@@ -176,6 +176,45 @@ const StepIndicator: React.FC<{
   );
 };
 
+// macOS 终端窗口标题栏
+const TerminalHeader: React.FC = () => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "8px",
+        marginBottom: "12px",
+      }}
+    >
+      <div
+        style={{
+          width: "12px",
+          height: "12px",
+          borderRadius: "50%",
+          background: "#FF5F57",
+        }}
+      />
+      <div
+        style={{
+          width: "12px",
+          height: "12px",
+          borderRadius: "50%",
+          background: "#FEBC2E",
+        }}
+      />
+      <div
+        style={{
+          width: "12px",
+          height: "12px",
+          borderRadius: "50%",
+          background: "#28C840",
+        }}
+      />
+    </div>
+  );
+};
+
 // 终端命令组件
 const TerminalCommand: React.FC<{
   command: string;
@@ -211,32 +250,59 @@ const TerminalCommand: React.FC<{
     <div style={{ opacity: cmdOpacity, marginBottom: "20px" }}>
       <div
         style={{
-          background: "rgba(0,0,0,0.4)",
-          borderRadius: "8px",
-          padding: "16px 20px",
-          fontFamily: "'SF Mono', 'Monaco', 'Inconsolata', monospace",
-          fontSize: "16px",
+          background: "rgba(30, 30, 30, 0.95)",
+          borderRadius: "12px",
+          padding: "24px 28px",
+          fontFamily: "'SF Mono', 'Monaco', 'Inconsolata', 'Menlo', 'Consolas', monospace",
+          fontSize: "24px",
+          border: "1px solid rgba(255, 255, 255, 0.1)",
+          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
         }}
       >
-        <span style={{ color: accentColor, marginRight: "8px" }}>➜</span>
-        <span style={{ color: textColor }}>
-          {command.slice(0, cmdCharCount)}
-          {cmdCharCount < command.length && (
-            <span style={{ opacity: frame % 10 < 5 ? 1 : 0 }}>▋</span>
-          )}
-        </span>
+        <TerminalHeader />
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            gap: "12px",
+          }}
+        >
+          <span
+            style={{
+              color: accentColor,
+              fontWeight: 600,
+              flexShrink: 0,
+            }}
+          >
+            ➜
+          </span>
+          <span
+            style={{
+              color: "#ffffff",
+              flex: 1,
+            }}
+          >
+            {command.slice(0, cmdCharCount)}
+            {cmdCharCount < command.length && (
+              <span style={{ opacity: frame % 10 < 5 ? 1 : 0 }}>▋</span>
+            )}
+          </span>
+        </div>
       </div>
       {output && outputOpacity > 0 && (
         <div
           style={{
             marginTop: "12px",
-            padding: "16px 20px",
-            fontFamily: "'SF Mono', 'Monaco', 'Inconsolata', monospace",
-            fontSize: "14px",
-            color: textColor,
-            opacity: outputOpacity * 0.7,
+            padding: "18px 24px",
+            fontFamily: "'SF Mono', 'Monaco', 'Inconsolata', 'Menlo', 'Consolas', monospace",
+            fontSize: "20px",
+            color: "#e0e0e0",
+            opacity: outputOpacity * 0.85,
             whiteSpace: "pre-wrap",
             lineHeight: 1.6,
+            background: "rgba(30, 30, 30, 0.9)",
+            borderRadius: "8px",
+            border: "1px solid rgba(255, 255, 255, 0.08)",
           }}
         >
           {output}
@@ -445,22 +511,14 @@ const InstallScene: React.FC<{
           command: "node --version",
           output: "v22.11.0 ✓\nOpenClaw 需要 Node.js 22 或更新版本",
         },
-        {
-          command: "npm --version",
-          output: "11.0.0 ✓\npm 包管理器已就绪",
-        },
-        {
-          command: "echo $SHELL",
-          output: "/bin/zsh\nshell 环境检查通过",
-        },
       ];
     }
     if (step === 2) {
       return [
         {
-          command: "curl -fsSL https://openclaw.ai/install.sh | bash",
+          command: "npm install -g @openclaw/cli",
           output:
-            "正在下载安装程序...\n\n[######################]   50.0%\n" +
+            "正在检查 npm 版本...\nnpm 10.9.2 ✓\n\n正在下载 @openclaw/cli...\n\n[######################]   50.0%\n" +
             "[###########################]  75.0%\n" +
             "[######################################] 100.0%\n\n" +
             "✓ OpenClaw CLI 安装成功\n" +
@@ -576,17 +634,17 @@ const InstallScene: React.FC<{
         justifyContent: "center",
         width: "100%",
         height: "100%",
-        padding: "0 120px",
+        padding: "0 80px",
       }}
     >
       <StepIndicator step={step} total={5} frame={frame} accentColor={accentColor} />
 
       <h2
         style={{
-          fontSize: "48px",
+          fontSize: "56px",
           fontWeight: 700,
           color: accentColor,
-          margin: "0 0 16px 0",
+          margin: "0 0 20px 0",
           textAlign: "center",
         }}
       >
@@ -597,9 +655,9 @@ const InstallScene: React.FC<{
 
       <p
         style={{
-          fontSize: "20px",
+          fontSize: "24px",
           color: textColor,
-          margin: "0 0 40px 0",
+          margin: "0 0 48px 0",
           textAlign: "center",
           opacity: 0.7,
         }}
@@ -609,7 +667,7 @@ const InstallScene: React.FC<{
         {step === 3 && "配置认证、网关和渠道"}
       </p>
 
-      <div style={{ width: "100%", maxWidth: "1200px" }}>
+      <div style={{ width: "100%", maxWidth: "1600px" }}>
         {commands.map((cmd, index) => (
           <TerminalCommand
             key={index}
@@ -706,9 +764,9 @@ const MessageScene: React.FC<{
 }> = ({ frame, accentColor, textColor }) => {
   const commands = [
     {
-      command: 'openclaw message send --target +15555550123 --message "你好，我是 OpenClaw"',
+      command: 'openclaw message send --target +8618476697664 --channel imessage --message "长官，飞书通道配置完成！✅ 已成功配对，现在可以在飞书中正常使用了。重复插件也已清理完毕 😎"',
       output:
-        "正在发送消息...\n\n✓ 消息已发送\n✓ 目标: +15555550123 (WhatsApp)\n✓ 状态: 已送达\n\n试试与你的 AI Agent 聊天吧！",
+        "正在发送消息...\n\n✓ 消息已发送\n✓ 目标: +8618476697664 (iMessage)\n✓ 状态: 已送达\n\n试试与你的 AI Agent 聊天吧！",
     },
   ];
 
@@ -921,8 +979,8 @@ export const OpenClawTutorial: React.FC<z.infer<typeof openClawSchema>> = ({
         />
       </Sequence>
 
-      {/* Scene 5: Install - Step 3 (1200-1920 frames, 24 seconds) - 延长了 */}
-      <Sequence from={1200} durationInFrames={720}>
+      {/* Scene 5: Install - Step 3 (1200-1560 frames, 12 seconds) */}
+      <Sequence from={1200} durationInFrames={360}>
         <InstallScene
           frame={frame - 1200}
           accentColor={accentColor}
@@ -931,28 +989,28 @@ export const OpenClawTutorial: React.FC<z.infer<typeof openClawSchema>> = ({
         />
       </Sequence>
 
-      {/* Scene 6: Gateway (1920-2280 frames, 12 seconds) - 延长了 */}
-      <Sequence from={1920} durationInFrames={360}>
+      {/* Scene 6: Gateway (1560-1920 frames, 12 seconds) */}
+      <Sequence from={1560} durationInFrames={360}>
         <GatewayScene
+          frame={frame - 1560}
+          accentColor={accentColor}
+          textColor={textColor}
+        />
+      </Sequence>
+
+      {/* Scene 7: Message (1920-2280 frames, 12 seconds) - 新场景 */}
+      <Sequence from={1920} durationInFrames={360}>
+        <MessageScene
           frame={frame - 1920}
           accentColor={accentColor}
           textColor={textColor}
         />
       </Sequence>
 
-      {/* Scene 7: Message (2280-2520 frames, 8 seconds) - 新场景 */}
-      <Sequence from={2280} durationInFrames={240}>
-        <MessageScene
-          frame={frame - 2280}
-          accentColor={accentColor}
-          textColor={textColor}
-        />
-      </Sequence>
-
-      {/* Scene 8: Outro (2520-2700 frames, 6 seconds) */}
-      <Sequence from={2520} durationInFrames={180}>
+      {/* Scene 8: Outro (2280-2460 frames, 6 seconds) */}
+      <Sequence from={2280} durationInFrames={180}>
         <OutroScene
-          frame={frame - 2520}
+          frame={frame - 2280}
           accentColor={accentColor}
           textColor={textColor}
         />
