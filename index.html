@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenClaw Tutorial - Remotion Video</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FF5A36 0%, #FF8A6B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.8;
+            color: #e0e0e0;
+        }
+
+        .player-container {
+            width: 100%;
+            max-width: 1920px;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .info {
+            margin-top: 30px;
+            max-width: 800px;
+            color: #e0e0e0;
+            text-align: center;
+        }
+
+        .info h2 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #FF5A36;
+        }
+
+        .info p {
+            font-size: 16px;
+            line-height: 1.6;
+            opacity: 0.8;
+            margin-bottom: 10px;
+        }
+
+        .info a {
+            color: #FF5A36;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .info a:hover {
+            text-decoration: underline;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 400px;
+            color: #fff;
+            font-size: 20px;
+        }
+    </style>
+  <script type="module" crossorigin src="/bundle.js"></script>
+</head>
+<body>
+    <div class="header">
+        <h1>OpenClaw Tutorial</h1>
+        <p>使用 Remotion 构建的 OpenClaw 配置教程视频</p>
+    </div>
+
+    <div class="player-container">
+        <div id="player" class="loading">正在加载视频播放器...</div>
+    </div>
+
+    <div class="info">
+        <h2>关于本项目</h2>
+        <p>这是一个使用 <a href="https://www.remotion.dev/" target="_blank">Remotion</a> 创建的程序化视频教程，演示了如何配置 Discord 通道的 OpenClaw。</p>
+        <p>Remotion 让你能够使用 React 和 TypeScript 来创建视频内容，所有动画都是代码生成的。</p>
+        <p>视频时长: 82 秒 | 分辨率: 1920x1080 | 帧率: 30fps</p>
+    </div>
+
+</body>
+</html>
