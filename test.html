@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>诊断页面</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1a1a2e;
+            color: #fff;
+        }
+        .success { color: #4ade80; }
+        .error { color: #f87171; }
+        .info { color: #60a5fa; }
+        pre {
+            background: #000;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>GitHub Pages 诊断页面</h1>
+    <div id="results"></div>
+
+    <script>
+        const results = document.getElementById('results');
+
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = type;
+            div.textContent = message;
+            results.appendChild(div);
+        }
+
+        async function checkFile(url) {
+            try {
+                const response = await fetch(url, { method: 'HEAD' });
+                const size = response.headers.get('content-length');
+                log(`✓ ${url} - ${response.status} (${size} bytes)`, 'success');
+                return true;
+            } catch (error) {
+                log(`✗ ${url} - ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        async function testScriptLoad(url) {
+            return new Promise((resolve) => {
+                const script = document.createElement('script');
+                script.onload = () => {
+                    log(`✓ Script loaded: ${url}`, 'success');
+                    resolve(true);
+                };
+                script.onerror = (error) => {
+                    log(`✗ Script failed to load: ${url}`, 'error');
+                    resolve(false);
+                };
+                script.src = url;
+                document.head.appendChild(script);
+            });
+        }
+
+        async function runDiagnostics() {
+            log('=== 开始诊断 ===', 'info');
+
+            // Check files
+            log('\n--- 检查文件 ---', 'info');
+            await checkFile('/my-remotion/index.html');
+            await checkFile('/my-remotion/bundle.js');
+            await checkFile('/my-remotion/.nojekyll');
+
+            // Test script loading
+            log('\n--- 测试脚本加载 ---', 'info');
+            await testScriptLoad('/my-remotion/bundle.js');
+
+            // Check environment
+            log('\n--- 环境信息 ---', 'info');
+            log(`Location: ${window.location.href}`, 'info');
+            log(`User Agent: ${navigator.userAgent}`, 'info');
+
+            // Check for errors
+            log('\n--- 检查全局错误 ---', 'info');
+            window.addEventListener('error', (event) => {
+                log(`Error: ${event.message} at ${event.filename}:${event.lineno}`, 'error');
+            });
+
+            window.addEventListener('unhandledrejection', (event) => {
+                log(`Unhandled Promise Rejection: ${event.reason}`, 'error');
+            });
+
+            setTimeout(() => {
+                log('\n=== 诊断完成 ===', 'info');
+            }, 2000);
+        }
+
+        runDiagnostics();
+    </script>
+</body>
+</html>
