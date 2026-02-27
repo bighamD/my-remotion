@@ -1,0 +1,47 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { Player } from '@remotion/player';
+import { OpenClawTutorial, openClawSchema } from './OpenClawTutorial';
+import { zIndex } from 'zod';
+
+// Player 组件
+const App: React.FC = () => {
+  const inputProps = {
+    backgroundColor: '#1a1a2e',
+    cardBg: '#16213e',
+    accentColor: '#FF5A36',
+    textColor: '#ffffff',
+    secondaryTextColor: '#a0a0a0',
+  };
+
+  return (
+    <div style={{
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}>
+      <Player
+        component={OpenClawTutorial}
+        inputProps={inputProps}
+        durationInFrames={2460}
+        compositionWidth={1920}
+        compositionHeight={1080}
+        fps={30}
+        style={{
+          width: '100%',
+          height: 'auto',
+          aspectRatio: '16/9',
+        }}
+        controls
+        loop
+        showVolumeControls
+      />
+    </div>
+  );
+};
+
+// 渲染应用
+const root = ReactDOM.createRoot(document.getElementById('player')!);
+root.render(<App />);

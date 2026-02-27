@@ -7,28 +7,36 @@
   "private": true,
   "dependencies": {
     "@remotion/cli": "4.0.422",
+    "@remotion/player": "4.0.422",
+    "@remotion/tailwind-v4": "4.0.422",
     "@remotion/zod-types": "4.0.422",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "remotion": "4.0.422",
-    "zod": "3.22.3",
-    "@remotion/tailwind-v4": "4.0.422",
-    "tailwindcss": "4.0.0"
+    "tailwindcss": "4.0.0",
+    "zod": "3.22.3"
   },
   "devDependencies": {
     "@remotion/eslint-config-flat": "4.0.422",
     "@types/react": "19.2.7",
     "@types/web": "0.0.166",
+    "@vitejs/plugin-react": "^5.1.4",
     "eslint": "9.19.0",
+    "gh-pages": "^6.3.0",
     "prettier": "3.6.0",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vite": "^7.3.1"
   },
   "scripts": {
     "dev": "remotion studio",
     "build": "remotion bundle",
+    "build:web": "vite build",
+    "preview:web": "vite preview",
+    "deploy": "gh-pages -d dist",
     "upgrade": "remotion upgrade",
     "lint": "eslint src && tsc"
   },
+  "homepage": "https://bighamD.github.io/my-remotion",
   "sideEffects": [
     "*.css"
   ],
