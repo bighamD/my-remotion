@@ -15,30 +15,21 @@ const App: React.FC = () => {
   };
 
   return (
-    <div style={{
-      width: '100%',
-      height: '100%',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-    }}>
-      <Player
-        component={OpenClawTutorial}
-        inputProps={inputProps}
-        durationInFrames={2460}
-        compositionWidth={1920}
-        compositionHeight={1080}
-        fps={30}
-        style={{
-          width: '100%',
-          height: 'auto',
-          aspectRatio: '16/9',
-        }}
-        controls
-        loop
-        showVolumeControls
-      />
-    </div>
+    <Player
+      component={OpenClawTutorial}
+      inputProps={inputProps}
+      durationInFrames={2460}
+      compositionWidth={1920}
+      compositionHeight={1080}
+      fps={30}
+      style={{
+        width: '100%',
+        maxWidth: '1920px',
+      }}
+      controls
+      loop
+      showVolumeControls
+    />
   );
 };
 
