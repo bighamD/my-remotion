@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@fontsource/patrick-hand':
+        specifier: ^5.2.8
+        version: 5.2.8
       '@remotion/cli':
         specifier: 4.0.422
         version: 4.0.422(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -753,6 +756,9 @@ packages:
   '@eslint/plugin-kit@0.2.8':
     resolution: {integrity: sha512-ZAoA40rNMPwSm+AeHpCq8STiNAwzWLJuP8Xv4CHIc9wv/PSuExjMrmjfYNj682vW0OOiZ1HKxzvjQr9XZIisQA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@fontsource/patrick-hand@5.2.8':
+    resolution: {integrity: sha512-FZx34VLuiF+Pjv/A/m1bTxjR6hAvmL6vdCp62uypVdgFvSrPrBOxX+vCXVy8lfNVFqvKfm/ghun+aaYVYqfBEg==}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -3227,6 +3233,8 @@ snapshots:
     dependencies:
       '@eslint/core': 0.13.0
       levn: 0.4.1
+
+  '@fontsource/patrick-hand@5.2.8': {}
 
   '@humanfs/core@0.19.1': {}
 

@@ -1,1 +1,27 @@
 @import "tailwindcss";
+@import "@fontsource/patrick-hand/index.css";
+
+/* 手绘粉笔样式 */
+.chalk-text {
+  font-family: 'Patrick Hand', cursive;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.8),
+               0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+.chalk-line {
+  filter: blur(0.3px);
+}
+
+.chalk-icon {
+  filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.5));
+}
+
+/* 粉笔红颜色 */
+.chalk-red {
+  color: #FF5A36;
+}
+
+/* 淡紫色 */
+.chalk-purple {
+  color: #B8A9C9;
+}
