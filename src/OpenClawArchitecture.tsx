@@ -3226,7 +3226,7 @@ const CronScene: React.FC<{
               gap: "16px",
             }}
           >
-            {useCases.map((useCase, index) => {
+            {useCases.map((useCase, index) => (
               <div
                 key={index}
                 style={{
