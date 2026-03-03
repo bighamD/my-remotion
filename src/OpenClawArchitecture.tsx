@@ -2009,18 +2009,18 @@ const MemoryScene: React.FC<{
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "60px 80px",
+        padding: "40px 50px",
       }}
     >
       <h1
         style={{
-          fontSize: "56px",
+          fontSize: "48px",
           fontWeight: 800,
           color: accentColor,
-          margin: "0 0 16px 0",
+          margin: "0 0 12px 0",
           opacity: titleOpacity,
           textAlign: "center",
-          minHeight: "70px",
+          minHeight: "60px",
         }}
       >
         {(() => {
@@ -2039,12 +2039,12 @@ const MemoryScene: React.FC<{
       </h1>
       <h3
         style={{
-          fontSize: "28px",
+          fontSize: "24px",
           fontWeight: 600,
-          margin: "0 0 60px 0",
+          margin: "0 0 40px 0",
           opacity: titleOpacity,
           textAlign: "center",
-          minHeight: "40px",
+          minHeight: "35px",
         }}
       >
         {/* 打字机效果 */}
@@ -2109,12 +2109,12 @@ const MemoryScene: React.FC<{
       <div
         style={{
           display: "flex",
-          gap: "40px",
+          gap: "30px",
           justifyContent: "center",
           alignItems: "center",
           width: "100%",
-          maxWidth: "1400px",
-          marginBottom: "50px",
+          maxWidth: "1100px",
+          marginBottom: "35px",
         }}
       >
         {memoryTypes.map((memory, index) => (
@@ -2128,26 +2128,26 @@ const MemoryScene: React.FC<{
           >
             <div
               style={{
-                width: "260px",
-                padding: "28px",
+                width: "220px",
+                padding: "20px",
                 background: `${memory.color}22`,
                 border: `3px solid ${memory.color}`,
-                borderRadius: "20px",
+                borderRadius: "16px",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                boxShadow: `0 8px 32px ${memory.color}44`,
+                boxShadow: `0 6px 24px ${memory.color}44`,
               }}
             >
-              <div style={{ fontSize: "56px", marginBottom: "18px" }}>
+              <div style={{ fontSize: "48px", marginBottom: "14px" }}>
                 {memory.icon}
               </div>
               <div
                 style={{
-                  fontSize: "24px",
+                  fontSize: "20px",
                   fontWeight: 700,
                   color: memory.color,
-                  marginBottom: "10px",
+                  marginBottom: "8px",
                   textAlign: "center",
                 }}
               >
@@ -2155,10 +2155,10 @@ const MemoryScene: React.FC<{
               </div>
               <div
                 style={{
-                  fontSize: "16px",
+                  fontSize: "14px",
                   color: "rgba(255,255,255,0.7)",
                   textAlign: "center",
-                  lineHeight: 1.4,
+                  lineHeight: 1.3,
                 }}
               >
                 {memory.desc}
@@ -2168,66 +2168,20 @@ const MemoryScene: React.FC<{
         ))}
       </div>
 
-      {/* 连接线 */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "100%",
-          maxWidth: "900px",
-          marginBottom: "50px",
-          opacity: spring({ frame: frame - 60, fps: 30 }),
-        }}
-      >
-        <svg
-          style={{
-            width: "100%",
-            height: "60px",
-            pointerEvents: "none",
-          }}
-        >
-          {[0, 1, 2].map((index) => {
-            const progress = interpolate(
-              frame - 70 - index * 5,
-              [0, 30],
-              [0, 1],
-              { extrapolateRight: "clamp" },
-            );
-            const segmentWidth = 250;
-            const startX = 130 + index * (segmentWidth + 40);
-            const endX = startX + segmentWidth * progress;
-
-            return (
-              <line
-                key={index}
-                x1={startX}
-                y1={30}
-                x2={endX}
-                y2={30}
-                stroke={accentColor}
-                strokeWidth="3"
-                strokeDasharray="5,5"
-              />
-            );
-          })}
-        </svg>
-      </div>
-
       {/* 底部环形流程图 */}
       <div
         style={{
           opacity: spring({ frame: frame - 90, fps: 30 }),
           width: "100%",
-          maxWidth: "1000px",
+          maxWidth: "900px",
         }}
       >
         <div
           style={{
-            fontSize: "20px",
+            fontSize: "18px",
             fontWeight: 700,
             color: textColor,
-            marginBottom: "30px",
+            marginBottom: "20px",
             textAlign: "center",
           }}
         >
@@ -2239,7 +2193,7 @@ const MemoryScene: React.FC<{
           style={{
             position: "relative",
             width: "100%",
-            height: "650px",
+            height: "550px",
           }}
         >
           {(() => {
@@ -2302,9 +2256,9 @@ const MemoryScene: React.FC<{
               },
             ];
 
-            const centerX = 500;
-            const centerY = 325;
-            const radius = 220;
+            const centerX = 450;
+            const centerY = 275;
+            const radius = 190;
 
             return (
               <>
@@ -2379,16 +2333,6 @@ const MemoryScene: React.FC<{
                     const cpX = centerX + Math.cos(currentAngle + 45 * (Math.PI / 180) / 2) * controlRadius;
                     const cpY = centerY + Math.sin(currentAngle + 45 * (Math.PI / 180) / 2) * controlRadius;
 
-                    const progress = interpolate(frame - 100 - index * 5, [0, 40], [0, 1], {
-                      extrapolateRight: "clamp",
-                    });
-
-                    // 计算当前进度下的点位置
-                    const t = progress;
-                    const invT = 1 - t;
-                    const currentX = invT * invT * x1 + 2 * invT * t * cpX + t * t * x2;
-                    const currentY = invT * invT * y1 + 2 * invT * t * cpY + t * t * y2;
-
                     const opacity = spring({
                       frame: frame - 100 - index * 5,
                       fps: 30,
@@ -2459,56 +2403,77 @@ const MemoryScene: React.FC<{
                     >
                       <div
                         style={{
-                          width: "130px",
-                          background: `${step.color}20`,
-                          border: `3px solid ${step.color}`,
-                          borderRadius: "16px",
-                          padding: "12px",
+                          position: "relative",
                           display: "flex",
                           flexDirection: "column",
                           alignItems: "center",
-                          boxShadow: `0 8px 24px ${step.color}40`,
-                          backdropFilter: "blur(10px)",
+                          gap: "8px",
                         }}
                       >
+                        {/* 圆形节点 */}
                         <div
                           style={{
-                            position: "absolute",
-                            top: "-12px",
-                            background: step.color,
-                            color: "white",
-                            width: "28px",
-                            height: "28px",
+                            width: "85px",
+                            height: "85px",
                             borderRadius: "50%",
+                            background: `${step.color}25`,
+                            border: `3px solid ${step.color}`,
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            fontSize: "14px",
-                            fontWeight: 800,
-                            boxShadow: `0 4px 12px ${step.color}60`,
+                            boxShadow: `0 8px 24px ${step.color}50`,
+                            backdropFilter: "blur(10px)",
+                            position: "relative",
                           }}
                         >
-                          {step.step}
+                          {/* 步骤编号 */}
+                          <div
+                            style={{
+                              position: "absolute",
+                              top: "-8px",
+                              right: "-8px",
+                              background: step.color,
+                              color: "white",
+                              width: "26px",
+                              height: "26px",
+                              borderRadius: "50%",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              fontSize: "14px",
+                              fontWeight: 800,
+                              boxShadow: `0 4px 12px ${step.color}70`,
+                              zIndex: 2,
+                            }}
+                          >
+                            {step.step}
+                          </div>
+                          {/* 图标 */}
+                          <div style={{ fontSize: "36px" }}>
+                            {step.icon}
+                          </div>
                         </div>
-                        <div style={{ fontSize: "36px", marginBottom: "6px" }}>
-                          {step.icon}
-                        </div>
+
+                        {/* 标题 */}
                         <div
                           style={{
-                            fontSize: "15px",
+                            fontSize: "13px",
                             fontWeight: 700,
                             color: step.color,
-                            marginBottom: "3px",
                             textAlign: "center",
+                            textShadow: `0 2px 8px ${step.color}40`,
                           }}
                         >
                           {step.title}
                         </div>
+
+                        {/* 描述（小字） */}
                         <div
                           style={{
-                            fontSize: "12px",
-                            color: "rgba(255,255,255,0.65)",
+                            fontSize: "10px",
+                            color: "rgba(255,255,255,0.5)",
                             textAlign: "center",
+                            maxWidth: "90px",
                           }}
                         >
                           {step.desc}
@@ -2531,8 +2496,8 @@ const MemoryScene: React.FC<{
                 >
                   <div
                     style={{
-                      fontSize: "48px",
-                      marginBottom: "8px",
+                      fontSize: "40px",
+                      marginBottom: "6px",
                       filter: "drop-shadow(0 0 20px rgba(167, 139, 250, 0.6))",
                     }}
                   >
@@ -2540,17 +2505,17 @@ const MemoryScene: React.FC<{
                   </div>
                   <div
                     style={{
-                      fontSize: "18px",
+                      fontSize: "16px",
                       fontWeight: 700,
                       color: textColor,
-                      marginBottom: "4px",
+                      marginBottom: "3px",
                     }}
                   >
                     循环增强
                   </div>
                       <div
                         style={{
-                          fontSize: "13px",
+                          fontSize: "12px",
                           color: "rgba(255,255,255,0.6)",
                         }}
                       >
@@ -2581,10 +2546,53 @@ const HeartbeatScene: React.FC<{
     config: { damping: 15, stiffness: 100 },
   });
 
-  const heartbeatScale = interpolate(frame % 60, [0, 30], [1, 1.1], {
-    extrapolateRight: "clamp",
-    extrapolateLeft: "clamp",
-  });
+  // 四个能力层
+  const capabilityLayers = [
+    {
+      title: "状态维持",
+      icon: "🔄",
+      color: "#3B82F6",
+      desc: "State Maintenance",
+      features: [
+        { text: "检查任务完成", icon: "✅" },
+        { text: "检查未处理消息", icon: "📬" },
+        { text: "更新短期记忆", icon: "💭" },
+      ],
+    },
+    {
+      title: "自主行为触发",
+      icon: "🤖",
+      color: "#F59E0B",
+      desc: "Autonomous Trigger",
+      features: [
+        { text: "空闲时主动学习", icon: "📚" },
+        { text: "主动总结", icon: "📝" },
+        { text: "主动优化策略", icon: "⚡" },
+      ],
+    },
+    {
+      title: "记忆整理",
+      icon: "🧠",
+      color: "#A78BFA",
+      desc: "Memory Governance",
+      features: [
+        { text: "压缩上下文", icon: "📦" },
+        { text: "写入长期记忆", icon: "💾" },
+        { text: "清理低权重数据", icon: "🗑️" },
+      ],
+    },
+    {
+      title: "系统健康监测",
+      icon: "🏥",
+      color: "#10B981",
+      desc: "Health Monitor",
+      features: [
+        { text: "检查 Node 在线", icon: "🌐" },
+        { text: "检查 Skills 可用", icon: "🛠️" },
+        { text: "更新状态到 Gateway", icon: "🚪" },
+      ],
+    },
+  ];
 
   return (
     <div
@@ -2595,18 +2603,18 @@ const HeartbeatScene: React.FC<{
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "60px",
+        padding: "50px 70px",
       }}
     >
       <h1
         style={{
-          fontSize: "56px",
+          fontSize: "48px",
           fontWeight: 800,
           color: accentColor,
-          margin: "0 0 16px 0",
+          margin: "0 0 12px 0",
           opacity: titleOpacity,
           textAlign: "center",
-          minHeight: "70px",
+          minHeight: "60px",
         }}
       >
         {(() => {
@@ -2625,24 +2633,24 @@ const HeartbeatScene: React.FC<{
       </h1>
       <h3
         style={{
-          fontSize: "28px",
+          fontSize: "24px",
           fontWeight: 600,
-          margin: "0 0 80px 0",
+          margin: "0 0 50px 0",
           opacity: titleOpacity,
           textAlign: "center",
-          minHeight: "40px",
+          minHeight: "35px",
         }}
       >
         {/* 打字机效果 */}
         {(() => {
           const parts = [
-            { text: "实时监控", color: "#F472B6", bold: true },
+            { text: "状态维持", color: "#3B82F6", bold: true },
             { text: "、", color: textColor },
-            { text: "故障告警", color: "#EF4444", bold: true },
+            { text: "自主触发", color: "#F59E0B", bold: true },
             { text: "、", color: textColor },
-            { text: "自动恢复", color: "#10B981", bold: true },
-            { text: "，确保服务", color: textColor },
-            { text: "稳定运行", color: "#3B82F6", bold: true },
+            { text: "记忆整理", color: "#A78BFA", bold: true },
+            { text: "、", color: textColor },
+            { text: "健康监测", color: "#10B981", bold: true },
           ];
 
           const typeStartFrame = 20;
@@ -2689,116 +2697,160 @@ const HeartbeatScene: React.FC<{
         })()}
       </h3>
 
-      <div style={{ position: "relative", width: "100%", maxWidth: "600px" }}>
-        {/* 心跳动画 */}
+      {/* 四个能力层网格 */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(2, 1fr)",
+          gap: "30px",
+          width: "100%",
+          maxWidth: "1200px",
+        }}
+      >
+        {capabilityLayers.map((layer, index) => (
+          <div
+            key={index}
+            style={{
+              opacity: spring({ frame: frame - 30 - index * 10, fps: 30 }),
+              transform: `translateY(${interpolate(frame - 30 - index * 10, [-30, 0], [30, 0], { extrapolateRight: "clamp" })}px)`,
+            }}
+          >
+            <div
+              style={{
+                background: `${layer.color}15`,
+                border: `3px solid ${layer.color}`,
+                borderRadius: "20px",
+                padding: "24px",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                boxShadow: `0 8px 32px ${layer.color}35`,
+              }}
+            >
+              {/* 标题栏 */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  marginBottom: "18px",
+                  paddingBottom: "14px",
+                  borderBottom: `2px solid ${layer.color}40`,
+                }}
+              >
+                <div style={{ fontSize: "40px" }}>{layer.icon}</div>
+                <div style={{ flex: 1 }}>
+                  <div
+                    style={{
+                      fontSize: "22px",
+                      fontWeight: 700,
+                      color: layer.color,
+                      marginBottom: "2px",
+                    }}
+                  >
+                    {layer.title}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "13px",
+                      color: "rgba(255,255,255,0.5)",
+                      fontStyle: "italic",
+                    }}
+                  >
+                    {layer.desc}
+                  </div>
+                </div>
+              </div>
+
+              {/* 功能列表 */}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "12px",
+                  flex: 1,
+                }}
+              >
+                {layer.features.map((feature, idx) => (
+                  <div
+                    key={idx}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "12px",
+                      background: `${layer.color}10`,
+                      padding: "12px 16px",
+                      borderRadius: "12px",
+                      opacity: spring({
+                        frame: frame - 60 - index * 5 - idx * 3,
+                        fps: 30,
+                      }),
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: "24px",
+                        filter: `drop-shadow(0 2px 8px ${layer.color}40)`,
+                      }}
+                    >
+                      {feature.icon}
+                    </span>
+                    <span
+                      style={{
+                        fontSize: "16px",
+                        fontWeight: 600,
+                        color: textColor,
+                        flex: 1,
+                      }}
+                    >
+                      {feature.text}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* 底部心跳动画 */}
+      <div
+        style={{
+          marginTop: "40px",
+          display: "flex",
+          alignItems: "center",
+          gap: "30px",
+          opacity: spring({ frame: frame - 100, fps: 30 }),
+        }}
+      >
         <div
           style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "40px",
+            fontSize: "60px",
+            animation: "heartbeat 1.5s ease-in-out infinite",
+            filter: "drop-shadow(0 4px 20px rgba(244, 114, 182, 0.6))",
+          }}
+        >
+          💓
+        </div>
+        <div
+          style={{
+            fontSize: "18px",
+            color: textColor,
+            textAlign: "center",
           }}
         >
           <div
             style={{
-              fontSize: "120px",
-              transform: `scale(${heartbeatScale})`,
-              opacity: spring({ frame: frame - 20, fps: 30 }),
-              filter: "drop-shadow(0 8px 32px rgba(244, 114, 182, 0.6))",
+              fontSize: "20px",
+              fontWeight: 700,
+              color: accentColor,
+              marginBottom: "6px",
             }}
           >
-            💓
+            持续运行
           </div>
-
-          {/* 状态指标 */}
-          <div
-            style={{
-              width: "100%",
-              opacity: spring({ frame: frame - 40, fps: 30 }),
-            }}
-          >
-            {[
-              { label: "系统运行时间", value: "99.9%", color: "#10B981" },
-              { label: "节点健康度", value: "100%", color: "#3B82F6" },
-              { label: "响应时间", value: "< 100ms", color: "#F59E0B" },
-            ].map((metric, index) => (
-              <div
-                key={index}
-                style={{
-                  marginBottom: "20px",
-                  opacity: spring({ frame: frame - 50 - index * 10, fps: 30 }),
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: "8px",
-                  }}
-                >
-                  <span style={{ fontSize: "18px", color: textColor }}>
-                    {metric.label}
-                  </span>
-                  <span
-                    style={{
-                      fontSize: "24px",
-                      fontWeight: 700,
-                      color: metric.color,
-                    }}
-                  >
-                    {metric.value}
-                  </span>
-                </div>
-                <div
-                  style={{
-                    width: "100%",
-                    height: "8px",
-                    background: "rgba(255,255,255,0.1)",
-                    borderRadius: "4px",
-                    overflow: "hidden",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: index === 2 ? "90%" : "100%",
-                      height: "100%",
-                      background: metric.color,
-                      borderRadius: "4px",
-                    }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
+          <div>确保系统稳定与自我优化</div>
         </div>
-      </div>
-
-      {/* 底部特性 */}
-      <div
-        style={{
-          marginTop: "60px",
-          display: "flex",
-          gap: "24px",
-          opacity: spring({ frame: frame - 100, fps: 30 }),
-        }}
-      >
-        {["自动告警", "故障恢复", "性能监控", "日志记录"].map((feature) => (
-          <div
-            key={feature}
-            style={{
-              background: "rgba(255,255,255,0.05)",
-              border: "2px solid rgba(255,255,255,0.2)",
-              borderRadius: "12px",
-              padding: "12px 24px",
-              fontSize: "18px",
-              color: textColor,
-              fontWeight: 600,
-            }}
-          >
-            ✓ {feature}
-          </div>
-        ))}
       </div>
     </div>
   );
@@ -2819,10 +2871,62 @@ const CronScene: React.FC<{
     config: { damping: 15, stiffness: 100 },
   });
 
-  const cronExamples = [
-    { time: "0 9 * * 1-5", desc: "工作日早上9点", icon: "🌅" },
-    { time: "0 */6 * * *", desc: "每6小时", icon: "⏰" },
-    { time: "0 0 * * 0", desc: "每周日午夜", icon: "📅" },
+  const cronExpressions = [
+    {
+      expression: "0 9 * * *",
+      desc: "每天 9:00 执行",
+      icon: "🌅",
+      color: "#FF6B6B",
+    },
+    {
+      expression: "0 */6 * * *",
+      desc: "每 6 小时执行",
+      icon: "⏰",
+      color: "#4ECDC4",
+    },
+    {
+      expression: "0 0 * * 1",
+      desc: "每周一 0:00 执行",
+      icon: "📅",
+      color: "#45B7D1",
+    },
+    {
+      expression: "*/30 * * * *",
+      desc: "每 30 分钟执行",
+      icon: "🔄",
+      color: "#FFA07A",
+    },
+  ];
+
+  const useCases = [
+    {
+      title: "数据报表",
+      icon: "📊",
+      desc: "定期生成统计报表",
+      color: "#FF6B6B",
+      examples: ["每日销售统计", "周报生成", "月度汇总"],
+    },
+    {
+      title: "提醒通知",
+      icon: "🔔",
+      desc: "定时发送重要提醒",
+      color: "#4ECDC4",
+      examples: ["会议提醒", "任务截止", "生日祝福"],
+    },
+    {
+      title: "系统清理",
+      icon: "🧹",
+      desc: "定期维护系统健康",
+      color: "#45B7D1",
+      examples: ["日志清理", "缓存刷新", "临时文件删除"],
+    },
+    {
+      title: "数据同步",
+      icon: "🔄",
+      desc: "自动同步外部数据",
+      color: "#FFA07A",
+      examples: ["API 数据拉取", "数据库同步", "文件备份"],
+    },
   ];
 
   return (
@@ -2834,18 +2938,19 @@ const CronScene: React.FC<{
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "60px",
+        padding: "60px 80px",
       }}
     >
+      {/* 标题 */}
       <h1
         style={{
-          fontSize: "56px",
+          fontSize: "64px",
           fontWeight: 800,
           color: accentColor,
-          margin: "0 0 16px 0",
+          margin: "0 0 20px 0",
           opacity: titleOpacity,
           textAlign: "center",
-          minHeight: "70px",
+          minHeight: "80px",
         }}
       >
         {(() => {
@@ -2862,190 +2967,265 @@ const CronScene: React.FC<{
           return title.substring(0, charsToShow);
         })()}
       </h1>
+
+      {/* 副标题 - 彩色关键词打字机效果 */}
       <h3
         style={{
           fontSize: "28px",
           fontWeight: 600,
-          margin: "0 0 60px 0",
-          opacity: titleOpacity,
+          margin: "0 0 50px 0",
+          opacity: spring({ frame: frame - 60, fps: 30 }),
+          color: textColor,
           textAlign: "center",
           minHeight: "40px",
         }}
       >
-        {/* 打字机效果 */}
         {(() => {
           const parts = [
             { text: "Cron", color: "#A78BFA", bold: true },
-            { text: "表达式配置，", color: textColor },
+            { text: "、", color: textColor },
             { text: "定时触发", color: "#10B981", bold: true },
-            { text: "，让", color: textColor },
+            { text: "、", color: textColor },
             { text: "Agent", color: "#F59E0B", bold: true },
-            { text: "主动工作", color: "#3B82F6", bold: true },
+            { text: "、", color: textColor },
+            { text: "主动工作", color: "#EC4899", bold: true },
           ];
 
-          const typeStartFrame = 16;
-          const durationPerChar = 2;
+          const typeStartFrame = 75;
+          const durationPerChar = 4;
+          const totalChars = parts.reduce(
+            (sum, p) => sum + p.text.length,
+            0,
+          );
+          const charsToShow = Math.max(
+            0,
+            Math.min(
+              totalChars,
+              Math.floor((frame - typeStartFrame) / durationPerChar),
+            ),
+          );
 
-          const result = [];
-          let totalChars = 0;
+          let currentChar = 0;
+          const rendered: React.ReactNode[] = [];
 
           for (const part of parts) {
-            const partEnd = totalChars + part.text.length;
-            const charsToShow = Math.max(
-              0,
-              Math.min(
-                part.text.length,
-                Math.floor((frame - typeStartFrame) / durationPerChar) -
-                  totalChars,
-              ),
+            if (currentChar >= charsToShow) break;
+
+            const charsInPart = Math.min(
+              part.text.length,
+              charsToShow - currentChar,
             );
+            const visibleText = part.text.substring(0, charsInPart);
 
-            if (charsToShow > 0) {
-              result.push(
-                <span
-                  key={totalChars}
-                  style={{
-                    color: part.color,
-                    fontWeight: part.bold ? 700 : 400,
-                  }}
-                >
-                  {part.text.substring(0, charsToShow)}
-                </span>,
-              );
-            }
-
-            totalChars = partEnd;
-            if (
-              Math.floor((frame - typeStartFrame) / durationPerChar) <=
-              totalChars
-            ) {
-              break;
-            }
+            rendered.push(
+              <span
+                key={currentChar}
+                style={{
+                  color: part.color,
+                  fontWeight: part.bold ? 700 : 400,
+                }}
+              >
+                {visibleText}
+              </span>,
+            );
+            currentChar += part.text.length;
           }
 
-          return result.length > 0 ? result : <span>&nbsp;</span>;
+          return rendered;
         })()}
       </h3>
 
-      <div style={{ width: "100%", maxWidth: "1000px" }}>
-        {/* Cron 表达式示例 */}
-        <div style={{ marginBottom: "60px" }}>
-          <div
-            style={{
-              fontSize: "28px",
-              fontWeight: 700,
-              color: textColor,
-              marginBottom: "30px",
-              textAlign: "center",
-            }}
-          >
-            Cron 表达式示例
-          </div>
-          {cronExamples.map((example, index) => (
+      {/* Cron 表达式示例 */}
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "1400px",
+          marginBottom: "40px",
+          opacity: spring({ frame: frame - 120, fps: 30 }),
+        }}
+      >
+        <h2
+          style={{
+            fontSize: "32px",
+            fontWeight: 700,
+            color: textColor,
+            marginBottom: "30px",
+            textAlign: "center",
+          }}
+        >
+          ⏱️ Cron 表达式示例
+        </h2>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, 1fr)",
+            gap: "24px",
+          }}
+        >
+          {cronExpressions.map((expr, index) => (
             <div
               key={index}
               style={{
-                marginBottom: "20px",
-                opacity: spring({ frame: frame - 20 - index * 10, fps: 30 }),
-                transform: `translateX(${interpolate(frame - 20 - index * 10, [-50, 0], [50, 0], { extrapolateRight: "clamp" })}px)`,
+                background: `${expr.color}15`,
+                border: `3px solid ${expr.color}`,
+                borderRadius: "16px",
+                padding: "24px",
+                textAlign: "center",
+                opacity: spring({
+                  frame: frame - 140 - index * 10,
+                  fps: 30,
+                }),
+                transform: `translateY(${interpolate(
+                  frame - 140 - index * 10,
+                  [-20, 0],
+                  [20, 0],
+                  { extrapolateRight: "clamp" },
+                )}px)`,
               }}
             >
               <div
                 style={{
-                  background: "rgba(255,255,255,0.05)",
-                  border: "2px solid rgba(255,255,255,0.2)",
-                  borderRadius: "12px",
-                  padding: "20px 24px",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "20px",
+                  fontSize: "48px",
+                  marginBottom: "16px",
+                  filter: `drop-shadow(0 2px 8px ${expr.color}60)`,
                 }}
               >
-                <span style={{ fontSize: "40px" }}>{example.icon}</span>
-                <code
-                  style={{
-                    flex: 1,
-                    fontSize: "20px",
-                    color: "#A78BFA",
-                    fontFamily: "monospace",
-                    fontWeight: 600,
-                  }}
-                >
-                  {example.time}
-                </code>
-                <span
-                  style={{ fontSize: "18px", color: "rgba(255,255,255,0.7)" }}
-                >
-                  {example.desc}
-                </span>
+                {expr.icon}
+              </div>
+              <div
+                style={{
+                  fontSize: "24px",
+                  fontWeight: 700,
+                  fontFamily: "monospace",
+                  color: expr.color,
+                  marginBottom: "12px",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                {expr.expression}
+              </div>
+              <div
+                style={{
+                  fontSize: "16px",
+                  color: textColor,
+                  fontWeight: 500,
+                }}
+              >
+                {expr.desc}
               </div>
             </div>
           ))}
         </div>
+      </div>
 
-        {/* 使用场景 */}
-        <div
+      {/* 应用场景 */}
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "1400px",
+          opacity: spring({ frame: frame - 200, fps: 30 }),
+        }}
+      >
+        <h2
           style={{
-            opacity: spring({ frame: frame - 60, fps: 30 }),
+            fontSize: "32px",
+            fontWeight: 700,
+            color: textColor,
+            marginBottom: "30px",
+            textAlign: "center",
           }}
         >
-          <div
-            style={{
-              fontSize: "28px",
-              fontWeight: 700,
-              color: textColor,
-              marginBottom: "30px",
-              textAlign: "center",
-            }}
-          >
-            典型使用场景
-          </div>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "20px",
-            }}
-          >
-            {[
-              { icon: "📊", title: "数据报表", desc: "每日自动生成" },
-              { icon: "🔔", title: "提醒通知", desc: "定时发送" },
-              { icon: "🧹", title: "系统清理", desc: "定期维护" },
-              { icon: "🔄", title: "数据同步", desc: "自动更新" },
-            ].map((scenario, index) => (
+          🎯 应用场景
+        </h2>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, 1fr)",
+            gap: "24px",
+          }}
+        >
+          {useCases.map((useCase, index) => (
+            <div
+              key={index}
+              style={{
+                background: `rgba(255, 255, 255, 0.05)`,
+                backdropFilter: "blur(10px)",
+                border: `2px solid ${useCase.color}40`,
+                borderRadius: "16px",
+                padding: "24px",
+                opacity: spring({
+                  frame: frame - 220 - index * 10,
+                  fps: 30,
+                }),
+                transform: `translateY(${interpolate(
+                  frame - 220 - index * 10,
+                  [-20, 0],
+                  [20, 0],
+                  { extrapolateRight: "clamp" },
+                )}px)`,
+              }}
+            >
               <div
-                key={index}
                 style={{
-                  background: `${accentColor}11`,
-                  border: `2px solid ${accentColor}`,
-                  borderRadius: "12px",
-                  padding: "20px",
                   display: "flex",
                   alignItems: "center",
-                  gap: "16px",
+                  gap: "12px",
+                  marginBottom: "16px",
                 }}
               >
-                <span style={{ fontSize: "36px" }}>{scenario.icon}</span>
-                <div>
-                  <div
-                    style={{
-                      fontSize: "18px",
-                      fontWeight: 700,
-                      color: textColor,
-                      marginBottom: "4px",
-                    }}
-                  >
-                    {scenario.title}
-                  </div>
-                  <div
-                    style={{ fontSize: "14px", color: "rgba(255,255,255,0.6)" }}
-                  >
-                    {scenario.desc}
-                  </div>
+                <div
+                  style={{
+                    fontSize: "40px",
+                    filter: `drop-shadow(0 2px 8px ${useCase.color}60)`,
+                  }}
+                >
+                  {useCase.icon}
+                </div>
+                <div
+                  style={{
+                    fontSize: "20px",
+                    fontWeight: 700,
+                    color: useCase.color,
+                  }}
+                >
+                  {useCase.title}
                 </div>
               </div>
-            ))}
-          </div>
+              <div
+                style={{
+                  fontSize: "14px",
+                  color: textColor,
+                  marginBottom: "16px",
+                  opacity: 0.8,
+                }}
+              >
+                {useCase.desc}
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "8px",
+                }}
+              >
+                {useCase.examples.map((example, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      fontSize: "13px",
+                      color: "rgba(255,255,255,0.6)",
+                      padding: "6px 12px",
+                      background: `${useCase.color}15`,
+                      borderRadius: "8px",
+                      textAlign: "center",
+                    }}
+                  >
+                    {example}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
