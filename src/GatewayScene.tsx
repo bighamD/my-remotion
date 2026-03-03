@@ -308,6 +308,138 @@ const FunctionalMatrix: React.FC<{ frame: number }> = ({ frame }) => {
   );
 };
 
+const DataFlowLines: React.FC<{ frame: number }> = ({ frame }) => {
+  const opacity = spring({
+    frame: Math.max(0, frame - 180),
+    fps: 30,
+    config: { damping: 15, stiffness: 100 },
+  });
+
+  const pathProgress = spring({
+    frame: Math.max(0, frame - 180),
+    fps: 30,
+    config: { damping: 20, stiffness: 80 },
+  });
+
+  // 路径动画：绘制线条
+  const pathLength = 300;
+  const dashOffset = interpolate(pathProgress, [0, 1], [pathLength, 0], {
+    extrapolateRight: "clamp",
+  });
+
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        pointerEvents: "none",
+        opacity,
+      }}
+    >
+      <svg
+        width="100%"
+        height="100%"
+        style={{ position: "absolute", top: 0, left: 0 }}
+      >
+        <defs>
+          <marker
+            id="arrowhead-purple"
+            markerWidth="10"
+            markerHeight="10"
+            refX="9"
+            refY="3"
+            orient="auto"
+          >
+            <polygon points="0 0, 10 3, 0 6" fill="#9C27B0" />
+          </marker>
+        </defs>
+
+        {/* 路径 A: 从多用户隔离到模块 */}
+        <path
+          d="M 350 280 Q 450 350 550 400"
+          stroke="#9C27B0"
+          strokeWidth="3"
+          fill="none"
+          strokeLinecap="round"
+          markerEnd="url(#arrowhead-purple)"
+          style={{
+            strokeDasharray: pathLength,
+            strokeDashoffset: dashOffset,
+          }}
+          className="chalk-line"
+        />
+
+        {/* 路径 B: 从模块向下到出口 */}
+        <path
+          d="M 700 500 L 700 650"
+          stroke="#9C27B0"
+          strokeWidth="3"
+          fill="none"
+          strokeLinecap="round"
+          markerEnd="url(#arrowhead-purple)"
+          style={{
+            strokeDasharray: 150,
+            strokeDashoffset: interpolate(pathProgress, [0, 1], [150, 0], {
+              extrapolateRight: "clamp",
+            }),
+          }}
+          className="chalk-line"
+        />
+      </svg>
+
+      {/* 出口元素 */}
+      <div
+        style={{
+          position: "absolute",
+          left: 660,
+          top: 680,
+          display: "flex",
+          alignItems: "center",
+          gap: 16,
+        }}
+      >
+        {/* 窄门 */}
+        <svg width="60" height="80" className="chalk-icon">
+          <rect
+            x="5"
+            y="5"
+            width="50"
+            height="70"
+            fill="none"
+            stroke="white"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          <circle cx="45" cy="40" r="4" fill="white" />
+        </svg>
+
+        {/* 对话气泡 */}
+        <svg width="80" height="60" className="chalk-icon">
+          <path
+            d="M10,10 Q10,5 20,5 L70,5 Q80,5 80,15 L80,40 Q80,50 70,50 L30,50 L15,60 L20,50 L20,50 Q10,50 10,40 Z"
+            fill="rgba(184, 169, 201, 0.3)"
+            stroke="#B8A9C9"
+            strokeWidth="2"
+          />
+          <text
+            x="40"
+            y="35"
+            textAnchor="middle"
+            fill="white"
+            fontSize="20"
+            fontWeight="bold"
+          >
+            ...
+          </text>
+        </svg>
+      </div>
+    </div>
+  );
+};
+
 export const GatewayScene: React.FC<GatewaySceneProps> = ({
   frame,
   backgroundColor,
@@ -321,6 +453,7 @@ export const GatewayScene: React.FC<GatewaySceneProps> = ({
       <TitleLayer frame={currentFrame} accentColor={accentColor} />
       <EntrySection frame={currentFrame} />
       <FunctionalMatrix frame={currentFrame} />
+      <DataFlowLines frame={currentFrame} />
     </AbsoluteFill>
   );
 };
