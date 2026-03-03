@@ -3035,7 +3035,7 @@ const CronScene: React.FC<{
         })()}
       </h3>
 
-      {/* Cron 表达式示例 */}
+      {/* Cron 表达式示例 - macOS 终端风格 */}
       <div
         style={{
           width: "100%",
@@ -3062,59 +3062,169 @@ const CronScene: React.FC<{
             gap: "24px",
           }}
         >
-          {cronExpressions.map((expr, index) => (
-            <div
-              key={index}
-              style={{
-                background: `${expr.color}15`,
-                border: `3px solid ${expr.color}`,
-                borderRadius: "16px",
-                padding: "24px",
-                textAlign: "center",
-                opacity: spring({
-                  frame: frame - 140 - index * 10,
-                  fps: 30,
-                }),
-                transform: `translateY(${interpolate(
-                  frame - 140 - index * 10,
-                  [-20, 0],
-                  [20, 0],
-                  { extrapolateRight: "clamp" },
-                )}px)`,
-              }}
-            >
+          {cronExpressions.map((expr, index) => {
+            // 打字机效果
+            const typeStartFrame = 140 + index * 30;
+            const durationPerChar = 5;
+            const charsToShow = Math.max(
+              0,
+              Math.min(
+                expr.expression.length,
+                Math.floor((frame - typeStartFrame) / durationPerChar),
+              ),
+            );
+
+            // 光标闪烁
+            const cursorOpacity =
+              frame > typeStartFrame + expr.expression.length * durationPerChar
+                ? Math.sin((frame - typeStartFrame) * 0.3) * 0.5 + 0.5
+                : 1;
+
+            return (
               <div
+                key={index}
                 style={{
-                  fontSize: "48px",
-                  marginBottom: "16px",
-                  filter: `drop-shadow(0 2px 8px ${expr.color}60)`,
+                  background: "#1E1E1E",
+                  borderRadius: "12px",
+                  overflow: "hidden",
+                  opacity: spring({
+                    frame: frame - 120 - index * 5,
+                    fps: 30,
+                  }),
+                  transform: `translateY(${interpolate(
+                    frame - 120 - index * 5,
+                    [-20, 0],
+                    [20, 0],
+                    { extrapolateRight: "clamp" },
+                  )}px)`,
+                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
                 }}
               >
-                {expr.icon}
+                {/* 终端窗口标题栏 */}
+                <div
+                  style={{
+                    background: "#2D2D2D",
+                    padding: "12px 16px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    borderBottom: "1px solid #3D3D3D",
+                  }}
+                >
+                  {/* 红绿灯按钮 */}
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "8px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "14px",
+                        height: "14px",
+                        borderRadius: "50%",
+                        background: "#FF5F56",
+                        border: "1px solid #E0443E",
+                      }}
+                    />
+                    <div
+                      style={{
+                        width: "14px",
+                        height: "14px",
+                        borderRadius: "50%",
+                        background: "#FFBD2E",
+                        border: "1px solid #DEA123",
+                      }}
+                    />
+                    <div
+                      style={{
+                        width: "14px",
+                        height: "14px",
+                        borderRadius: "50%",
+                        background: "#27C93F",
+                        border: "1px solid #1AAB29",
+                      }}
+                    />
+                  </div>
+                  {/* 终端标题 */}
+                  <div
+                    style={{
+                      flex: 1,
+                      textAlign: "center",
+                      fontSize: "13px",
+                      color: "#999999",
+                      fontWeight: 500,
+                      fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif",
+                    }}
+                  >
+                    {expr.icon} cron
+                  </div>
+                </div>
+
+                {/* 终端内容区域 */}
+                <div
+                  style={{
+                    padding: "20px 16px",
+                    fontFamily: '"Menlo", "Monaco", "Courier New", monospace',
+                  }}
+                >
+                  {/* 提示符和命令 */}
+                  <div
+                    style={{
+                      fontSize: "18px",
+                      fontWeight: 600,
+                      color: "#FFFFFF",
+                      marginBottom: "12px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
+                    <span style={{ color: "#23E468" }}>➜</span>
+                    <span style={{ color: "#5EA1FF" }}>~</span>
+                    <span>crontab -l</span>
+                  </div>
+
+                  {/* 表达式 */}
+                  <div
+                    style={{
+                      fontSize: "20px",
+                      fontWeight: 500,
+                      color: expr.color,
+                      marginBottom: "16px",
+                      letterSpacing: "0.08em",
+                      lineHeight: 1.6,
+                      minHeight: "32px",
+                    }}
+                  >
+                    {expr.expression.substring(0, charsToShow)}
+                    <span
+                      style={{
+                        opacity: cursorOpacity,
+                        background: expr.color,
+                        color: expr.color,
+                        marginLeft: "2px",
+                        animation: "blink 1s infinite",
+                      }}
+                    >
+                      █
+                    </span>
+                  </div>
+
+                  {/* 描述 */}
+                  <div
+                    style={{
+                      fontSize: "13px",
+                      color: "#999999",
+                      fontStyle: "italic",
+                    }}
+                  >
+                    # {expr.desc}
+                  </div>
+                </div>
               </div>
-              <div
-                style={{
-                  fontSize: "24px",
-                  fontWeight: 700,
-                  fontFamily: "monospace",
-                  color: expr.color,
-                  marginBottom: "12px",
-                  letterSpacing: "0.05em",
-                }}
-              >
-                {expr.expression}
-              </div>
-              <div
-                style={{
-                  fontSize: "16px",
-                  color: textColor,
-                  fontWeight: 500,
-                }}
-              >
-                {expr.desc}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
