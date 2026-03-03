@@ -3410,16 +3410,16 @@ const SummaryScene: React.FC<{
   ];
 
   // 树状布局参数
-  const topNodeY = 150;
-  const bottomNodeY = 600;
+  const topNodeY = 240;
+  const bottomNodeY = 620;
   const centerX = 960;
-  const nodeRadius = 55;
-  const topNodeRadius = 85;
+  const nodeRadius = 50;
+  const topNodeRadius = 75;
 
   // 计算底部节点的X坐标（均匀分布）
   const bottomNodesX = modules.map((_, index) => {
-    const startX = 160;
-    const endX = 1760;
+    const startX = 200;
+    const endX = 1720;
     return startX + (endX - startX) * (index / (modules.length - 1));
   });
 
@@ -3432,10 +3432,85 @@ const SummaryScene: React.FC<{
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "60px 80px",
+        padding: "40px 80px 60px 80px",
         position: "relative",
       }}
     >
+      {/* 标题 */}
+      <h1
+        style={{
+          fontSize: "56px",
+          fontWeight: 800,
+          color: accentColor,
+          margin: "0 0 16px 0",
+          opacity: spring({ frame: frame - 10, fps: 30 }),
+          textAlign: "center",
+          minHeight: "70px",
+          zIndex: 20,
+          textShadow: "0 0 30px rgba(167, 139, 250, 0.5)",
+        }}
+      >
+        OpenClaw 完整架构
+      </h1>
+
+      {/* 副标题 - 打字机效果 */}
+      <h3
+        style={{
+          fontSize: "24px",
+          fontWeight: 600,
+          margin: "0 0 30px 0",
+          opacity: spring({ frame: frame - 20, fps: 30 }),
+          color: textColor,
+          textAlign: "center",
+          minHeight: "35px",
+          zIndex: 20,
+        }}
+      >
+        {(() => {
+          const parts = [
+            { text: "八大能力", color: "#A78BFA", bold: true },
+            { text: "相互协作", color: textColor },
+            { text: "→", color: "#10B981", bold: true },
+            { text: "能干活的系统", color: "#10B981", bold: true },
+          ];
+
+          const typeStartFrame = 30;
+          const durationPerChar = 3;
+
+          const rendered: React.ReactNode[] = [];
+          let currentChar = 0;
+
+          for (const part of parts) {
+            for (let charIndex = 0; charIndex < part.text.length; charIndex++) {
+              const char = part.text[charIndex];
+              rendered.push(
+                <span
+                  key={currentChar}
+                  style={{
+                    color: part.color,
+                    fontWeight: part.bold ? 700 : 400,
+                  }}
+                >
+                  {char}
+                </span>,
+              );
+              currentChar++;
+            }
+          }
+
+          const totalChars = parts.reduce((sum, p) => sum + p.text.length, 0);
+          const charsToShow = Math.max(
+            0,
+            Math.min(
+              totalChars,
+              Math.floor((frame - typeStartFrame) / durationPerChar),
+            ),
+          );
+
+          return rendered.slice(0, charsToShow);
+        })()}
+      </h3>
+
       {/* SVG 飞线连接 */}
       <svg
         style={{
@@ -3611,6 +3686,100 @@ const SummaryScene: React.FC<{
           </div>
         );
       })}
+
+      {/* 底部描述文字 */}
+      <div
+        style={{
+          marginTop: "40px",
+          textAlign: "center",
+          zIndex: 20,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "14px",
+        }}
+      >
+        {/* 第一行：不是只会聊天的机器人 */}
+        <div
+          style={{
+            fontSize: "18px",
+            fontWeight: 600,
+            color: textColor,
+            opacity: spring({ frame: frame - 120, fps: 30 }),
+          }}
+        >
+          不是只会聊天的机器人
+        </div>
+
+        {/* 第二行：能力标签 */}
+        <div
+          style={{
+            display: "flex",
+            gap: "10px",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            opacity: spring({ frame: frame - 130, fps: 30 }),
+          }}
+        >
+          {[
+            { text: "会思考", color: "#A78BFA" },
+            { text: "会记忆", color: "#EC4899" },
+            { text: "会执行", color: "#10B981" },
+            { text: "自主", color: "#F59E0B" },
+            { text: "跨设备", color: "#3B82F6" },
+          ].map((tag, index) => (
+            <div
+              key={index}
+              style={{
+                background: `${tag.color}20`,
+                border: `2px solid ${tag.color}`,
+                borderRadius: "20px",
+                padding: "6px 16px",
+                fontSize: "14px",
+                fontWeight: 600,
+                color: tag.color,
+                opacity: spring({
+                  frame: frame - 140 - index * 5,
+                  fps: 30,
+                }),
+              }}
+            >
+              {tag.text}
+            </div>
+          ))}
+        </div>
+
+        {/* 第三行：数字化助理 */}
+        <div
+          style={{
+            fontSize: "20px",
+            fontWeight: 700,
+            color: textColor,
+            opacity: spring({ frame: frame - 180, fps: 30 }),
+          }}
+        >
+          的数字化助理
+        </div>
+
+        {/* 第四行：号召 */}
+        <div
+          style={{
+            fontSize: "26px",
+            fontWeight: 800,
+            color: accentColor,
+            marginTop: "16px",
+            padding: "14px 36px",
+            background: `${accentColor}15`,
+            border: `3px solid ${accentColor}`,
+            borderRadius: "30px",
+            opacity: spring({ frame: frame - 200, fps: 30 }),
+            boxShadow: `0 0 40px ${accentColor}40`,
+            textShadow: "0 0 20px rgba(167, 139, 250, 0.6)",
+          }}
+        >
+          开始部署属于你的 OpenClaw 🚀
+        </div>
+      </div>
     </div>
   );
 };
