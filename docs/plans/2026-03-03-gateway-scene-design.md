@@ -1,34 +1,45 @@
-# Gateway 场景设计文档
+# Gateway Scene Design (2026-03-03)
 
-**日期**: 2026-03-03
-**项目**: Remotion Video - OpenClaw Architecture
-**场景**: Gateway 核心功能解析
+## Summary
+Add a new Gateway flow scene to `src/OpenClawArchitecture.tsx`, matching the existing visual language. The scene presents a single-screen horizontal flow diagram with sequential highlight animations to explain the execution pipeline in `gateway.md`.
 
-## 概述
+## Goals
+- Visualize the Gateway pipeline without over-design.
+- Keep implementation small, readable, and consistent with current Remotion styles.
+- Auto-adjust scene duration based on number of steps.
 
-在 OpenClawArchitecture 视频中添加 Gateway 场景作为场景 2，展示 Gateway 作为所有请求第一站的核心功能。时长 10 秒（300 帧）。
+## Non-Goals
+- No deep per-step explanations or extra panels.
+- No new external assets or heavy layout frameworks.
 
-## 集成方式
+## Layout & Structure
+- One full-screen scene, centered horizontal flow.
+- Nodes (rounded cards) connected by arrow/line segments.
+- Steps in order:
+  1. User Input
+  2. Gateway
+  3. Intent Parsing
+  4. Module Routing
+  5. Node Execution
+  6. Result Aggregation
+  7. Return to User
 
-- **位置**: OpenClawArchitecture.tsx 场景序列中的场景 2
-- **插入位置**: 在场景 1（整体架构概览）之后
-- **时长**: 300 帧（10 秒），与其他场景对齐
-- **实现方式**: 新增 `GatewayScene` 组件
+## Animation
+- Each step animates in sequence with:
+  - opacity from 0 → 1
+  - slight upward motion
+  - line/arrow glow activated with the step
+- Gateway node uses accent color to stand out.
+- Final subtle pulse across the whole line to signal completion.
 
-## 场景布局
+## Data Flow
+- Uses `frame` and existing color props only.
+- No external data, no state, no hooks beyond Remotion animation helpers.
 
-```
-┌─────────────────────────────────────────────────┐
-│  标题: Gateway: 所有请求的第一站                  │
-├──────────────────┬──────────────────────────────┤
-│  左侧：入口感知区  │  右侧：功能矩阵（四象限）        │
-│  ┌────┐    ┌───┐ │  ┌────┬────┐                  │
-│  │服务器│  │门│ │  │ Q1 │ Q2 │                  │
-│  └────┘    └───┘ │  ├────┼────┤                  │
-│                 │  │ Q3 │ Q4 │                  │
-│  用户请求入口    │  └────┴────┘                  │
-├──────────────────┴──────────────────────────────┤
-│  动态流程线 → 出口门 + 对话气泡                   │
-│  警示语: 无 Gateway，系统无法识别用户指令         │
-└─────────────────────────────────────────────────┘
-```
+## Edge Cases
+- Text wrapping avoided by fixed-width cards.
+- If overall width is tight, reduce gap and font size slightly.
+
+## Verification
+- Preview render: confirm step order, timing cadence, and node emphasis.
+- Visual check for alignment, clipping, and line continuity.
