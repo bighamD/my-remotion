@@ -2928,7 +2928,7 @@ const CronScene: React.FC<{
           width: "100%",
           maxWidth: "1200px",
           marginBottom: "30px",
-          opacity: spring({ frame: frame - 120, fps: 30 }),
+          opacity: spring({ frame: frame - 30, fps: 30 }),
         }}
       >
         <h2
@@ -2949,9 +2949,9 @@ const CronScene: React.FC<{
             background: "#1E1E1E",
             borderRadius: "12px",
             overflow: "hidden",
-            opacity: spring({ frame: frame - 130, fps: 30 }),
+            opacity: spring({ frame: frame - 40, fps: 30 }),
             transform: `translateY(${interpolate(
-              frame - 130,
+              frame - 40,
               [-30, 0],
               [30, 0],
               { extrapolateRight: "clamp" },
@@ -3038,7 +3038,7 @@ const CronScene: React.FC<{
                 display: "flex",
                 alignItems: "center",
                 gap: "10px",
-                opacity: spring({ frame: frame - 150, fps: 30 }),
+                opacity: spring({ frame: frame - 50, fps: 30 }),
               }}
             >
               <span style={{ color: "#23E468" }}>➜</span>
@@ -3049,7 +3049,7 @@ const CronScene: React.FC<{
             {/* 表达式列表 */}
             {cronExpressions.map((expr, index) => {
               // 打字机效果 - 更早开始，更快完成
-              const typeStartFrame = 80 + index * 25;
+              const typeStartFrame = 60 + index * 25;
               const durationPerChar = 2; // 加快打字速度
               const charsToShow = Math.max(
                 0,
