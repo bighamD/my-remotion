@@ -2922,33 +2922,23 @@ const CronScene: React.FC<{
         })()}
       </h3>
 
-      {/* Cron 表达式示例 - macOS 终端风格 */}
+      {/* Cron 定时任务 - Todo List 风格 */}
       <div
         style={{
           width: "100%",
-          maxWidth: "1200px",
+          maxWidth: "1400px",
           marginBottom: "30px",
           opacity: spring({ frame: frame - 30, fps: 30 }),
         }}
       >
-        <h2
-          style={{
-            fontSize: "28px",
-            fontWeight: 700,
-            color: textColor,
-            marginBottom: "20px",
-            textAlign: "center",
-          }}
-        >
-          ⏱️ Cron 表达式示例
-        </h2>
-
-        {/* 单个终端窗口 */}
+        {/* 任务列表卡片 */}
         <div
           style={{
-            background: "#1E1E1E",
-            borderRadius: "12px",
-            overflow: "hidden",
+            background: "rgba(255, 255, 255, 0.03)",
+            backdropFilter: "blur(20px)",
+            borderRadius: "20px",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+            padding: "40px 50px",
             opacity: spring({ frame: frame - 40, fps: 30 }),
             transform: `translateY(${interpolate(
               frame - 40,
@@ -2956,142 +2946,213 @@ const CronScene: React.FC<{
               [30, 0],
               { extrapolateRight: "clamp" },
             )}px)`,
-            boxShadow: "0 12px 48px rgba(0, 0, 0, 0.5)",
+            boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)",
           }}
         >
-          {/* 终端窗口标题栏 */}
+          {/* 列表标题 */}
           <div
             style={{
-              background: "#2D2D2D",
-              padding: "10px 16px",
               display: "flex",
               alignItems: "center",
-              gap: "8px",
-              borderBottom: "1px solid #3D3D3D",
+              justifyContent: "space-between",
+              marginBottom: "30px",
+              paddingBottom: "20px",
+              borderBottom: "2px solid rgba(255, 255, 255, 0.1)",
             }}
           >
-            {/* 红绿灯按钮 */}
             <div
               style={{
-                display: "flex",
-                gap: "8px",
-              }}
-            >
-              <div
-                style={{
-                  width: "12px",
-                  height: "12px",
-                  borderRadius: "50%",
-                  background: "#FF5F56",
-                  border: "1px solid #E0443E",
-                }}
-              />
-              <div
-                style={{
-                  width: "12px",
-                  height: "12px",
-                  borderRadius: "50%",
-                  background: "#FFBD2E",
-                  border: "1px solid #DEA123",
-                }}
-              />
-              <div
-                style={{
-                  width: "12px",
-                  height: "12px",
-                  borderRadius: "50%",
-                  background: "#27C93F",
-                  border: "1px solid #1AAB29",
-                }}
-              />
-            </div>
-            {/* 终端标题 */}
-            <div
-              style={{
-                flex: 1,
-                textAlign: "center",
-                fontSize: "13px",
-                color: "#999999",
-                fontWeight: 500,
-                fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif",
-              }}
-            >
-              ⏰ cron — crontab -l
-            </div>
-          </div>
-
-          {/* 终端内容区域 */}
-          <div
-            style={{
-              padding: "20px 24px",
-              fontFamily: '"Menlo", "Monaco", "Courier New", monospace',
-              background: "rgba(0, 0, 0, 0.3)",
-            }}
-          >
-            {/* 提示符和命令 */}
-            <div
-              style={{
-                fontSize: "22px",
-                fontWeight: 600,
-                color: "#FFFFFF",
-                marginBottom: "16px",
                 display: "flex",
                 alignItems: "center",
-                gap: "10px",
+                gap: "16px",
                 opacity: spring({ frame: frame - 50, fps: 30 }),
               }}
             >
-              <span style={{ color: "#23E468" }}>➜</span>
-              <span style={{ color: "#5EA1FF" }}>~</span>
-              <span>crontab -l</span>
+              <div
+                style={{
+                  width: "48px",
+                  height: "48px",
+                  borderRadius: "12px",
+                  background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "24px",
+                }}
+              >
+                ⏰
+              </div>
+              <div>
+                <div
+                  style={{
+                    fontSize: "24px",
+                    fontWeight: 700,
+                    color: textColor,
+                    marginBottom: "4px",
+                  }}
+                >
+                  定时任务列表
+                </div>
+                <div
+                  style={{
+                    fontSize: "14px",
+                    color: "rgba(255, 255, 255, 0.5)",
+                  }}
+                >
+                  4 个待执行任务
+                </div>
+              </div>
             </div>
+            <div
+              style={{
+                fontSize: "48px",
+                opacity: spring({ frame: frame - 60, fps: 30 }),
+              }}
+            >
+              📋
+            </div>
+          </div>
 
-            {/* 表达式列表 */}
+          {/* 任务项列表 */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "16px",
+            }}
+          >
             {cronExpressions.map((expr, index) => {
-              // 每个表达式依次淡入
-              const fadeInFrame = 50 + index * 10;
+              const fadeInFrame = 70 + index * 15;
 
               return (
                 <div
                   key={index}
                   style={{
-                    marginBottom: "14px",
+                    background: `rgba(${parseInt(expr.color.slice(1, 3), 16)}, ${parseInt(
+                      expr.color.slice(3, 5),
+                      16,
+                    )}, ${parseInt(expr.color.slice(5, 7), 16)}, 0.1)`,
+                    border: `2px solid ${expr.color}30`,
+                    borderRadius: "16px",
+                    padding: "20px 24px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "20px",
                     opacity: spring({
                       frame: fadeInFrame,
                       fps: 30,
                     }),
+                    transform: `translateX(${interpolate(
+                      fadeInFrame,
+                      [-30, 0],
+                      [30, 0],
+                      { extrapolateRight: "clamp" },
+                    )}px)`,
+                    transition: "all 0.3s ease",
                   }}
                 >
-                  {/* 表达式 */}
+                  {/* 复选框 */}
                   <div
                     style={{
-                      fontSize: "22px",
-                      fontWeight: 600,
-                      color: expr.color,
-                      marginBottom: "3px",
-                      letterSpacing: "0.05em",
-                      lineHeight: 1.3,
-                      fontFamily: '"Menlo", "Monaco", "Courier New", monospace',
+                      width: "28px",
+                      height: "28px",
+                      borderRadius: "8px",
+                      border: `3px solid ${expr.color}`,
+                      background: "transparent",
                       display: "flex",
                       alignItems: "center",
+                      justifyContent: "center",
+                      flexShrink: 0,
                     }}
                   >
-                    <span style={{ marginRight: "10px", opacity: 0.4 }}>
-                      {index + 1}.
-                    </span>
-                    {expr.expression}
+                    <div
+                      style={{
+                        width: "14px",
+                        height: "14px",
+                        background: expr.color,
+                        borderRadius: "3px",
+                        opacity: 0,
+                      }}
+                    />
                   </div>
 
-                  {/* 描述 */}
+                  {/* 任务内容 */}
                   <div
                     style={{
-                      fontSize: "12px",
-                      color: "#999999",
-                      fontStyle: "italic",
-                      marginLeft: "32px",
+                      flex: 1,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "20px",
                     }}
                   >
-                    # {expr.desc}
+                    {/* 表达式 */}
+                    <div
+                      style={{
+                        fontFamily: '"Menlo", "Monaco", "Courier New", monospace',
+                        fontSize: "20px",
+                        fontWeight: 600,
+                        color: expr.color,
+                        letterSpacing: "0.05em",
+                        background: `${expr.color}15`,
+                        padding: "8px 16px",
+                        borderRadius: "8px",
+                      }}
+                    >
+                      {expr.expression}
+                    </div>
+
+                    {/* 图标和描述 */}
+                    <div
+                      style={{
+                        flex: 1,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "12px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontSize: "28px",
+                          filter: `drop-shadow(0 2px 8px ${expr.color}60)`,
+                        }}
+                      >
+                        {expr.icon}
+                      </div>
+                      <div>
+                        <div
+                          style={{
+                            fontSize: "18px",
+                            fontWeight: 600,
+                            color: textColor,
+                            marginBottom: "2px",
+                          }}
+                        >
+                          {expr.desc}
+                        </div>
+                        <div
+                          style={{
+                            fontSize: "13px",
+                            color: "rgba(255, 255, 255, 0.5)",
+                          }}
+                        >
+                          等待执行
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 时间标签 */}
+                  <div
+                    style={{
+                      background: `${expr.color}20`,
+                      color: expr.color,
+                      padding: "6px 14px",
+                      borderRadius: "20px",
+                      fontSize: "13px",
+                      fontWeight: 600,
+                    }}
+                  >
+                    Cron
                   </div>
                 </div>
               );
@@ -3100,7 +3161,7 @@ const CronScene: React.FC<{
         </div>
       </div>
 
-      {/* 应用场景 */}
+      {/* 应用场景 - Todo List 风格 */}
       <div
         style={{
           width: "100%",
@@ -3108,106 +3169,194 @@ const CronScene: React.FC<{
           opacity: spring({ frame: frame - 200, fps: 30 }),
         }}
       >
-        <h2
-          style={{
-            fontSize: "32px",
-            fontWeight: 700,
-            color: textColor,
-            marginBottom: "30px",
-            textAlign: "center",
-          }}
-        >
-          🎯 应用场景
-        </h2>
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: "24px",
+            background: "rgba(255, 255, 255, 0.03)",
+            backdropFilter: "blur(20px)",
+            borderRadius: "20px",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+            padding: "35px 45px",
+            opacity: spring({ frame: frame - 210, fps: 30 }),
           }}
         >
-          {useCases.map((useCase, index) => (
+          {/* 场景标题 */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "16px",
+              marginBottom: "25px",
+              paddingBottom: "15px",
+              borderBottom: "2px solid rgba(255, 255, 255, 0.1)",
+            }}
+          >
             <div
-              key={index}
               style={{
-                background: `rgba(255, 255, 255, 0.05)`,
-                backdropFilter: "blur(10px)",
-                border: `2px solid ${useCase.color}40`,
-                borderRadius: "16px",
-                padding: "24px",
-                opacity: spring({
-                  frame: frame - 220 - index * 10,
-                  fps: 30,
-                }),
-                transform: `translateY(${interpolate(
-                  frame - 220 - index * 10,
-                  [-20, 0],
-                  [20, 0],
-                  { extrapolateRight: "clamp" },
-                )}px)`,
+                fontSize: "32px",
               }}
             >
+              🎯
+            </div>
+            <div>
               <div
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "12px",
-                  marginBottom: "16px",
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: "40px",
-                    filter: `drop-shadow(0 2px 8px ${useCase.color}60)`,
-                  }}
-                >
-                  {useCase.icon}
-                </div>
-                <div
-                  style={{
-                    fontSize: "20px",
-                    fontWeight: 700,
-                    color: useCase.color,
-                  }}
-                >
-                  {useCase.title}
-                </div>
-              </div>
-              <div
-                style={{
-                  fontSize: "14px",
+                  fontSize: "22px",
+                  fontWeight: 700,
                   color: textColor,
-                  marginBottom: "16px",
-                  opacity: 0.8,
                 }}
               >
-                {useCase.desc}
+                应用场景
               </div>
               <div
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "8px",
+                  fontSize: "13px",
+                  color: "rgba(255, 255, 255, 0.5)",
                 }}
               >
-                {useCase.examples.map((example, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      fontSize: "13px",
-                      color: "rgba(255,255,255,0.6)",
-                      padding: "6px 12px",
-                      background: `${useCase.color}15`,
-                      borderRadius: "8px",
-                      textAlign: "center",
-                    }}
-                  >
-                    {example}
-                  </div>
-                ))}
+                Cron 的实际使用案例
               </div>
             </div>
-          ))}
+          </div>
+
+          {/* 场景网格 */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)",
+              gap: "20px",
+            }}
+          >
+            {useCases.map((useCase, index) => (
+              <div
+                key={index}
+                style={{
+                  background: `rgba(${parseInt(
+                    useCase.color.slice(1, 3),
+                    16,
+                  )}, ${parseInt(useCase.color.slice(3, 5), 16)}, ${parseInt(
+                    useCase.color.slice(5, 7),
+                    16,
+                  )}, 0.08)`,
+                  border: `2px solid ${useCase.color}25`,
+                  borderRadius: "14px",
+                  padding: "20px",
+                  opacity: spring({
+                    frame: frame - 230 - index * 10,
+                    fps: 30,
+                  }),
+                  transform: `translateY(${interpolate(
+                    frame - 230 - index * 10,
+                    [-15, 0],
+                    [15, 0],
+                    { extrapolateRight: "clamp" },
+                  )}px)`,
+                }}
+              >
+                {/* 场景标题 */}
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px",
+                    marginBottom: "16px",
+                  }}
+                >
+                  {/* 复选框 */}
+                  <div
+                    style={{
+                      width: "24px",
+                      height: "24px",
+                      borderRadius: "6px",
+                      border: `2px solid ${useCase.color}`,
+                      background: "transparent",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "12px",
+                        height: "12px",
+                        background: useCase.color,
+                        borderRadius: "2px",
+                        opacity: 0,
+                      }}
+                    />
+                  </div>
+
+                  {/* 图标和标题 */}
+                  <div
+                    style={{
+                      fontSize: "32px",
+                      filter: `drop-shadow(0 2px 8px ${useCase.color}60)`,
+                    }}
+                  >
+                    {useCase.icon}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "18px",
+                      fontWeight: 700,
+                      color: useCase.color,
+                    }}
+                  >
+                    {useCase.title}
+                  </div>
+                </div>
+
+                {/* 描述 */}
+                <div
+                  style={{
+                    fontSize: "13px",
+                    color: textColor,
+                    marginBottom: "14px",
+                    opacity: 0.7,
+                    marginLeft: "36px",
+                  }}
+                >
+                  {useCase.desc}
+                </div>
+
+                {/* 任务子项列表 */}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "6px",
+                    marginLeft: "36px",
+                  }}
+                >
+                  {useCase.examples.map((example, i) => (
+                    <div
+                      key={i}
+                      style={{
+                        fontSize: "12px",
+                        color: "rgba(255,255,255,0.6)",
+                        padding: "5px 10px",
+                        background: `${useCase.color}12`,
+                        borderRadius: "6px",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: "4px",
+                          height: "4px",
+                          borderRadius: "50%",
+                          background: useCase.color,
+                        }}
+                      />
+                      {example}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
