@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenClaw Gateway 详解</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #1a1a1a;
+      background-image: radial-gradient(circle, #2c2c2c 1px, transparent 1px);
+      background-size: 25px 25px;
+      font-family: 'Noto Sans SC', sans-serif;
+      color: #ffffff;
+    }
+
+    .chalk-border {
+      border: 2px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .grid-line-r {
+      border-right: 2px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .grid-line-b {
+      border-bottom: 2px solid rgba(255, 255, 255, 0.4);
+    }
+
+    /* 模拟手绘箭头 */
+    .hand-arrow {
+      position: relative;
+      width: 60px;
+      height: 12px;
+      background: #22c55e;
+      /* 绿色 */
+      clip-path: polygon(0% 20%, 70% 20%, 70% 0%, 100% 50%, 70% 100%, 70% 80%, 0% 80%);
+    }
+  </style>
+</head>
+
+<body class="p-4 md:p-12 flex items-center justify-center min-h-screen">
+
+  <div class="max-w-5xl w-full">
+    <h1 class="text-4xl md:text-5xl font-bold mb-12 flex items-center gap-4">
+      <span class="text-red-500">Gateway:</span>
+      <span class="text-white opacity-90">所有请求的第一站</span>
+    </h1>
+
+    <div class="chalk-border rounded-sm grid grid-cols-12 overflow-hidden bg-[#121212]/50">
+
+      <div
+        class="col-span-12 md:col-span-6 p-8 flex flex-col items-center justify-center grid-line-r border-b md:border-b-0 border-white/40">
+        <div class="mb-8 text-white/80">
+          <div class="relative">
+            <i data-lucide="door-open" size="120" stroke-width="1"></i>
+            <div class="absolute -left-8 top-1/4">
+              <i data-lucide="server" size="40" stroke-width="1.5"></i>
+            </div>
+          </div>
+        </div>
+        <p class="text-xl tracking-wide">
+          用户请求入口：<span class="font-light">网页/手机/聊天软件</span>
+        </p>
+      </div>
+
+      <div class="col-span-12 md:col-span-6 grid grid-cols-2">
+        <div class="p-6 flex flex-col items-center justify-center grid-line-r grid-line-b">
+          <h3 class="text-red-400 text-xl font-bold mb-4">身份验证</h3>
+          <i data-lucide="contact-2" class="text-white" size="48"></i>
+        </div>
+
+        <div class="p-6 flex flex-col items-center justify-center grid-line-b">
+          <h3 class="text-yellow-400 text-xl font-bold mb-4">连接管理</h3>
+          <i data-lucide="share-2" class="text-white" size="48"></i>
+        </div>
+
+        <div class="p-6 flex flex-col items-center justify-center grid-line-r">
+          <h3 class="text-yellow-400 text-xl font-bold mb-4 flex">
+            <span class="text-yellow-400">多用户</span>
+            <span class="text-red-400">隔离</span>
+          </h3>
+          <div class="hand-arrow mt-2"></div>
+        </div>
+
+        <div class="p-6 flex flex-col items-center justify-center relative">
+          <h3 class="text-green-400 text-xl font-bold mb-4">请求路由</h3>
+          <div class="border-2 border-white/60 p-2 rounded flex items-center gap-2">
+            <i data-lucide="component" size="24"></i>
+            <span class="text-sm">模块</span>
+          </div>
+          <div class="absolute -bottom-8 text-purple-400 animate-bounce">
+            <i data-lucide="arrow-down" size="32"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-16 flex flex-col md:flex-row items-center justify-center gap-8">
+      <p class="text-2xl md:text-3xl font-bold">
+        <span class="text-purple-400">无 Gateway:</span>
+        <span class="text-white/80 ml-2">系统无法识别用户指令</span>
+      </p>
+
+      <div class="flex items-center gap-6 opacity-80">
+        <i data-lucide="door-closed" class="text-white" size="64"></i>
+        <i data-lucide="message-square-more" class="text-white" size="64"></i>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+
+</html>

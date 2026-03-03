@@ -2241,8 +2241,14 @@ const MemoryScene: React.FC<{
 
                     // 计算控制点，使线条弯曲
                     const controlRadius = radius * 1.3;
-                    const cpX = centerX + Math.cos(currentAngle + 45 * (Math.PI / 180) / 2) * controlRadius;
-                    const cpY = centerY + Math.sin(currentAngle + 45 * (Math.PI / 180) / 2) * controlRadius;
+                    const cpX =
+                      centerX +
+                      Math.cos(currentAngle + (45 * (Math.PI / 180)) / 2) *
+                        controlRadius;
+                    const cpY =
+                      centerY +
+                      Math.sin(currentAngle + (45 * (Math.PI / 180)) / 2) *
+                        controlRadius;
 
                     const opacity = spring({
                       frame: frame - 100 - index * 5,
@@ -2262,11 +2268,7 @@ const MemoryScene: React.FC<{
                         />
 
                         {/* 流动动画 */}
-                        <circle
-                          r="4"
-                          fill={step.color}
-                          opacity={opacity}
-                        >
+                        <circle r="4" fill={step.color} opacity={opacity}>
                           <animateMotion
                             dur={`${3 + index * 0.5}s`}
                             repeatCount="indefinite"
@@ -2360,9 +2362,7 @@ const MemoryScene: React.FC<{
                             {step.step}
                           </div>
                           {/* 图标 */}
-                          <div style={{ fontSize: "36px" }}>
-                            {step.icon}
-                          </div>
+                          <div style={{ fontSize: "36px" }}>{step.icon}</div>
                         </div>
 
                         {/* 标题 */}
@@ -2424,14 +2424,14 @@ const MemoryScene: React.FC<{
                   >
                     循环增强
                   </div>
-                      <div
-                        style={{
-                          fontSize: "12px",
-                          color: "rgba(255,255,255,0.6)",
-                        }}
-                      >
+                  <div
+                    style={{
+                      fontSize: "12px",
+                      color: "rgba(255,255,255,0.6)",
+                    }}
+                  >
                     每次交互都会优化记忆
-                      </div>
+                  </div>
                 </div>
               </>
             );
@@ -2880,10 +2880,7 @@ const CronScene: React.FC<{
 
           const typeStartFrame = 20;
           const durationPerChar = 3;
-          const totalChars = parts.reduce(
-            (sum, p) => sum + p.text.length,
-            0,
-          );
+          const totalChars = parts.reduce((sum, p) => sum + p.text.length, 0);
           const charsToShow = Math.max(
             0,
             Math.min(
@@ -2991,7 +2988,8 @@ const CronScene: React.FC<{
                   width: "38px",
                   height: "38px",
                   borderRadius: "10px",
-                  background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                  background:
+                    "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -3106,7 +3104,8 @@ const CronScene: React.FC<{
                     {/* 表达式 */}
                     <div
                       style={{
-                        fontFamily: '"Menlo", "Monaco", "Courier New", monospace',
+                        fontFamily:
+                          '"Menlo", "Monaco", "Courier New", monospace',
                         fontSize: "16px",
                         fontWeight: 600,
                         color: expr.color,
@@ -3249,132 +3248,132 @@ const CronScene: React.FC<{
                 <div
                   key={index}
                   style={{
-                  background: `rgba(${parseInt(
-                    useCase.color.slice(1, 3),
-                    16,
-                  )}, ${parseInt(useCase.color.slice(3, 5), 16)}, ${parseInt(
-                    useCase.color.slice(5, 7),
-                    16,
-                  )}, 0.08)`,
-                  border: `2px solid ${useCase.color}25`,
-                  borderRadius: "12px",
-                  padding: "14px",
-                  opacity: spring({
-                    frame: frame - 120 - index * 5,
-                    fps: 30,
-                  }),
-                  transform: `translateY(${interpolate(
-                    frame - 120 - index * 5,
-                    [-15, 0],
-                    [15, 0],
-                    { extrapolateRight: "clamp" },
-                  )}px)`,
-                }}
-              >
-                {/* 场景标题 */}
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "10px",
-                    marginBottom: "12px",
+                    background: `rgba(${parseInt(
+                      useCase.color.slice(1, 3),
+                      16,
+                    )}, ${parseInt(useCase.color.slice(3, 5), 16)}, ${parseInt(
+                      useCase.color.slice(5, 7),
+                      16,
+                    )}, 0.08)`,
+                    border: `2px solid ${useCase.color}25`,
+                    borderRadius: "12px",
+                    padding: "14px",
+                    opacity: spring({
+                      frame: frame - 120 - index * 5,
+                      fps: 30,
+                    }),
+                    transform: `translateY(${interpolate(
+                      frame - 120 - index * 5,
+                      [-15, 0],
+                      [15, 0],
+                      { extrapolateRight: "clamp" },
+                    )}px)`,
                   }}
                 >
-                  {/* 复选框 */}
+                  {/* 场景标题 */}
                   <div
                     style={{
-                      width: "24px",
-                      height: "24px",
-                      borderRadius: "6px",
-                      border: `2px solid ${useCase.color}`,
-                      background: "transparent",
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: "center",
-                      flexShrink: 0,
+                      gap: "10px",
+                      marginBottom: "12px",
                     }}
                   >
+                    {/* 复选框 */}
                     <div
                       style={{
-                        width: "12px",
-                        height: "12px",
-                        background: useCase.color,
-                        borderRadius: "2px",
-                        opacity: 0, // 保持未勾选状态
-                      }}
-                    />
-                  </div>
-
-                  {/* 图标和标题 */}
-                  <div
-                    style={{
-                      fontSize: "24px",
-                      filter: `drop-shadow(0 2px 8px ${useCase.color}60)`,
-                    }}
-                  >
-                    {useCase.icon}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "15px",
-                      fontWeight: 700,
-                      color: useCase.color,
-                    }}
-                  >
-                    {useCase.title}
-                  </div>
-                </div>
-
-                {/* 描述 */}
-                <div
-                  style={{
-                    fontSize: "11px",
-                    color: textColor,
-                    marginBottom: "10px",
-                    opacity: 0.7,
-                    marginLeft: "30px",
-                  }}
-                >
-                  {useCase.desc}
-                </div>
-
-                {/* 任务子项列表 */}
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "4px",
-                    marginLeft: "30px",
-                  }}
-                >
-                  {useCase.examples.map((example, i) => (
-                    <div
-                      key={i}
-                      style={{
-                        fontSize: "10px",
-                        color: "rgba(255,255,255,0.6)",
-                        padding: "3px 8px",
-                        background: `${useCase.color}12`,
-                        borderRadius: "4px",
+                        width: "24px",
+                        height: "24px",
+                        borderRadius: "6px",
+                        border: `2px solid ${useCase.color}`,
+                        background: "transparent",
                         display: "flex",
                         alignItems: "center",
-                        gap: "8px",
+                        justifyContent: "center",
+                        flexShrink: 0,
                       }}
                     >
                       <div
                         style={{
-                          width: "4px",
-                          height: "4px",
-                          borderRadius: "50%",
+                          width: "12px",
+                          height: "12px",
                           background: useCase.color,
+                          borderRadius: "2px",
+                          opacity: 0, // 保持未勾选状态
                         }}
                       />
-                      {example}
                     </div>
-                  ))}
+
+                    {/* 图标和标题 */}
+                    <div
+                      style={{
+                        fontSize: "24px",
+                        filter: `drop-shadow(0 2px 8px ${useCase.color}60)`,
+                      }}
+                    >
+                      {useCase.icon}
+                    </div>
+                    <div
+                      style={{
+                        fontSize: "15px",
+                        fontWeight: 700,
+                        color: useCase.color,
+                      }}
+                    >
+                      {useCase.title}
+                    </div>
+                  </div>
+
+                  {/* 描述 */}
+                  <div
+                    style={{
+                      fontSize: "11px",
+                      color: textColor,
+                      marginBottom: "10px",
+                      opacity: 0.7,
+                      marginLeft: "30px",
+                    }}
+                  >
+                    {useCase.desc}
+                  </div>
+
+                  {/* 任务子项列表 */}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "4px",
+                      marginLeft: "30px",
+                    }}
+                  >
+                    {useCase.examples.map((example, i) => (
+                      <div
+                        key={i}
+                        style={{
+                          fontSize: "10px",
+                          color: "rgba(255,255,255,0.6)",
+                          padding: "3px 8px",
+                          background: `${useCase.color}12`,
+                          borderRadius: "4px",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px",
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: "4px",
+                            height: "4px",
+                            borderRadius: "50%",
+                            background: useCase.color,
+                          }}
+                        />
+                        {example}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            );
+              );
             })}
           </div>
         </div>
@@ -3392,12 +3391,6 @@ const SummaryScene: React.FC<{
   accentColor: string;
   textColor: string;
 }> = ({ frame, accentColor, textColor }) => {
-  const titleOpacity = spring({
-    frame,
-    fps: 30,
-    config: { damping: 15, stiffness: 100 },
-  });
-
   const modules = [
     { name: "Gateway", icon: "🚪", desc: "网关核心", color: "#FF4444" },
     { name: "Agent", icon: "🤖", desc: "智能代理", color: "#3B82F6" },
@@ -3409,20 +3402,6 @@ const SummaryScene: React.FC<{
     { name: "Cron", icon: "⏰", desc: "定时任务", color: "#F97316" },
   ];
 
-  // 树状布局参数
-  const topNodeY = 200;
-  const bottomNodeY = 520;
-  const centerX = 960;
-  const nodeRadius = 48;
-  const topNodeRadius = 70;
-
-  // 计算底部节点的X坐标（均匀分布）
-  const bottomNodesX = modules.map((_, index) => {
-    const startX = 200;
-    const endX = 1720;
-    return startX + (endX - startX) * (index / (modules.length - 1));
-  });
-
   return (
     <div
       style={{
@@ -3431,350 +3410,444 @@ const SummaryScene: React.FC<{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
-        padding: "40px 80px 60px 80px",
+        justifyContent: "space-between",
+        padding: "60px 0px 80px 0px",
         position: "relative",
       }}
     >
-      {/* 标题 */}
-      <h1
+      {/* 顶部区域：标题 */}
+      <div
         style={{
-          fontSize: "56px",
-          fontWeight: 800,
-          color: accentColor,
-          margin: "0 0 16px 0",
-          opacity: spring({ frame: frame - 10, fps: 30 }),
-          textAlign: "center",
-          minHeight: "70px",
-          zIndex: 20,
-          textShadow: "0 0 30px rgba(167, 139, 250, 0.5)",
-        }}
-      >
-        OpenClaw 完整架构
-      </h1>
-
-      {/* 副标题 - 打字机效果 */}
-      <h3
-        style={{
-          fontSize: "24px",
-          fontWeight: 600,
-          margin: "0 0 30px 0",
-          opacity: spring({ frame: frame - 20, fps: 30 }),
-          color: textColor,
-          textAlign: "center",
-          minHeight: "35px",
-          zIndex: 20,
-        }}
-      >
-        {(() => {
-          const parts = [
-            { text: "八大能力", color: "#A78BFA", bold: true },
-            { text: "相互协作", color: textColor },
-            { text: "→", color: "#10B981", bold: true },
-            { text: "能干活的系统", color: "#10B981", bold: true },
-          ];
-
-          const typeStartFrame = 30;
-          const durationPerChar = 3;
-
-          const rendered: React.ReactNode[] = [];
-          let currentChar = 0;
-
-          for (const part of parts) {
-            for (let charIndex = 0; charIndex < part.text.length; charIndex++) {
-              const char = part.text[charIndex];
-              rendered.push(
-                <span
-                  key={currentChar}
-                  style={{
-                    color: part.color,
-                    fontWeight: part.bold ? 700 : 400,
-                  }}
-                >
-                  {char}
-                </span>,
-              );
-              currentChar++;
-            }
-          }
-
-          const totalChars = parts.reduce((sum, p) => sum + p.text.length, 0);
-          const charsToShow = Math.max(
-            0,
-            Math.min(
-              totalChars,
-              Math.floor((frame - typeStartFrame) / durationPerChar),
-            ),
-          );
-
-          return rendered.slice(0, charsToShow);
-        })()}
-      </h3>
-
-      {/* SVG 飞线连接 */}
-      <svg
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
           width: "100%",
-          height: "100%",
-          pointerEvents: "none",
-          zIndex: 0,
+          textAlign: "center",
+          flexShrink: 0,
+          zIndex: 20,
         }}
       >
-        <defs>
-          {/* 定义渐变色 */}
-          {modules.map((module, index) => (
-            <linearGradient
-              key={index}
-              id={`lineGradient${index}`}
-              x1="0%"
-              y1="0%"
-              x2="100%"
-              y2="100%"
-            >
-              <stop offset="0%" stopColor="#A78BFA" stopOpacity="0.8" />
-              <stop offset="100%" stopColor={module.color} stopOpacity="0.8" />
-            </linearGradient>
-          ))}
-        </defs>
+        <h1
+          style={{
+            fontSize: "56px",
+            fontWeight: 800,
+            color: accentColor,
+            margin: "0 0 16px 0",
+            opacity: spring({ frame: frame - 10, fps: 30 }),
+            textAlign: "center",
+            minHeight: "70px",
+            textShadow: "0 0 30px rgba(167, 139, 250, 0.5)",
+          }}
+        >
+          OpenClaw 完整架构
+        </h1>
 
-        {/* 连接线 */}
-        {modules.map((module, index) => {
-          const startX = centerX;
-          const startY = topNodeY + topNodeRadius;
-          const endX = bottomNodesX[index];
-          const endY = bottomNodeY - nodeRadius;
+        {/* 副标题 - 打字机效果 */}
+        <h3
+          style={{
+            fontSize: "24px",
+            fontWeight: 600,
+            margin: "0",
+            opacity: spring({ frame: frame - 20, fps: 30 }),
+            color: textColor,
+            textAlign: "center",
+            minHeight: "35px",
+          }}
+        >
+          {(() => {
+            const parts = [
+              { text: "八大能力", color: "#A78BFA", bold: true },
+              { text: "相互协作", color: textColor },
+              { text: "→", color: "#10B981", bold: true },
+              { text: "能干活的系统", color: "#10B981", bold: true },
+            ];
 
-          // 贝塞尔曲线控制点
-          const controlY = (startY + endY) / 2;
+            const typeStartFrame = 30;
+            const durationPerChar = 3;
 
-          const lineOpacity = spring({
-            frame: frame - 30 - index * 5,
-            fps: 30,
+            const rendered: React.ReactNode[] = [];
+            let currentChar = 0;
+
+            for (const part of parts) {
+              for (
+                let charIndex = 0;
+                charIndex < part.text.length;
+                charIndex++
+              ) {
+                const char = part.text[charIndex];
+                rendered.push(
+                  <span
+                    key={currentChar}
+                    style={{
+                      color: part.color,
+                      fontWeight: part.bold ? 700 : 400,
+                    }}
+                  >
+                    {char}
+                  </span>,
+                );
+                currentChar++;
+              }
+            }
+
+            const totalChars = parts.reduce((sum, p) => sum + p.text.length, 0);
+            const charsToShow = Math.max(
+              0,
+              Math.min(
+                totalChars,
+                Math.floor((frame - typeStartFrame) / durationPerChar),
+              ),
+            );
+
+            return rendered.slice(0, charsToShow);
+          })()}
+        </h3>
+      </div>
+
+      {/* 中间区域：树状图 */}
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "space-between",
+          minHeight: "520px",
+        }}
+      >
+        {/* 树状布局参数 */}
+        {(() => {
+          const centerX = 960;
+          const topNodeY = 120; // 相对于中间容器顶部，往下移
+          const bottomNodeY = 420; // 相对于中间容器顶部，往下移
+          const nodeRadius = 70; // 增大节点尺寸
+          const topNodeRadius = 100; // 增大根节点尺寸
+
+          // 计算底部节点的X坐标（均匀分布）
+          const bottomNodesX = modules.map((_, index) => {
+            const startX = 120;
+            const endX = 1800;
+            return startX + (endX - startX) * (index / (modules.length - 1));
           });
 
           return (
-            <g key={index}>
-              {/* 静态连接线 */}
-              <path
-                d={`M ${startX} ${startY} Q ${startX} ${controlY} ${endX} ${endY}`}
-                stroke={`url(#lineGradient${index})`}
-                strokeWidth="2"
-                fill="none"
-                opacity={lineOpacity * 0.3}
-              />
+            <>
+              {/* SVG 飞线连接 */}
+              <svg
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  pointerEvents: "none",
+                  zIndex: 0,
+                }}
+              >
+                <defs>
+                  {/* 定义渐变色 */}
+                  {modules.map((module, index) => (
+                    <linearGradient
+                      key={index}
+                      id={`lineGradient${index}`}
+                      x1="0%"
+                      y1="0%"
+                      x2="100%"
+                      y2="100%"
+                    >
+                      <stop offset="0%" stopColor="#A78BFA" stopOpacity="0.8" />
+                      <stop
+                        offset="100%"
+                        stopColor={module.color}
+                        stopOpacity="0.8"
+                      />
+                    </linearGradient>
+                  ))}
+                </defs>
 
-              {/* 飞线动画 */}
-              <circle r="4" fill={module.color}>
-                <animateMotion
-                  dur={`${2 + index * 0.2}s`}
-                  repeatCount="indefinite"
-                  path={`M ${startX} ${startY} Q ${startX} ${controlY} ${endX} ${endY}`}
-                />
-                <animate
-                  attributeName="opacity"
-                  values="0;1;1;0"
-                  dur={`${2 + index * 0.2}s`}
-                  repeatCount="indefinite"
-                />
-              </circle>
-            </g>
+                {/* 连接线 */}
+                {modules.map((module, index) => {
+                  const startX = centerX;
+                  const startY = topNodeY + topNodeRadius;
+                  const endX = bottomNodesX[index];
+                  const endY = bottomNodeY - nodeRadius;
+
+                  // 贝塞尔曲线控制点
+                  const controlY = (startY + endY) / 2;
+
+                  const lineOpacity = spring({
+                    frame: frame - 30 - index * 5,
+                    fps: 30,
+                  });
+
+                  return (
+                    <g key={index}>
+                      {/* 静态连接线 */}
+                      <path
+                        d={`M ${startX} ${startY} Q ${startX} ${controlY} ${endX} ${endY}`}
+                        stroke={`url(#lineGradient${index})`}
+                        strokeWidth="2"
+                        fill="none"
+                        opacity={lineOpacity * 0.3}
+                      />
+
+                      {/* 飞线动画 */}
+                      <circle r="4" fill={module.color}>
+                        <animateMotion
+                          dur={`${2 + index * 0.2}s`}
+                          repeatCount="indefinite"
+                          path={`M ${startX} ${startY} Q ${startX} ${controlY} ${endX} ${endY}`}
+                        />
+                        <animate
+                          attributeName="opacity"
+                          values="0;1;1;0"
+                          dur={`${2 + index * 0.2}s`}
+                          repeatCount="indefinite"
+                        />
+                      </circle>
+                    </g>
+                  );
+                })}
+              </svg>
+
+              {/* 顶部根节点 - OpenClaw 智能系统 */}
+              <div
+                style={{
+                  position: "absolute",
+                  left: centerX - topNodeRadius,
+                  top: topNodeY - topNodeRadius,
+                  width: topNodeRadius * 2,
+                  height: topNodeRadius * 2,
+                  borderRadius: "50%",
+                  background: `linear-gradient(135deg, #667eea 0%, #764ba2 100%)`,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: `0 0 60px rgba(102, 126, 234, 0.6)`,
+                  opacity: spring({ frame: frame - 20, fps: 30 }),
+                  transform: `scale(${spring({ frame: frame - 20, fps: 30, config: { damping: 20, stiffness: 120 } })})`,
+                  zIndex: 10,
+                  border: "4px solid rgba(255, 255, 255, 0.2)",
+                }}
+              >
+                <div style={{ fontSize: "52px", marginBottom: "8px" }}>🤖</div>
+                <div
+                  style={{
+                    fontSize: "22px",
+                    fontWeight: 700,
+                    color: "#FFFFFF",
+                    textAlign: "center",
+                    lineHeight: 1.2,
+                  }}
+                >
+                  OpenClaw
+                </div>
+                <div
+                  style={{
+                    fontSize: "16px",
+                    color: "rgba(255,255,255,0.8)",
+                    marginTop: "4px",
+                  }}
+                >
+                  智能系统
+                </div>
+              </div>
+
+              {/* 底部子节点 */}
+              {modules.map((module, index) => {
+                const fadeInFrame = 40 + index * 8;
+
+                return (
+                  <div
+                    key={index}
+                    style={{
+                      position: "absolute",
+                      left: bottomNodesX[index] - nodeRadius,
+                      top: bottomNodeY - nodeRadius,
+                      width: nodeRadius * 2,
+                      height: nodeRadius * 2,
+                      borderRadius: "50%",
+                      background: `linear-gradient(135deg, ${module.color}22 0%, ${module.color}11 100%)`,
+                      border: `3px solid ${module.color}`,
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      boxShadow: `0 0 40px ${module.color}40`,
+                      opacity: spring({
+                        frame: fadeInFrame,
+                        fps: 30,
+                      }),
+                      transform: `scale(${spring({
+                        frame: fadeInFrame,
+                        fps: 30,
+                        config: { damping: 20, stiffness: 120 },
+                      })})`,
+                      zIndex: 10,
+                    }}
+                  >
+                    <div style={{ fontSize: "38px", marginBottom: "8px" }}>
+                      {module.icon}
+                    </div>
+                    <div
+                      style={{
+                        fontSize: "18px",
+                        fontWeight: 700,
+                        color: module.color,
+                        marginBottom: "3px",
+                        textAlign: "center",
+                      }}
+                    >
+                      {module.name}
+                    </div>
+                    <div
+                      style={{
+                        fontSize: "13px",
+                        color: "rgba(255,255,255,0.7)",
+                        textAlign: "center",
+                      }}
+                    >
+                      {module.desc}
+                    </div>
+                  </div>
+                );
+              })}
+            </>
           );
-        })}
-      </svg>
-
-      {/* 顶部根节点 - OpenClaw 智能系统 */}
-      <div
-        style={{
-          position: "absolute",
-          left: centerX - topNodeRadius,
-          top: topNodeY - topNodeRadius,
-          width: topNodeRadius * 2,
-          height: topNodeRadius * 2,
-          borderRadius: "50%",
-          background: `linear-gradient(135deg, #667eea 0%, #764ba2 100%)`,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          boxShadow: `0 0 60px rgba(102, 126, 234, 0.6)`,
-          opacity: spring({ frame: frame - 20, fps: 30 }),
-          transform: `scale(${spring({ frame: frame - 20, fps: 30, config: { damping: 20, stiffness: 120 } })})`,
-          zIndex: 10,
-          border: "4px solid rgba(255, 255, 255, 0.2)",
-        }}
-      >
-        <div style={{ fontSize: "48px", marginBottom: "8px" }}>🤖</div>
-        <div
-          style={{
-            fontSize: "20px",
-            fontWeight: 700,
-            color: "#FFFFFF",
-            textAlign: "center",
-            lineHeight: 1.2,
-          }}
-        >
-          OpenClaw
-        </div>
-        <div
-          style={{
-            fontSize: "14px",
-            color: "rgba(255,255,255,0.8)",
-            marginTop: "4px",
-          }}
-        >
-          智能系统
-        </div>
+        })()}
       </div>
 
-      {/* 底部子节点 */}
-      {modules.map((module, index) => {
-        const fadeInFrame = 40 + index * 8;
-
-        return (
-          <div
-            key={index}
-            style={{
-              position: "absolute",
-              left: bottomNodesX[index] - nodeRadius,
-              top: bottomNodeY - nodeRadius,
-              width: nodeRadius * 2,
-              height: nodeRadius * 2,
-              borderRadius: "50%",
-              background: `linear-gradient(135deg, ${module.color}22 0%, ${module.color}11 100%)`,
-              border: `3px solid ${module.color}`,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              boxShadow: `0 0 40px ${module.color}40`,
-              opacity: spring({
-                frame: fadeInFrame,
-                fps: 30,
-              }),
-              transform: `scale(${spring({
-                frame: fadeInFrame,
-                fps: 30,
-                config: { damping: 20, stiffness: 120 },
-              })})`,
-              zIndex: 10,
-            }}
-          >
-            <div style={{ fontSize: "32px", marginBottom: "6px" }}>{module.icon}</div>
-            <div
-              style={{
-                fontSize: "16px",
-                fontWeight: 700,
-                color: module.color,
-                marginBottom: "2px",
-                textAlign: "center",
-              }}
-            >
-              {module.name}
-            </div>
-            <div
-              style={{
-                fontSize: "11px",
-                color: "rgba(255,255,255,0.6)",
-                textAlign: "center",
-              }}
-            >
-              {module.desc}
-            </div>
-          </div>
-        );
-      })}
-
-      {/* 底部描述文字 */}
+      {/* 底部区域：描述文字 */}
       <div
         style={{
-          marginTop: "25px",
+          width: "100%",
           textAlign: "center",
+          flexShrink: 0,
           zIndex: 20,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: "12px",
+          gap: "20px",
         }}
       >
-        {/* 第一行：不是只会聊天的机器人 */}
+        {/* 主描述卡片 */}
         <div
           style={{
-            fontSize: "18px",
-            fontWeight: 600,
-            color: textColor,
+            padding: "28px 48px",
+            background: "rgba(255, 255, 255, 0.03)",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+            borderRadius: "24px",
+            backdropFilter: "blur(10px)",
             opacity: spring({ frame: frame - 120, fps: 30 }),
+            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
           }}
         >
-          不是只会聊天的机器人
-        </div>
+          {/* 主标题 */}
+          <div
+            style={{
+              fontSize: "24px",
+              fontWeight: 700,
+              color: textColor,
+              marginBottom: "16px",
+              lineHeight: 1.6,
+            }}
+          >
+            不是只会聊天的机器人
+          </div>
 
-        {/* 第二行：能力标签 */}
-        <div
-          style={{
-            display: "flex",
-            gap: "10px",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            opacity: spring({ frame: frame - 130, fps: 30 }),
-          }}
-        >
-          {[
-            { text: "会思考", color: "#A78BFA" },
-            { text: "会记忆", color: "#EC4899" },
-            { text: "会执行", color: "#10B981" },
-            { text: "自主", color: "#F59E0B" },
-            { text: "跨设备", color: "#3B82F6" },
-          ].map((tag, index) => (
-            <div
-              key={index}
+          {/* 能力展示 - 连贯的句子 */}
+          <div
+            style={{
+              fontSize: "20px",
+              color: "rgba(255, 255, 255, 0.8)",
+              lineHeight: 1.8,
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "8px",
+            }}
+          >
+            <span style={{ color: "rgba(255, 255, 255, 0.6)" }}>而是</span>
+
+            {[
+              { text: "会思考", color: "#A78BFA", icon: "🧠" },
+              { text: "会记忆", color: "#EC4899", icon: "💭" },
+              { text: "会执行", color: "#10B981", icon: "⚡" },
+              { text: "自主", color: "#F59E0B", icon: "🎯" },
+            ].map((ability, index) => (
+              <span key={index} style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                <span
+                  style={{
+                    opacity: spring({
+                      frame: frame - 130 - index * 10,
+                      fps: 30,
+                    }),
+                  }}
+                >
+                  {ability.icon}
+                </span>
+                <span
+                  style={{
+                    color: ability.color,
+                    fontWeight: 600,
+                    opacity: spring({
+                      frame: frame - 135 - index * 10,
+                      fps: 30,
+                    }),
+                  }}
+                >
+                  {ability.text}
+                </span>
+                {index < 3 && (
+                  <span
+                    style={{
+                      color: "rgba(255, 255, 255, 0.4)",
+                      opacity: spring({
+                        frame: frame - 140 - index * 10,
+                        fps: 30,
+                      }),
+                    }}
+                  >
+                    、
+                  </span>
+                )}
+              </span>
+            ))}
+
+            <span style={{ color: "rgba(255, 255, 255, 0.6)" }}>的</span>
+
+            <span
               style={{
-                background: `${tag.color}20`,
-                border: `2px solid ${tag.color}`,
-                borderRadius: "20px",
-                padding: "6px 16px",
-                fontSize: "14px",
-                fontWeight: 600,
-                color: tag.color,
+                color: accentColor,
+                fontWeight: 700,
+                fontSize: "22px",
                 opacity: spring({
-                  frame: frame - 140 - index * 5,
+                  frame: frame - 180,
                   fps: 30,
                 }),
               }}
             >
-              {tag.text}
-            </div>
-          ))}
+              数字化助理
+            </span>
+          </div>
         </div>
 
-        {/* 第三行：数字化助理 */}
-        <div
-          style={{
-            fontSize: "20px",
-            fontWeight: 700,
-            color: textColor,
-            opacity: spring({ frame: frame - 180, fps: 30 }),
-          }}
-        >
-          的数字化助理
-        </div>
-
-        {/* 第四行：号召 */}
+        {/* 号召按钮 */}
         <div
           style={{
             fontSize: "26px",
             fontWeight: 800,
             color: accentColor,
-            marginTop: "16px",
-            padding: "14px 36px",
+            padding: "16px 40px",
             background: `${accentColor}15`,
             border: `3px solid ${accentColor}`,
             borderRadius: "30px",
             opacity: spring({ frame: frame - 200, fps: 30 }),
             boxShadow: `0 0 40px ${accentColor}40`,
             textShadow: "0 0 20px rgba(167, 139, 250, 0.6)",
+            cursor: "pointer",
+            transition: "all 0.3s ease",
           }}
         >
           开始部署属于你的 OpenClaw 🚀

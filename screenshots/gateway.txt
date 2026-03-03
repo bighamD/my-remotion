@@ -1,0 +1,17 @@
+User
+  ↓
+Channel（输入来源）
+  ↓
+Gateway（路由）
+  ↓
+Agent（理解 + 决策）
+  ↓
+Skill（结构化能力）
+  ↓
+Node（真实执行）
+  ↓
+Gateway
+  ↓
+Channel
+  ↓
+User
