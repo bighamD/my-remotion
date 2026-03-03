@@ -2892,6 +2892,12 @@ const CronScene: React.FC<{
             ),
           );
 
+          // 闪烁光标
+          const cursorOpacity =
+            frame < typeStartFrame + totalChars * durationPerChar
+              ? 1
+              : Math.sin((frame - typeStartFrame) * 0.3) * 0.5 + 0.5;
+
           let currentChar = 0;
           const rendered: React.ReactNode[] = [];
 
@@ -2918,7 +2924,22 @@ const CronScene: React.FC<{
             currentChar += part.text.length;
           }
 
-          return rendered;
+          return (
+            <>
+              {rendered}
+              <span
+                style={{
+                  opacity: cursorOpacity,
+                  color: "#A78BFA",
+                  marginLeft: "2px",
+                  fontSize: "28px",
+                  fontWeight: 600,
+                }}
+              >
+                █
+              </span>
+            </>
+          );
         })()}
       </h3>
 
