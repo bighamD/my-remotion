@@ -3410,11 +3410,11 @@ const SummaryScene: React.FC<{
   ];
 
   // 树状布局参数
-  const topNodeY = 240;
-  const bottomNodeY = 620;
+  const topNodeY = 200;
+  const bottomNodeY = 520;
   const centerX = 960;
-  const nodeRadius = 50;
-  const topNodeRadius = 75;
+  const nodeRadius = 48;
+  const topNodeRadius = 70;
 
   // 计算底部节点的X坐标（均匀分布）
   const bottomNodesX = modules.map((_, index) => {
@@ -3690,13 +3690,13 @@ const SummaryScene: React.FC<{
       {/* 底部描述文字 */}
       <div
         style={{
-          marginTop: "40px",
+          marginTop: "25px",
           textAlign: "center",
           zIndex: 20,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: "14px",
+          gap: "12px",
         }}
       >
         {/* 第一行：不是只会聊天的机器人 */}
