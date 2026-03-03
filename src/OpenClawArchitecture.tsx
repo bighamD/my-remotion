@@ -2927,7 +2927,7 @@ const CronScene: React.FC<{
         style={{
           width: "100%",
           maxWidth: "1400px",
-          marginBottom: "30px",
+          marginBottom: "20px",
           opacity: spring({ frame: frame - 30, fps: 30 }),
         }}
       >
@@ -2936,9 +2936,9 @@ const CronScene: React.FC<{
           style={{
             background: "rgba(255, 255, 255, 0.03)",
             backdropFilter: "blur(20px)",
-            borderRadius: "20px",
+            borderRadius: "16px",
             border: "1px solid rgba(255, 255, 255, 0.1)",
-            padding: "40px 50px",
+            padding: "25px 30px",
             opacity: spring({ frame: frame - 40, fps: 30 }),
             transform: `translateY(${interpolate(
               frame - 40,
@@ -2955,8 +2955,8 @@ const CronScene: React.FC<{
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-              marginBottom: "30px",
-              paddingBottom: "20px",
+              marginBottom: "18px",
+              paddingBottom: "12px",
               borderBottom: "2px solid rgba(255, 255, 255, 0.1)",
             }}
           >
@@ -2964,20 +2964,20 @@ const CronScene: React.FC<{
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "16px",
+                gap: "12px",
                 opacity: spring({ frame: frame - 50, fps: 30 }),
               }}
             >
               <div
                 style={{
-                  width: "48px",
-                  height: "48px",
-                  borderRadius: "12px",
+                  width: "38px",
+                  height: "38px",
+                  borderRadius: "10px",
                   background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "24px",
+                  fontSize: "20px",
                 }}
               >
                 ⏰
@@ -2985,17 +2985,17 @@ const CronScene: React.FC<{
               <div>
                 <div
                   style={{
-                    fontSize: "24px",
+                    fontSize: "20px",
                     fontWeight: 700,
                     color: textColor,
-                    marginBottom: "4px",
+                    marginBottom: "2px",
                   }}
                 >
                   定时任务列表
                 </div>
                 <div
                   style={{
-                    fontSize: "14px",
+                    fontSize: "12px",
                     color: "rgba(255, 255, 255, 0.5)",
                   }}
                 >
@@ -3018,11 +3018,11 @@ const CronScene: React.FC<{
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: "16px",
+              gap: "10px",
             }}
           >
             {cronExpressions.map((expr, index) => {
-              const fadeInFrame = 70 + index * 15;
+              const fadeInFrame = 60 + index * 10;
 
               return (
                 <div
@@ -3033,11 +3033,11 @@ const CronScene: React.FC<{
                       16,
                     )}, ${parseInt(expr.color.slice(5, 7), 16)}, 0.1)`,
                     border: `2px solid ${expr.color}30`,
-                    borderRadius: "16px",
-                    padding: "20px 24px",
+                    borderRadius: "12px",
+                    padding: "12px 16px",
                     display: "flex",
                     alignItems: "center",
-                    gap: "20px",
+                    gap: "14px",
                     opacity: spring({
                       frame: fadeInFrame,
                       fps: 30,
@@ -3054,10 +3054,10 @@ const CronScene: React.FC<{
                   {/* 复选框 */}
                   <div
                     style={{
-                      width: "28px",
-                      height: "28px",
-                      borderRadius: "8px",
-                      border: `3px solid ${expr.color}`,
+                      width: "22px",
+                      height: "22px",
+                      borderRadius: "6px",
+                      border: `2px solid ${expr.color}`,
                       background: "transparent",
                       display: "flex",
                       alignItems: "center",
@@ -3067,10 +3067,10 @@ const CronScene: React.FC<{
                   >
                     <div
                       style={{
-                        width: "14px",
-                        height: "14px",
+                        width: "11px",
+                        height: "11px",
                         background: expr.color,
-                        borderRadius: "3px",
+                        borderRadius: "2px",
                         opacity: 0,
                       }}
                     />
@@ -3082,20 +3082,20 @@ const CronScene: React.FC<{
                       flex: 1,
                       display: "flex",
                       alignItems: "center",
-                      gap: "20px",
+                      gap: "14px",
                     }}
                   >
                     {/* 表达式 */}
                     <div
                       style={{
                         fontFamily: '"Menlo", "Monaco", "Courier New", monospace',
-                        fontSize: "20px",
+                        fontSize: "16px",
                         fontWeight: 600,
                         color: expr.color,
                         letterSpacing: "0.05em",
                         background: `${expr.color}15`,
-                        padding: "8px 16px",
-                        borderRadius: "8px",
+                        padding: "6px 12px",
+                        borderRadius: "6px",
                       }}
                     >
                       {expr.expression}
@@ -3107,12 +3107,12 @@ const CronScene: React.FC<{
                         flex: 1,
                         display: "flex",
                         alignItems: "center",
-                        gap: "12px",
+                        gap: "10px",
                       }}
                     >
                       <div
                         style={{
-                          fontSize: "28px",
+                          fontSize: "22px",
                           filter: `drop-shadow(0 2px 8px ${expr.color}60)`,
                         }}
                       >
@@ -3121,17 +3121,17 @@ const CronScene: React.FC<{
                       <div>
                         <div
                           style={{
-                            fontSize: "18px",
+                            fontSize: "15px",
                             fontWeight: 600,
                             color: textColor,
-                            marginBottom: "2px",
+                            marginBottom: "1px",
                           }}
                         >
                           {expr.desc}
                         </div>
                         <div
                           style={{
-                            fontSize: "13px",
+                            fontSize: "11px",
                             color: "rgba(255, 255, 255, 0.5)",
                           }}
                         >
@@ -3146,9 +3146,9 @@ const CronScene: React.FC<{
                     style={{
                       background: `${expr.color}20`,
                       color: expr.color,
-                      padding: "6px 14px",
-                      borderRadius: "20px",
-                      fontSize: "13px",
+                      padding: "4px 10px",
+                      borderRadius: "16px",
+                      fontSize: "11px",
                       fontWeight: 600,
                     }}
                   >
@@ -3166,17 +3166,17 @@ const CronScene: React.FC<{
         style={{
           width: "100%",
           maxWidth: "1400px",
-          opacity: spring({ frame: frame - 200, fps: 30 }),
+          opacity: spring({ frame: frame - 100, fps: 30 }),
         }}
       >
         <div
           style={{
             background: "rgba(255, 255, 255, 0.03)",
             backdropFilter: "blur(20px)",
-            borderRadius: "20px",
+            borderRadius: "16px",
             border: "1px solid rgba(255, 255, 255, 0.1)",
-            padding: "35px 45px",
-            opacity: spring({ frame: frame - 210, fps: 30 }),
+            padding: "20px 25px",
+            opacity: spring({ frame: frame - 110, fps: 30 }),
           }}
         >
           {/* 场景标题 */}
@@ -3184,15 +3184,15 @@ const CronScene: React.FC<{
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "16px",
-              marginBottom: "25px",
-              paddingBottom: "15px",
+              gap: "12px",
+              marginBottom: "15px",
+              paddingBottom: "10px",
               borderBottom: "2px solid rgba(255, 255, 255, 0.1)",
             }}
           >
             <div
               style={{
-                fontSize: "32px",
+                fontSize: "24px",
               }}
             >
               🎯
@@ -3200,7 +3200,7 @@ const CronScene: React.FC<{
             <div>
               <div
                 style={{
-                  fontSize: "22px",
+                  fontSize: "18px",
                   fontWeight: 700,
                   color: textColor,
                 }}
@@ -3209,7 +3209,7 @@ const CronScene: React.FC<{
               </div>
               <div
                 style={{
-                  fontSize: "13px",
+                  fontSize: "11px",
                   color: "rgba(255, 255, 255, 0.5)",
                 }}
               >
@@ -3223,10 +3223,10 @@ const CronScene: React.FC<{
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(4, 1fr)",
-              gap: "20px",
+              gap: "16px",
             }}
           >
-            {useCases.map((useCase, index) => (
+            {useCases.map((useCase, index) => {
               <div
                 key={index}
                 style={{
@@ -3238,14 +3238,14 @@ const CronScene: React.FC<{
                     16,
                   )}, 0.08)`,
                   border: `2px solid ${useCase.color}25`,
-                  borderRadius: "14px",
-                  padding: "20px",
+                  borderRadius: "12px",
+                  padding: "14px",
                   opacity: spring({
-                    frame: frame - 230 - index * 10,
+                    frame: frame - 120 - index * 5,
                     fps: 30,
                   }),
                   transform: `translateY(${interpolate(
-                    frame - 230 - index * 10,
+                    frame - 120 - index * 5,
                     [-15, 0],
                     [15, 0],
                     { extrapolateRight: "clamp" },
@@ -3257,8 +3257,8 @@ const CronScene: React.FC<{
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "12px",
-                    marginBottom: "16px",
+                    gap: "10px",
+                    marginBottom: "12px",
                   }}
                 >
                   {/* 复选框 */}
@@ -3289,7 +3289,7 @@ const CronScene: React.FC<{
                   {/* 图标和标题 */}
                   <div
                     style={{
-                      fontSize: "32px",
+                      fontSize: "24px",
                       filter: `drop-shadow(0 2px 8px ${useCase.color}60)`,
                     }}
                   >
@@ -3297,7 +3297,7 @@ const CronScene: React.FC<{
                   </div>
                   <div
                     style={{
-                      fontSize: "18px",
+                      fontSize: "15px",
                       fontWeight: 700,
                       color: useCase.color,
                     }}
@@ -3309,11 +3309,11 @@ const CronScene: React.FC<{
                 {/* 描述 */}
                 <div
                   style={{
-                    fontSize: "13px",
+                    fontSize: "11px",
                     color: textColor,
-                    marginBottom: "14px",
+                    marginBottom: "10px",
                     opacity: 0.7,
-                    marginLeft: "36px",
+                    marginLeft: "30px",
                   }}
                 >
                   {useCase.desc}
@@ -3324,19 +3324,19 @@ const CronScene: React.FC<{
                   style={{
                     display: "flex",
                     flexDirection: "column",
-                    gap: "6px",
-                    marginLeft: "36px",
+                    gap: "4px",
+                    marginLeft: "30px",
                   }}
                 >
                   {useCase.examples.map((example, i) => (
                     <div
                       key={i}
                       style={{
-                        fontSize: "12px",
+                        fontSize: "10px",
                         color: "rgba(255,255,255,0.6)",
-                        padding: "5px 10px",
+                        padding: "3px 8px",
                         background: `${useCase.color}12`,
-                        borderRadius: "6px",
+                        borderRadius: "4px",
                         display: "flex",
                         alignItems: "center",
                         gap: "8px",
