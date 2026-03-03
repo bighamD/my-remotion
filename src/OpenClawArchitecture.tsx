@@ -167,26 +167,9 @@ const OverallArchitectureScene: React.FC<{
             minHeight: "65px",
           }}
         >
-          {(() => {
-            const title = "OpenClaw 核心组成";
-            const typeStartFrame = 5;
-            const durationPerChar = 3;
-            const charsToShow = Math.max(
-              0,
-              Math.min(
-                title.length,
-                Math.floor((frame - typeStartFrame) / durationPerChar),
-              ),
-            );
-            return (
-              <span>
-                <span style={{ color: accentColor }}>
-                  {title.substring(0, charsToShow).split(" ")[0]}
-                </span>
-                {charsToShow > 8 && title.substring(8, charsToShow)}
-              </span>
-            );
-          })()}
+          <span>
+            <span style={{ color: accentColor }}>OpenClaw</span> 核心组成
+          </span>
         </h1>
 
         <div style={{ display: "flex", gap: "60px" }}>
@@ -448,19 +431,7 @@ const GatewayScene: React.FC<{
           minHeight: "70px",
         }}
       >
-        {(() => {
-          const title = "Gateway: 所有请求的第一站";
-          const typeStartFrame = 5;
-          const durationPerChar = 3;
-          const charsToShow = Math.max(
-            0,
-            Math.min(
-              title.length,
-              Math.floor((frame - typeStartFrame) / durationPerChar),
-            ),
-          );
-          return title.substring(0, charsToShow);
-        })()}
+        Gateway: 所有请求的第一站
       </h1>
       <h3
         style={{
@@ -775,19 +746,7 @@ const AgentScene: React.FC<{
           minHeight: "70px",
         }}
       >
-        {(() => {
-          const title = "Agent: 智能代理";
-          const typeStartFrame = 5;
-          const durationPerChar = 3;
-          const charsToShow = Math.max(
-            0,
-            Math.min(
-              title.length,
-              Math.floor((frame - typeStartFrame) / durationPerChar),
-            ),
-          );
-          return title.substring(0, charsToShow);
-        })()}
+        Agent: 智能代理
       </h1>
       <h3
         style={{
@@ -1028,19 +987,7 @@ const SkillsScene: React.FC<{
           minHeight: "70px",
         }}
       >
-        {(() => {
-          const title = "Skills: 技能系统";
-          const typeStartFrame = 5;
-          const durationPerChar = 3;
-          const charsToShow = Math.max(
-            0,
-            Math.min(
-              title.length,
-              Math.floor((frame - typeStartFrame) / durationPerChar),
-            ),
-          );
-          return title.substring(0, charsToShow);
-        })()}
+        Skills: 技能系统
       </h1>
       <h3
         style={{
@@ -1322,19 +1269,7 @@ const ChannelsScene: React.FC<{
           minHeight: "70px",
         }}
       >
-        {(() => {
-          const title = "Channels: 沟通热线";
-          const typeStartFrame = 5;
-          const durationPerChar = 3;
-          const charsToShow = Math.max(
-            0,
-            Math.min(
-              title.length,
-              Math.floor((frame - typeStartFrame) / durationPerChar),
-            ),
-          );
-          return title.substring(0, charsToShow);
-        })()}
+        Channels: 沟通热线
       </h1>
       <h3
         style={{
@@ -1612,19 +1547,7 @@ const NodesScene: React.FC<{
             minHeight: "65px",
           }}
         >
-          {(() => {
-            const title = "Nodes: 助理的眼睛和手，真正干活的";
-            const typeStartFrame = 5;
-            const durationPerChar = 3;
-            const charsToShow = Math.max(
-              0,
-              Math.min(
-                title.length,
-                Math.floor((frame - typeStartFrame) / durationPerChar),
-              ),
-            );
-            return title.substring(0, charsToShow);
-          })()}
+          Nodes: 助理的眼睛和手，真正干活的
         </h1>
         <h3
           style={{
@@ -2023,19 +1946,7 @@ const MemoryScene: React.FC<{
           minHeight: "60px",
         }}
       >
-        {(() => {
-          const title = "Memory: 记忆系统";
-          const typeStartFrame = 5;
-          const durationPerChar = 3;
-          const charsToShow = Math.max(
-            0,
-            Math.min(
-              title.length,
-              Math.floor((frame - typeStartFrame) / durationPerChar),
-            ),
-          );
-          return title.substring(0, charsToShow);
-        })()}
+        Memory: 记忆系统
       </h1>
       <h3
         style={{
@@ -2617,19 +2528,7 @@ const HeartbeatScene: React.FC<{
           minHeight: "60px",
         }}
       >
-        {(() => {
-          const title = "Heartbeat: 健康检查";
-          const typeStartFrame = 5;
-          const durationPerChar = 3;
-          const charsToShow = Math.max(
-            0,
-            Math.min(
-              title.length,
-              Math.floor((frame - typeStartFrame) / durationPerChar),
-            ),
-          );
-          return title.substring(0, charsToShow);
-        })()}
+        Heartbeat: 健康检查
       </h1>
       <h3
         style={{
@@ -2953,19 +2852,7 @@ const CronScene: React.FC<{
           minHeight: "80px",
         }}
       >
-        {(() => {
-          const title = "Cron: 定时任务";
-          const typeStartFrame = 5;
-          const durationPerChar = 3;
-          const charsToShow = Math.max(
-            0,
-            Math.min(
-              title.length,
-              Math.floor((frame - typeStartFrame) / durationPerChar),
-            ),
-          );
-          return title.substring(0, charsToShow);
-        })()}
+        Cron: 定时任务
       </h1>
 
       {/* 副标题 - 彩色关键词打字机效果 */}
@@ -3404,19 +3291,7 @@ const SummaryScene: React.FC<{
           minHeight: "80px",
         }}
       >
-        {(() => {
-          const title = "OpenClaw 完整架构";
-          const typeStartFrame = 5;
-          const durationPerChar = 3;
-          const charsToShow = Math.max(
-            0,
-            Math.min(
-              title.length,
-              Math.floor((frame - typeStartFrame) / durationPerChar),
-            ),
-          );
-          return title.substring(0, charsToShow);
-        })()}
+        OpenClaw 完整架构
       </h1>
 
       <h3
