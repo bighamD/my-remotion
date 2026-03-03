@@ -7,7 +7,6 @@ import {
 } from "remotion";
 import { z } from "zod";
 import { zColor } from "@remotion/zod-types";
-import { GatewayScene } from "./GatewayScene";
 
 export const openClawArchitectureSchema = z.object({
   backgroundColor: zColor(),
@@ -26,7 +25,11 @@ const OverallArchitectureScene: React.FC<{
   accentColor: string;
   textColor: string;
 }> = ({ frame, accentColor, textColor }) => {
-  const titleOpacity = spring({ frame, fps: 30, config: { damping: 15, stiffness: 100 } });
+  const titleOpacity = spring({
+    frame,
+    fps: 30,
+    config: { damping: 15, stiffness: 100 },
+  });
 
   // 模块组件
   const ModuleBox: React.FC<{
@@ -38,34 +41,48 @@ const OverallArchitectureScene: React.FC<{
     x: number;
     y: number;
   }> = ({ icon, title, color, frame, delay, x, y }) => {
-    const opacity = spring({ frame: frame - delay, fps: 30, config: { damping: 20, stiffness: 100 } });
-    const scale = spring({ frame: frame - delay, fps: 30, config: { damping: 25, stiffness: 100 } });
+    const opacity = spring({
+      frame: frame - delay,
+      fps: 30,
+      config: { damping: 20, stiffness: 100 },
+    });
+    const scale = spring({
+      frame: frame - delay,
+      fps: 30,
+      config: { damping: 25, stiffness: 100 },
+    });
 
     return (
-      <div style={{
-        position: "absolute",
-        left: x,
-        top: y,
-        opacity,
-        transform: `scale(${scale})`,
-        transformOrigin: "center center",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: "12px",
-        minWidth: "120px",
-      }}>
-        <div style={{
-          fontSize: "56px",
-          filter: `drop-shadow(0 4px 16px ${color}66)`,
-        }}>
+      <div
+        style={{
+          position: "absolute",
+          left: x,
+          top: y,
+          opacity,
+          transform: `scale(${scale})`,
+          transformOrigin: "center center",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "12px",
+          minWidth: "120px",
+        }}
+      >
+        <div
+          style={{
+            fontSize: "72px",
+            filter: `drop-shadow(0 4px 16px ${color}66)`,
+          }}
+        >
           {icon}
         </div>
-        <div style={{
-          fontSize: "20px",
-          fontWeight: 600,
-          color,
-        }}>
+        <div
+          style={{
+            fontSize: "20px",
+            fontWeight: 600,
+            color,
+          }}
+        >
           {title}
         </div>
       </div>
@@ -80,13 +97,22 @@ const OverallArchitectureScene: React.FC<{
     y2: number;
     delay: number;
   }> = ({ x1, y1, x2, y2, delay }) => {
-    const progress = interpolate(frame - delay, [0, 30], [0, 1], { extrapolateRight: "clamp" });
+    const progress = interpolate(frame - delay, [0, 30], [0, 1], {
+      extrapolateRight: "clamp",
+    });
     const opacity = spring({ frame: frame - delay, fps: 30 });
 
     return (
       <g opacity={opacity}>
         <defs>
-          <marker id={`arrow-main-${x1}-${y1}`} markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+          <marker
+            id={`arrow-main-${x1}-${y1}`}
+            markerWidth="10"
+            markerHeight="10"
+            refX="9"
+            refY="3"
+            orient="auto"
+          >
             <polygon points="0 0, 10 3, 0 6" fill="rgba(255,255,255,0.2)" />
           </marker>
         </defs>
@@ -104,107 +130,209 @@ const OverallArchitectureScene: React.FC<{
   };
 
   return (
-    <div style={{
-      width: "100%",
-      height: "100%",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: "80px",
-      background: "radial-gradient(circle, #2c2c2c 1px, transparent 1px)",
-      backgroundSize: "30px 30px",
-    }}>
-      <div style={{
-        maxWidth: "1400px",
+    <div
+      style={{
         width: "100%",
-        border: "4px solid rgba(255,255,255,0.2)",
-        padding: "60px",
-        borderRadius: "16px",
-        background: "rgba(18,18,18,0.9)",
-        boxShadow: "0 25px 50px rgba(0,0,0,0.5)",
-      }}>
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "80px",
+        background: "radial-gradient(circle, #2c2c2c 1px, transparent 1px)",
+        backgroundSize: "30px 30px",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "1400px",
+          width: "100%",
+          // border: "4px solid rgba(255,255,255,0.2)",
+          // padding: "60px",
+          // borderRadius: "16px",
+          // background: "rgba(18,18,18,0.9)",
+          // boxShadow: "0 25px 50px rgba(0,0,0,0.5)",
+        }}
+      >
         {/* 标题 */}
-        <h1 style={{
-          fontSize: "52px",
-          fontWeight: 800,
-          color: textColor,
-          margin: "0 0 80px 0",
-          opacity: titleOpacity,
-          textAlign: "center",
-          textShadow: "0 0 20px rgba(255,255,255,0.3)",
-        }}>
-          一次看懂 <span style={{ color: accentColor }}>OpenClaw</span> 是怎么自动干活的
+        <h1
+          style={{
+            fontSize: "52px",
+            fontWeight: 800,
+            color: textColor,
+            margin: "0 0 80px 0",
+            opacity: titleOpacity,
+            textAlign: "center",
+            textShadow: "0 0 20px rgba(255,255,255,0.3)",
+            minHeight: "65px",
+          }}
+        >
+          {(() => {
+            const title = "OpenClaw 核心组成";
+            const typeStartFrame = 5;
+            const durationPerChar = 3;
+            const charsToShow = Math.max(
+              0,
+              Math.min(
+                title.length,
+                Math.floor((frame - typeStartFrame) / durationPerChar),
+              ),
+            );
+            return (
+              <span>
+                <span style={{ color: accentColor }}>
+                  {title.substring(0, charsToShow).split(" ")[0]}
+                </span>
+                {charsToShow > 8 && title.substring(8, charsToShow)}
+              </span>
+            );
+          })()}
         </h1>
 
         <div style={{ display: "flex", gap: "60px" }}>
           {/* 左侧：OpenClaw 核心区 */}
-          <div style={{
-            flex: "0 0 280px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            borderRight: "2px solid rgba(255,255,255,0.2)",
-            paddingRight: "40px",
-          }}>
-            <div style={{
-              fontSize: "120px",
-              marginBottom: "24px",
-              filter: "drop-shadow(0 8px 32px rgba(255,90,54,0.4))",
-            }}>
+          <div
+            style={{
+              flex: "0 0 280px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRight: "2px solid rgba(255,255,255,0.2)",
+              paddingRight: "40px",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "120px",
+                marginBottom: "24px",
+                filter: "drop-shadow(0 8px 32px rgba(255,90,54,0.4))",
+              }}
+            >
               🖥️
             </div>
             <div style={{ textAlign: "center" }}>
-              <div style={{
-                fontSize: "48px",
-                fontWeight: 800,
-                color: accentColor,
-                marginBottom: "8px",
-                letterSpacing: "-0.02em",
-              }}>
+              <div
+                style={{
+                  fontSize: "48px",
+                  fontWeight: 800,
+                  color: accentColor,
+                  marginBottom: "8px",
+                  letterSpacing: "-0.02em",
+                }}
+              >
                 OpenClaw
               </div>
-              <div style={{
-                fontSize: "24px",
-                color: "rgba(255,255,255,0.5)",
-              }}>
+              <div
+                style={{
+                  fontSize: "24px",
+                  color: "rgba(255,255,255,0.5)",
+                }}
+              >
                 AI 私人助理
               </div>
             </div>
           </div>
 
           {/* 右侧：模块架构图 */}
-          <div style={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            paddingLeft: "20px",
-            position: "relative",
-            height: "500px",
-          }}>
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              paddingLeft: "20px",
+              position: "relative",
+              height: "500px",
+            }}
+          >
             {/* 第一行：Gateway → Agent → Skills → Channels */}
-            <ModuleBox icon="🚪" title="Gateway" color="white" frame={frame} delay={20} x={0} y={0} />
-            <ModuleBox icon="🤖" title="Agent" color="white" frame={frame} delay={30} x={280} y={0} />
-            <ModuleBox icon="💼" title="Skills" color="#EAB308" frame={frame} delay={40} x={560} y={0} />
-            <ModuleBox icon="📡" title="Channels" color="#22C55E" frame={frame} delay={50} x={840} y={0} />
+            <ModuleBox
+              icon="🚪"
+              title="Gateway"
+              color="white"
+              frame={frame}
+              delay={20}
+              x={0}
+              y={0}
+            />
+            <ModuleBox
+              icon="🤖"
+              title="Agent"
+              color="white"
+              frame={frame}
+              delay={30}
+              x={280}
+              y={0}
+            />
+            <ModuleBox
+              icon="💼"
+              title="Skills"
+              color="#EAB308"
+              frame={frame}
+              delay={40}
+              x={560}
+              y={0}
+            />
+            <ModuleBox
+              icon="📡"
+              title="Channels"
+              color="#22C55E"
+              frame={frame}
+              delay={50}
+              x={840}
+              y={0}
+            />
 
             {/* 第二行：Nodes → Memory → Heartbeat → Cron */}
-            <ModuleBox icon="🌐" title="Nodes" color="#34D399" frame={frame} delay={60} x={0} y={250} />
-            <ModuleBox icon="🧠" title="Memory" color="#A78BFA" frame={frame} delay={70} x={280} y={250} />
-            <ModuleBox icon="💓" title="Heartbeat" color="#F472B6" frame={frame} delay={80} x={560} y={250} />
-            <ModuleBox icon="⏰" title="Cron" color="#9333EA" frame={frame} delay={90} x={840} y={250} />
+            <ModuleBox
+              icon="🌐"
+              title="Nodes"
+              color="#34D399"
+              frame={frame}
+              delay={60}
+              x={0}
+              y={250}
+            />
+            <ModuleBox
+              icon="🧠"
+              title="Memory"
+              color="#A78BFA"
+              frame={frame}
+              delay={70}
+              x={280}
+              y={250}
+            />
+            <ModuleBox
+              icon="💓"
+              title="Heartbeat"
+              color="#F472B6"
+              frame={frame}
+              delay={80}
+              x={560}
+              y={250}
+            />
+            <ModuleBox
+              icon="⏰"
+              title="Cron"
+              color="#9333EA"
+              frame={frame}
+              delay={90}
+              x={840}
+              y={250}
+            />
 
             {/* 箭头连接 */}
-            <svg style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              pointerEvents: "none",
-            }}>
+            <svg
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                pointerEvents: "none",
+              }}
+            >
               {/* 第一行箭头 */}
               <Arrow x1={140} y1={70} x2={270} y2={70} delay={25} />
               <Arrow x1={420} y1={70} x2={550} y2={70} delay={35} />
@@ -219,16 +347,26 @@ const OverallArchitectureScene: React.FC<{
         </div>
 
         {/* 底部说明 */}
-        <div style={{
-          marginTop: "80px",
-          paddingTop: "40px",
-          borderTop: "1px solid rgba(255,255,255,0.1)",
-          textAlign: "center",
-          opacity: spring({ frame: frame - 110, fps: 30 }),
-        }}>
+        <div
+          style={{
+            marginTop: "80px",
+            paddingTop: "40px",
+            borderTop: "1px solid rgba(255,255,255,0.1)",
+            textAlign: "center",
+            opacity: spring({ frame: frame - 110, fps: 30 }),
+          }}
+        >
           <div style={{ fontSize: "36px", lineHeight: 1.5 }}>
-            <span style={{ color: "#EAB308", fontWeight: 700 }}>主动执行任务原理：</span>
-            <span style={{ fontWeight: 300, letterSpacing: "0.2em", color: "rgba(255,255,255,0.7)" }}>
+            <span style={{ color: "#EAB308", fontWeight: 700 }}>
+              主动执行任务原理：
+            </span>
+            <span
+              style={{
+                fontWeight: 300,
+                letterSpacing: "0.2em",
+                color: "rgba(255,255,255,0.7)",
+              }}
+            >
               多模块协同响应
             </span>
           </div>
@@ -241,7 +379,278 @@ const OverallArchitectureScene: React.FC<{
 // ============================================
 // 场景 2: Gateway 网关核心（基于 gateway.html）
 // ============================================
-// GatewayScene 组件已移至 src/GatewayScene.tsx
+
+const GatewayScene: React.FC<{
+  frame: number;
+  accentColor: string;
+  textColor: string;
+}> = ({ frame, accentColor, textColor }) => {
+  // eslint-disable-line @typescript-eslint/no-unused-vars
+  const titleOpacity = spring({
+    frame,
+    fps: 30,
+    config: { damping: 15, stiffness: 100 },
+  });
+
+  const gatewayFunctions = [
+    {
+      title: "身份验证",
+      icon: "📋",
+      color: "#FF4444",
+      desc: "验证用户身份",
+      delay: 40,
+    },
+    {
+      title: "连接管理",
+      icon: "🔗",
+      color: "#00CC66",
+      desc: "管理连接状态",
+      delay: 50,
+    },
+    {
+      title: "多用户隔离",
+      icon: "🔄",
+      color: "#3399FF",
+      desc: "用户数据隔离",
+      delay: 60,
+    },
+    {
+      title: "请求路由",
+      icon: "➡️",
+      color: "#00CC66",
+      desc: "路由到目标模块",
+      delay: 70,
+    },
+  ];
+
+  return (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        padding: "40px 60px",
+        background: "radial-gradient(circle, #2c2c2c 1px, transparent 1px)",
+        backgroundSize: "30px 30px",
+      }}
+    >
+      {/* 标题 */}
+      <h1
+        style={{
+          fontSize: "56px",
+          fontWeight: 800,
+          color: "#FF4444",
+          margin: "0 0 50px 0",
+          opacity: titleOpacity,
+          textAlign: "center",
+          textShadow: "0 0 30px rgba(255,68,68,0.5)",
+          minHeight: "70px",
+        }}
+      >
+        {(() => {
+          const title = "Gateway: 所有请求的第一站";
+          const typeStartFrame = 5;
+          const durationPerChar = 3;
+          const charsToShow = Math.max(
+            0,
+            Math.min(
+              title.length,
+              Math.floor((frame - typeStartFrame) / durationPerChar),
+            ),
+          );
+          return title.substring(0, charsToShow);
+        })()}
+      </h1>
+
+      {/* 主内容区：使用 flexbox 而不是 absolute */}
+      <div
+        style={{
+          display: "flex",
+          gap: "60px",
+          width: "100%",
+          maxWidth: "1600px",
+          flex: 1,
+          alignItems: "center",
+        }}
+      >
+        {/* 左侧：用户请求入口 */}
+        <div
+          style={{
+            flex: "0 0 420px",
+            opacity: spring({ frame: frame - 20, fps: 30 }),
+            transform: `scale(${spring({ frame: frame - 20, fps: 30, config: { damping: 25, stiffness: 100 } })})`,
+            transformOrigin: "center center",
+          }}
+        >
+          <div
+            style={{
+              padding: "60px 40px",
+              background: "rgba(255,255,255,0.08)",
+              border: "5px solid rgba(255,255,255,0.4)",
+              borderRadius: "28px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              boxShadow: "0 16px 64px rgba(0,0,0,0.6)",
+            }}
+          >
+            <div style={{ fontSize: "96px", marginBottom: "24px" }}>🖥️</div>
+            <div
+              style={{
+                fontSize: "32px",
+                fontWeight: 700,
+                color: textColor,
+                marginBottom: "16px",
+                textAlign: "center",
+              }}
+            >
+              用户请求入口
+            </div>
+            <div
+              style={{
+                fontSize: "20px",
+                color: "rgba(255,255,255,0.6)",
+                textAlign: "center",
+              }}
+            >
+              网页 / 手机 / 聊天软件
+            </div>
+          </div>
+        </div>
+
+        {/* 中间箭头 */}
+        <div
+          style={{
+            flex: "0 0 80px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            opacity: spring({ frame: frame - 30, fps: 30 }),
+          }}
+        >
+          <div
+            style={{
+              fontSize: "56px",
+              color: "#FFAA00",
+              transform: `scale(${interpolate(frame - 30, [0, 20], [0.5, 1], { extrapolateRight: "clamp" })})`,
+            }}
+          >
+            ➡️
+          </div>
+        </div>
+
+        {/* 右侧：Gateway 四个功能模块 */}
+        <div
+          style={{
+            flex: 1,
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gridTemplateRows: "1fr 1fr",
+            gap: "20px",
+          }}
+        >
+          {gatewayFunctions.map((func) => (
+            <div
+              key={func.title}
+              style={{
+                opacity: spring({ frame: frame - func.delay, fps: 30 }),
+                transform: `scale(${spring({ frame: frame - func.delay, fps: 30, config: { damping: 25, stiffness: 100 } })})`,
+                transformOrigin: "center center",
+              }}
+            >
+              <div
+                style={{
+                  padding: "20px 16px",
+                  background: `${func.color}22`,
+                  border: `3px solid ${func.color}`,
+                  borderRadius: "16px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  height: "100%",
+                  minHeight: "130px",
+                  justifyContent: "center",
+                  boxShadow: `0 6px 24px ${func.color}44`,
+                }}
+              >
+                <div style={{ fontSize: "40px", marginBottom: "10px" }}>
+                  {func.icon}
+                </div>
+                <div
+                  style={{
+                    fontSize: "20px",
+                    fontWeight: 700,
+                    color: func.color,
+                    marginBottom: "6px",
+                    textAlign: "center",
+                  }}
+                >
+                  {func.title}
+                </div>
+                <div
+                  style={{
+                    fontSize: "14px",
+                    color: "rgba(255,255,255,0.7)",
+                    textAlign: "center",
+                  }}
+                >
+                  {func.desc}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 底部警告 */}
+      <div
+        style={{
+          marginTop: "40px",
+          marginBottom: "20px",
+          opacity: spring({ frame: frame - 90, fps: 30 }),
+          transform: `translateY(${interpolate(frame - 90, [-20, 0], [30, 0], { extrapolateRight: "clamp" })}px)`,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "20px",
+            padding: "20px 40px",
+            background: "rgba(255,68,68,0.15)",
+            border: "3px solid #FF4444",
+            borderRadius: "20px",
+          }}
+        >
+          <div style={{ fontSize: "36px" }}>🚫</div>
+          <div>
+            <div
+              style={{
+                fontSize: "26px",
+                fontWeight: 700,
+                color: "#FF4444",
+                marginBottom: "6px",
+              }}
+            >
+              无Gateway: 系统无法识别用户指令
+            </div>
+            <div
+              style={{
+                fontSize: "16px",
+                color: "rgba(255,255,255,0.7)",
+              }}
+            >
+              所有请求必须通过Gateway进行身份验证和路由
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 // ============================================
 // 场景 3: Agent 智能代理系统
@@ -252,53 +661,146 @@ const AgentScene: React.FC<{
   accentColor: string;
   textColor: string;
 }> = ({ frame, accentColor, textColor }) => {
-  const titleOpacity = spring({ frame, fps: 30, config: { damping: 15, stiffness: 100 } });
+  const titleOpacity = spring({
+    frame,
+    fps: 30,
+    config: { damping: 15, stiffness: 100 },
+  });
 
   const llmProviders = [
-    { name: "Claude", icon: "🧠", color: "#8B5CF6" },
-    { name: "GPT-4", icon: "🤖", color: "#10B981" },
-    { name: "Gemini", icon: "💎", color: "#3B82F6" },
+    { name: "OpenAI", icon: "🤖", color: "#10B981" },
+    { name: "DeepSeek", icon: "🐳", color: "#3B82F6" },
+    { name: "Qwen", icon: "🐍", color: "#F59E0B" },
   ];
 
   const agentFeatures = [
-    { icon: "💭", title: "上下文记忆", desc: "持久化对话历史" },
-    { icon: "🎯", title: "任务规划", desc: "复杂任务分解" },
-    { icon: "🔧", title: "工具调用", desc: "扩展能力边界" },
-    { icon: "🛡️", title: "安全防护", desc: "权限与审计" },
+    {
+      icon: "💬",
+      title: "理解用户意图",
+      desc: "理解用户意图",
+      color: "#10B981",
+    },
+    { icon: "🎯", title: "任务规划", desc: "复杂任务分解", color: "#3B82F6" },
+    {
+      icon: "💭",
+      title: "上下文记忆",
+      desc: "持久化对话历史",
+      color: "#F59E0B",
+    },
+    { icon: "🔧", title: "工具调用", desc: "扩展能力边界", color: "#10B981" },
   ];
 
   return (
-    <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "60px" }}>
-      <h1 style={{ fontSize: "56px", fontWeight: 800, color: accentColor, margin: "0 0 16px 0", opacity: titleOpacity, textAlign: "center" }}>
-        Agent: 智能代理
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "60px",
+      }}
+    >
+      <h1
+        style={{
+          fontSize: "56px",
+          fontWeight: 800,
+          color: accentColor,
+          margin: "0 0 16px 0",
+          opacity: titleOpacity,
+          textAlign: "center",
+          minHeight: "70px",
+        }}
+      >
+        {(() => {
+          const title = "Agent: 智能代理";
+          const typeStartFrame = 5;
+          const durationPerChar = 3;
+          const charsToShow = Math.max(
+            0,
+            Math.min(
+              title.length,
+              Math.floor((frame - typeStartFrame) / durationPerChar),
+            ),
+          );
+          return title.substring(0, charsToShow);
+        })()}
       </h1>
-      <p style={{ fontSize: "24px", color: textColor, margin: "0 0 60px 0", opacity: titleOpacity, textAlign: "center" }}>
-        强大的 LLM 驱动，理解并执行复杂任务
+      <p
+        style={{
+          fontSize: "24px",
+          color: textColor,
+          margin: "0 0 60px 0",
+          opacity: titleOpacity,
+          textAlign: "center",
+          minHeight: "32px",
+        }}
+      >
+        {(() => {
+          const subtitle = "强大的 LLM 驱动，理解并执行复杂任务";
+          const typeStartFrame = 18;
+          const durationPerChar = 2;
+          const charsToShow = Math.max(
+            0,
+            Math.min(
+              subtitle.length,
+              Math.floor((frame - typeStartFrame) / durationPerChar),
+            ),
+          );
+          return subtitle.substring(0, charsToShow);
+        })()}
       </p>
 
-      <div style={{ display: "flex", gap: "80px", width: "100%", maxWidth: "1400px" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "80px",
+          width: "100%",
+          maxWidth: "1400px",
+        }}
+      >
         {/* 左侧：LLM 提供商 */}
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: "28px", fontWeight: 700, color: textColor, marginBottom: "30px", textAlign: "center" }}>
+          <div
+            style={{
+              fontSize: "28px",
+              fontWeight: 700,
+              color: textColor,
+              marginBottom: "30px",
+              textAlign: "center",
+            }}
+          >
             支持的 LLM
           </div>
           {llmProviders.map((provider, index) => (
-            <div key={index} style={{
-              marginBottom: "20px",
-              opacity: spring({ frame: frame - 20 - index * 10, fps: 30 }),
-              transform: `translateX(${interpolate(frame - 20 - index * 10, [-50, 0], [50, 0], { extrapolateRight: "clamp" })}px)`,
-            }}>
-              <div style={{
-                background: `${provider.color}22`,
-                border: `3px solid ${provider.color}`,
-                borderRadius: "16px",
-                padding: "20px 24px",
-                display: "flex",
-                alignItems: "center",
-                gap: "16px",
-              }}>
+            <div
+              key={index}
+              style={{
+                marginBottom: "28px",
+                opacity: spring({ frame: frame - 20 - index * 10, fps: 30 }),
+                transform: `translateX(${interpolate(frame - 20 - index * 10, [-50, 0], [50, 0], { extrapolateRight: "clamp" })}px)`,
+              }}
+            >
+              <div
+                style={{
+                  background: `${provider.color}22`,
+                  border: `3px solid ${provider.color}`,
+                  borderRadius: "16px",
+                  padding: "20px 24px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "16px",
+                }}
+              >
                 <span style={{ fontSize: "40px" }}>{provider.icon}</span>
-                <span style={{ fontSize: "24px", fontWeight: 700, color: provider.color }}>
+                <span
+                  style={{
+                    fontSize: "24px",
+                    fontWeight: 700,
+                    color: provider.color,
+                  }}
+                >
                   {provider.name}
                 </span>
               </div>
@@ -308,33 +810,64 @@ const AgentScene: React.FC<{
 
         {/* 右侧：Agent 特性 */}
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: "28px", fontWeight: 700, color: textColor, marginBottom: "30px", textAlign: "center" }}>
+          <div
+            style={{
+              fontSize: "28px",
+              fontWeight: 700,
+              color: textColor,
+              marginBottom: "30px",
+              textAlign: "center",
+            }}
+          >
             核心能力
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "20px",
+            }}
+          >
             {agentFeatures.map((feature, index) => (
-              <div key={index} style={{
-                opacity: spring({ frame: frame - 50 - index * 8, fps: 30 }),
-                transform: `scale(${spring({ frame: frame - 50 - index * 8, fps: 30, config: { damping: 25, stiffness: 100 } })})`,
-                transformOrigin: "center center",
-              }}>
-                <div style={{
-                  background: "rgba(255,255,255,0.05)",
-                  border: "2px solid rgba(255,255,255,0.2)",
-                  borderRadius: "16px",
-                  padding: "24px",
-                  textAlign: "center",
-                  minHeight: "140px",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}>
-                  <div style={{ fontSize: "40px", marginBottom: "12px" }}>{feature.icon}</div>
-                  <div style={{ fontSize: "18px", fontWeight: 700, color: textColor, marginBottom: "6px" }}>
+              <div
+                key={index}
+                style={{
+                  opacity: spring({ frame: frame - 50 - index * 8, fps: 30 }),
+                  transform: `scale(${spring({ frame: frame - 50 - index * 8, fps: 30, config: { damping: 25, stiffness: 100 } })})`,
+                  transformOrigin: "center center",
+                }}
+              >
+                <div
+                  style={{
+                    background: `${feature.color}22`,
+                    border: `3px solid ${feature.color}`,
+                    borderRadius: "16px",
+                    padding: "24px",
+                    textAlign: "center",
+                    minHeight: "140px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: `0 8px 32px ${feature.color}44`,
+                  }}
+                >
+                  <div style={{ fontSize: "40px", marginBottom: "12px" }}>
+                    {feature.icon}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "18px",
+                      fontWeight: 700,
+                      color: feature.color,
+                      marginBottom: "6px",
+                    }}
+                  >
                     {feature.title}
                   </div>
-                  <div style={{ fontSize: "14px", color: "rgba(255,255,255,0.6)" }}>
+                  <div
+                    style={{ fontSize: "14px", color: "rgba(255,255,255,0.6)" }}
+                  >
                     {feature.desc}
                   </div>
                 </div>
@@ -356,7 +889,11 @@ const SkillsScene: React.FC<{
   accentColor: string;
   textColor: string;
 }> = ({ frame, accentColor, textColor }) => {
-  const titleOpacity = spring({ frame, fps: 30, config: { damping: 15, stiffness: 100 } });
+  const titleOpacity = spring({
+    frame,
+    fps: 30,
+    config: { damping: 15, stiffness: 100 },
+  });
 
   const skills = [
     { name: "浏览器", icon: "🌐", desc: "自动化操作", color: "#3B82F6" },
@@ -368,70 +905,205 @@ const SkillsScene: React.FC<{
   ];
 
   return (
-    <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "60px" }}>
-      <h1 style={{ fontSize: "56px", fontWeight: 800, color: accentColor, margin: "0 0 16px 0", opacity: titleOpacity, textAlign: "center" }}>
-        Skills: 技能系统
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "60px",
+      }}
+    >
+      <h1
+        style={{
+          fontSize: "56px",
+          fontWeight: 800,
+          color: accentColor,
+          margin: "0 0 16px 0",
+          opacity: titleOpacity,
+          textAlign: "center",
+          minHeight: "70px",
+        }}
+      >
+        {(() => {
+          const title = "Skills: 技能系统";
+          const typeStartFrame = 5;
+          const durationPerChar = 3;
+          const charsToShow = Math.max(
+            0,
+            Math.min(
+              title.length,
+              Math.floor((frame - typeStartFrame) / durationPerChar),
+            ),
+          );
+          return title.substring(0, charsToShow);
+        })()}
       </h1>
-      <p style={{ fontSize: "24px", color: textColor, margin: "0 0 60px 0", opacity: titleOpacity, textAlign: "center" }}>
-        扩展 Agent 能力，连接真实世界
-      </p>
+      <h3
+        style={{
+          fontSize: "28px",
+          fontWeight: 600,
+          margin: "0 0 60px 0",
+          opacity: titleOpacity,
+          textAlign: "center",
+          minHeight: "40px",
+        }}
+      >
+        {/* 打字机效果 */}
+        {(() => {
+          const parts = [
+            { text: "Agent", color: "#3B82F6", bold: true },
+            { text: "决定做什么，", color: textColor },
+            { text: "Skills", color: "#F59E0B", bold: true },
+            { text: "决定怎么做", color: textColor },
+          ];
 
-      <div style={{ position: "relative", width: "100%", maxWidth: "1200px" }}>
+          const typeStartFrame = 10;
+          const durationPerChar = 2;
+
+          const result = [];
+          let totalChars = 0;
+
+          for (const part of parts) {
+            const partEnd = totalChars + part.text.length;
+            const charsToShow = Math.max(
+              0,
+              Math.min(
+                part.text.length,
+                Math.floor((frame - typeStartFrame) / durationPerChar) -
+                  totalChars,
+              ),
+            );
+
+            if (charsToShow > 0) {
+              result.push(
+                <span
+                  key={totalChars}
+                  style={{
+                    color: part.color,
+                    fontWeight: part.bold ? 700 : 400,
+                  }}
+                >
+                  {part.text.substring(0, charsToShow)}
+                </span>,
+              );
+            }
+
+            totalChars = partEnd;
+            if (
+              Math.floor((frame - typeStartFrame) / durationPerChar) <=
+              totalChars
+            ) {
+              break;
+            }
+          }
+
+          return result.length > 0 ? result : <span>&nbsp;</span>;
+        })()}
+      </h3>
+
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          maxWidth: "1200px",
+          height: "700px",
+        }}
+      >
         {/* 中心 Agent */}
-        <div style={{
-          position: "absolute",
-          left: "50%",
-          top: "50%",
-          transform: `translate(-50%, -50%) scale(${spring({ frame: frame - 20, fps: 30, config: { damping: 25, stiffness: 100 } })})`,
-          width: "200px",
-          height: "200px",
-          opacity: spring({ frame: frame - 20, fps: 30 }),
-          background: `${accentColor}22`,
-          border: `4px solid ${accentColor}`,
-          borderRadius: "50%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          boxShadow: `0 16px 64px ${accentColor}44`,
-        }}>
-          <div style={{ fontSize: "64px", marginBottom: "12px" }}>🤖</div>
-          <div style={{ fontSize: "24px", fontWeight: 700, color: accentColor }}>Agent</div>
+        <div
+          style={{
+            position: "absolute",
+            left: "50%",
+            top: "50%",
+            transform: `translate(-50%, -50%) scale(${spring({
+              frame: frame - 20,
+              fps: 30,
+              config: { damping: 25, stiffness: 100 },
+            })})`,
+            width: "220px",
+            height: "220px",
+            opacity: spring({ frame: frame - 20, fps: 30 }),
+            background: `${accentColor}22`,
+            border: `4px solid ${accentColor}`,
+            borderRadius: "50%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow: `0 16px 64px ${accentColor}44`,
+            zIndex: 10,
+          }}
+        >
+          <div style={{ fontSize: "72px", marginBottom: "12px" }}>🤖</div>
+          <div
+            style={{ fontSize: "26px", fontWeight: 700, color: accentColor }}
+          >
+            Agent
+          </div>
         </div>
 
         {/* Skills 圆形排列 */}
         {skills.map((skill, index) => {
           const angle = (index * 60 - 90) * (Math.PI / 180);
-          const radius = 280;
-          const x = 600 + Math.cos(angle) * radius - 100;
-          const y = 200 + Math.sin(angle) * radius - 60;
+          const radius = 300;
+          const centerX = 600;
+          const centerY = 350;
+          const x = centerX + Math.cos(angle) * radius - 80;
+          const y = centerY + Math.sin(angle) * radius - 80;
 
           return (
-            <div key={index} style={{
-              position: "absolute",
-              left: x,
-              top: y,
-              opacity: spring({ frame: frame - 40 - index * 8, fps: 30 }),
-              transform: `scale(${spring({ frame: frame - 40 - index * 8, fps: 30, config: { damping: 25, stiffness: 100 } })})`,
-              transformOrigin: "center center",
-            }}>
-              <div style={{
-                width: "160px",
-                height: "160px",
-                background: `${skill.color}22`,
-                border: `3px solid ${skill.color}`,
-                borderRadius: "20px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                boxShadow: `0 8px 32px ${skill.color}44`,
-              }}>
-                <div style={{ fontSize: "48px", marginBottom: "12px" }}>{skill.icon}</div>
-                <div style={{ fontSize: "18px", fontWeight: 700, color: skill.color, marginBottom: "4px" }}>
+            <div
+              key={index}
+              style={{
+                position: "absolute",
+                left: x,
+                top: y,
+                opacity: spring({
+                  frame: frame - 40 - index * 8,
+                  fps: 30,
+                }),
+                transform: `scale(${spring({
+                  frame: frame - 40 - index * 8,
+                  fps: 30,
+                  config: { damping: 25, stiffness: 100 },
+                })})`,
+                transformOrigin: "center center",
+                zIndex: 5,
+              }}
+            >
+              <div
+                style={{
+                  width: "160px",
+                  height: "160px",
+                  background: `${skill.color}22`,
+                  border: `3px solid ${skill.color}`,
+                  borderRadius: "20px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: `0 8px 32px ${skill.color}44`,
+                }}
+              >
+                <div style={{ fontSize: "48px", marginBottom: "12px" }}>
+                  {skill.icon}
+                </div>
+                <div
+                  style={{
+                    fontSize: "18px",
+                    fontWeight: 700,
+                    color: skill.color,
+                    marginBottom: "4px",
+                  }}
+                >
                   {skill.name}
                 </div>
-                <div style={{ fontSize: "14px", color: "rgba(255,255,255,0.6)" }}>
+                <div
+                  style={{ fontSize: "14px", color: "rgba(255,255,255,0.6)" }}
+                >
                   {skill.desc}
                 </div>
               </div>
@@ -440,30 +1112,54 @@ const SkillsScene: React.FC<{
         })}
 
         {/* 连接线 */}
-        <svg style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", pointerEvents: "none" }}>
+        <svg
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            pointerEvents: "none",
+            zIndex: 1,
+          }}
+        >
           {skills.map((skill, index) => {
             const angle = (index * 60 - 90) * (Math.PI / 180);
             const progress = interpolate(
               frame - 100 - index * 3,
               [0, 30],
               [0, 1],
-              { extrapolateRight: "clamp" }
+              { extrapolateRight: "clamp" },
             );
-            const opacity = spring({ frame: frame - 100 - index * 3, fps: 30 });
-            const radius = 200 * progress;
-            const x2 = 600 + Math.cos(angle) * radius;
-            const y2 = 200 + Math.sin(angle) * radius;
+            const opacity = spring({
+              frame: frame - 100 - index * 3,
+              fps: 30,
+            });
+            // 减去模块半径，让连接线接近模块边缘但不重叠太多
+            const maxRadius = 300 - 120;
+            const radius = maxRadius * progress;
+            const centerX = 600;
+            const centerY = 350;
+            const x2 = centerX + Math.cos(angle) * radius;
+            const y2 = centerY + Math.sin(angle) * radius;
 
             return (
               <g key={index} opacity={opacity}>
                 <defs>
-                  <marker id={`arrow-skills-${index}`} markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+                  <marker
+                    id={`arrow-skills-${index}`}
+                    markerWidth="8"
+                    markerHeight="8"
+                    refX="7"
+                    refY="3"
+                    orient="auto"
+                  >
                     <polygon points="0 0, 8 3, 0 6" fill={skill.color} />
                   </marker>
                 </defs>
                 <line
-                  x1={600}
-                  y1={200}
+                  x1={centerX}
+                  y1={centerY}
                   x2={x2}
                   y2={y2}
                   stroke={skill.color}
@@ -489,117 +1185,204 @@ const ChannelsScene: React.FC<{
   accentColor: string;
   textColor: string;
 }> = ({ frame, accentColor, textColor }) => {
-  const titleOpacity = spring({ frame, fps: 30, config: { damping: 15, stiffness: 100 } });
+  const titleOpacity = spring({
+    frame,
+    fps: 30,
+    config: { damping: 15, stiffness: 100 },
+  });
 
   const channels = [
-    { name: "网页", icon: "💬", color: "#EF4444", x: 200, y: 200 },
-    { name: "WhatsApp", icon: "📱", color: "#10B981", x: 450, y: 200 },
-    { name: "Telegram", icon: "✈️", color: "#3B82F6", x: 700, y: 200 },
-    { name: "飞书", icon: "🚀", color: "#F59E0B", x: 950, y: 200 },
+    { name: "网页", icon: "🌐", color: "#EF4444" },
+    { name: "短信", icon: "📱", color: "#10B981" },
+    { name: "Telegram", icon: "✈️", color: "#3B82F6" },
+    { name: "飞书", icon: "🚀", color: "#F59E0B" },
   ];
 
   return (
-    <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "60px" }}>
-      <h1 style={{ fontSize: "56px", fontWeight: 800, color: accentColor, margin: "0 0 16px 0", opacity: titleOpacity, textAlign: "center" }}>
-        Channels: 沟通热线
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "60px 80px",
+      }}
+    >
+      <h1
+        style={{
+          fontSize: "56px",
+          fontWeight: 800,
+          color: accentColor,
+          margin: "0 0 16px 0",
+          opacity: titleOpacity,
+          textAlign: "center",
+          minHeight: "70px",
+        }}
+      >
+        {(() => {
+          const title = "Channels: 沟通热线";
+          const typeStartFrame = 5;
+          const durationPerChar = 3;
+          const charsToShow = Math.max(
+            0,
+            Math.min(
+              title.length,
+              Math.floor((frame - typeStartFrame) / durationPerChar),
+            ),
+          );
+          return title.substring(0, charsToShow);
+        })()}
       </h1>
-      <p style={{ fontSize: "24px", color: textColor, margin: "0 0 60px 0", opacity: titleOpacity, textAlign: "center" }}>
-        多渠道消息统一接入
+      <p
+        style={{
+          fontSize: "24px",
+          color: textColor,
+          margin: "0 0 70px 0",
+          opacity: titleOpacity,
+          textAlign: "center",
+          minHeight: "32px",
+        }}
+      >
+        {(() => {
+          const subtitle = "多渠道消息统一接入";
+          const typeStartFrame = 20;
+          const durationPerChar = 2;
+          const charsToShow = Math.max(
+            0,
+            Math.min(
+              subtitle.length,
+              Math.floor((frame - typeStartFrame) / durationPerChar),
+            ),
+          );
+          return subtitle.substring(0, charsToShow);
+        })()}
       </p>
 
-      <div style={{ position: "relative", width: "100%", maxWidth: "1200px", height: "450px" }}>
-        {/* 渠道图标 */}
+      {/* 渠道图标 */}
+      <div
+        style={{
+          display: "flex",
+          gap: "50px",
+          marginBottom: "60px",
+          width: "100%",
+          maxWidth: "1400px",
+          justifyContent: "center",
+        }}
+      >
         {channels.map((channel, index) => (
-          <div key={index} style={{
-            position: "absolute",
-            left: channel.x,
-            top: channel.y,
-            opacity: spring({ frame: frame - 20 - index * 10, fps: 30 }),
-            transform: `scale(${spring({ frame: frame - 20 - index * 10, fps: 30, config: { damping: 25, stiffness: 100 } })})`,
-            transformOrigin: "center center",
-          }}>
-            <div style={{
-              width: "160px",
-              height: "160px",
-              background: `${channel.color}22`,
-              border: `4px solid ${channel.color}`,
-              borderRadius: "20px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              boxShadow: `0 8px 32px ${channel.color}44`,
-            }}>
-              <div style={{ fontSize: "64px", marginBottom: "16px" }}>{channel.icon}</div>
-              <div style={{ fontSize: "24px", fontWeight: 700, color: channel.color }}>{channel.name}</div>
+          <div
+            key={index}
+            style={{
+              opacity: spring({
+                frame: frame - 20 - index * 10,
+                fps: 30,
+              }),
+              transform: `scale(${spring({
+                frame: frame - 20 - index * 10,
+                fps: 30,
+                config: { damping: 25, stiffness: 100 },
+              })})`,
+              transformOrigin: "center center",
+            }}
+          >
+            <div
+              style={{
+                width: "160px",
+                height: "160px",
+                background: `${channel.color}22`,
+                border: `4px solid ${channel.color}`,
+                borderRadius: "20px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: `0 8px 32px ${channel.color}44`,
+              }}
+            >
+              <div style={{ fontSize: "64px", marginBottom: "16px" }}>
+                {channel.icon}
+              </div>
+              <div
+                style={{
+                  fontSize: "24px",
+                  fontWeight: 700,
+                  color: channel.color,
+                }}
+              >
+                {channel.name}
+              </div>
             </div>
           </div>
         ))}
+      </div>
 
-        {/* 中间转换框 */}
-        <div style={{
-          position: "absolute",
-          left: 400,
-          top: 400,
-          width: "450px",
-          height: "100px",
-          opacity: spring({ frame: frame - 80, fps: 30 }),
-          transform: `scale(${spring({ frame: frame - 80, fps: 30, config: { damping: 25, stiffness: 100 } })})`,
-          transformOrigin: "center center",
-          background: `${accentColor}22`,
-          border: `3px solid ${accentColor}`,
-          borderRadius: "16px",
+      {/* 箭头 */}
+      <div
+        style={{
           display: "flex",
-          alignItems: "center",
           justifyContent: "center",
-        }}>
-          <div style={{ fontSize: "20px", color: accentColor, fontWeight: 600, textAlign: "center" }}>
+          marginBottom: "50px",
+          opacity: spring({ frame: frame - 70, fps: 30 }),
+        }}
+      >
+        <div style={{ fontSize: "56px" }}>⬇️</div>
+      </div>
+
+      {/* 中间转换框 */}
+      <div
+        style={{
+          maxWidth: "600px",
+          width: "100%",
+          opacity: spring({ frame: frame - 80, fps: 30 }),
+          transform: `scale(${spring({
+            frame: frame - 80,
+            fps: 30,
+            config: { damping: 25, stiffness: 100 },
+          })})`,
+          transformOrigin: "center center",
+        }}
+      >
+        <div
+          style={{
+            background: `${accentColor}22`,
+            border: `3px solid ${accentColor}`,
+            borderRadius: "16px",
+            padding: "28px 40px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            marginBottom: "40px",
+          }}
+        >
+          <div
+            style={{
+              fontSize: "22px",
+              color: accentColor,
+              fontWeight: 600,
+              textAlign: "center",
+            }}
+          >
             消息统一转换成系统能理解的格式
           </div>
         </div>
 
-        {/* 箭头 */}
-        <svg style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", pointerEvents: "none" }}>
-          {channels.map((channel, index) => {
-            const progress = interpolate(
-              frame - 60 - index * 5,
-              [0, 30],
-              [0, 1],
-              { extrapolateRight: "clamp" }
-            );
-            const opacity = spring({ frame: frame - 60 - index * 5, fps: 30 });
-
-            return (
-              <g key={index} opacity={opacity}>
-                <defs>
-                  <marker id={`arrow-channels-${index}`} markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
-                    <polygon points="0 0, 10 3, 0 6" fill="#FBBF24" />
-                  </marker>
-                </defs>
-                <line
-                  x1={channel.x + 80}
-                  y1={360}
-                  x2={channel.x + 80 + (500 - (channel.x + 80)) * progress}
-                  y2={400}
-                  stroke="#FBBF24"
-                  strokeWidth="3"
-                  markerEnd={`url(#arrow-channels-${index})`}
-                />
-              </g>
-            );
-          })}
-        </svg>
-
         {/* 输出说明 */}
-        <div style={{
-          position: "absolute",
-          left: 400,
-          top: 530,
-          width: "450px",
-          textAlign: "center",
-          opacity: spring({ frame: frame - 100, fps: 30 }),
-        }}>
-          <div style={{ fontSize: "24px", color: "#10B981", fontWeight: 700, marginBottom: "12px" }}>
+        <div
+          style={{
+            textAlign: "center",
+            opacity: spring({ frame: frame - 100, fps: 30 }),
+          }}
+        >
+          <div
+            style={{
+              fontSize: "26px",
+              color: "#10B981",
+              fontWeight: 700,
+              marginBottom: "12px",
+            }}
+          >
             ✓ 指令准确送达 Agent
           </div>
           <div style={{ fontSize: "18px", color: textColor }}>
@@ -620,73 +1403,371 @@ const NodesScene: React.FC<{
   accentColor: string;
   textColor: string;
 }> = ({ frame, accentColor, textColor }) => {
-  const titleOpacity = spring({ frame, fps: 30, config: { damping: 15, stiffness: 100 } });
+  const titleOpacity = spring({
+    frame,
+    fps: 30,
+    config: { damping: 15, stiffness: 100 },
+  });
 
-  const nodeTypes = [
-    { title: "Worker 节点", icon: "⚙️", desc: "执行任务", color: "#34D399" },
-    { title: "Scheduler 节点", icon: "📋", desc: "任务调度", color: "#60A5FA" },
-    { title: "Monitor 节点", icon: "📊", desc: "监控状态", color: "#F472B6" },
+  // 设备场景
+  const deviceScenarios = [
+    {
+      title: "本地电脑场景",
+      icon: "💻",
+      desc: "个人电脑上运行节点，本地化服务",
+      devices: ["🖥️ 桌面应用", "📁 本地文件", "⚙️ 系统控制"],
+      color: "#3B82F6",
+    },
+    {
+      title: "服务器场景",
+      icon: "🖥️",
+      desc: "服务器集群部署，稳定可靠",
+      devices: ["🔧 运维管理", "📊 监控告警", "🔄 自动化部署"],
+      color: "#10B981",
+    },
+    {
+      title: "云主机场景",
+      icon: "☁️",
+      desc: "云端弹性部署，按需扩展",
+      devices: ["🚀 弹性伸缩", "💰 成本优化", "🌍 全球分发"],
+      color: "#F59E0B",
+    },
+  ];
+
+  // 技术特性
+  const techFeatures = [
+    { icon: "🔌", title: "插件化架构", desc: "轻松添加新设备支持" },
+    { icon: "🔄", title: "自动重连", desc: "网络中断自动恢复" },
+    { icon: "⚡", title: "低延迟", desc: "毫秒级响应速度" },
+    { icon: "🛡️", title: "安全隔离", desc: "每个节点独立运行" },
   ];
 
   return (
-    <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "60px" }}>
-      <h1 style={{ fontSize: "56px", fontWeight: 800, color: accentColor, margin: "0 0 16px 0", opacity: titleOpacity, textAlign: "center" }}>
-        Nodes: 分布式节点
-      </h1>
-      <p style={{ fontSize: "24px", color: textColor, margin: "0 0 60px 0", opacity: titleOpacity, textAlign: "center" }}>
-        可扩展的分布式计算架构
-      </p>
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "50px 70px",
+        background:
+          "linear-gradient(135deg, rgba(30,30,40,0.9) 0%, rgba(20,20,30,0.95) 100%)",
+      }}
+    >
+      {/* 标题 - 打字机效果 */}
+      <div style={{ textAlign: "center", marginBottom: "45px" }}>
+        <h1
+          style={{
+            fontSize: "56px",
+            fontWeight: 800,
+            color: accentColor,
+            margin: "0 0 12px 0",
+            opacity: titleOpacity,
+            minHeight: "65px",
+          }}
+        >
+          {(() => {
+            const title = "Nodes: 助理的眼睛和手，真正干活的";
+            const typeStartFrame = 5;
+            const durationPerChar = 3;
+            const charsToShow = Math.max(
+              0,
+              Math.min(
+                title.length,
+                Math.floor((frame - typeStartFrame) / durationPerChar),
+              ),
+            );
+            return title.substring(0, charsToShow);
+          })()}
+        </h1>
+        <p
+          style={{
+            fontSize: "22px",
+            color: textColor,
+            margin: "0",
+            opacity: titleOpacity,
+            minHeight: "30px",
+          }}
+        >
+          {(() => {
+            const subtitle = "在多个设备上部署节点，让助理无处不在";
+            const typeStartFrame = 20;
+            const durationPerChar = 2;
+            const charsToShow = Math.max(
+              0,
+              Math.min(
+                subtitle.length,
+                Math.floor((frame - typeStartFrame) / durationPerChar),
+              ),
+            );
+            return subtitle.substring(0, charsToShow);
+          })()}
+        </p>
+      </div>
 
-      <div style={{ display: "flex", gap: "60px", justifyContent: "center", alignItems: "center", width: "100%", maxWidth: "1200px" }}>
-        {nodeTypes.map((node, index) => (
-          <div key={index} style={{
-            opacity: spring({ frame: frame - 20 - index * 15, fps: 30 }),
-            transform: `scale(${spring({ frame: frame - 20 - index * 15, fps: 30, config: { damping: 25, stiffness: 100 } })})`,
-            transformOrigin: "center center",
-          }}>
-            <div style={{
-              width: "280px",
-              padding: "32px",
-              background: `${node.color}22`,
-              border: `4px solid ${node.color}`,
-              borderRadius: "24px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              boxShadow: `0 12px 48px ${node.color}55`,
-            }}>
-              <div style={{ fontSize: "72px", marginBottom: "20px" }}>{node.icon}</div>
-              <div style={{ fontSize: "28px", fontWeight: 700, color: node.color, marginBottom: "12px" }}>
-                {node.title}
+      {/* 设备场景展示 */}
+      <div
+        style={{
+          display: "flex",
+          gap: "30px",
+          justifyContent: "center",
+          alignItems: "stretch",
+          width: "100%",
+          maxWidth: "1300px",
+          marginBottom: "40px",
+        }}
+      >
+        {deviceScenarios.map((scenario, index) => (
+          <div
+            key={index}
+            style={{
+              flex: 1,
+              opacity: spring({ frame: frame - 30 - index * 12, fps: 30 }),
+              transform: `translateY(${interpolate(frame - 30 - index * 12, [-30, 0], [40, 0], { extrapolateRight: "clamp" })}px)`,
+            }}
+          >
+            <div
+              style={{
+                background: `${scenario.color}15`,
+                border: `3px solid ${scenario.color}`,
+                borderRadius: "20px",
+                padding: "28px",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                boxShadow: `0 8px 32px ${scenario.color}40`,
+              }}
+            >
+              <div style={{ textAlign: "center", marginBottom: "18px" }}>
+                <div style={{ fontSize: "56px", marginBottom: "10px" }}>
+                  {scenario.icon}
+                </div>
+                <div
+                  style={{
+                    fontSize: "24px",
+                    fontWeight: 700,
+                    color: scenario.color,
+                    marginBottom: "8px",
+                  }}
+                >
+                  {scenario.title}
+                </div>
+                <div
+                  style={{
+                    fontSize: "15px",
+                    color: "rgba(255,255,255,0.65)",
+                    lineHeight: 1.4,
+                  }}
+                >
+                  {scenario.desc}
+                </div>
               </div>
-              <div style={{ fontSize: "18px", color: "rgba(255,255,255,0.7)" }}>
-                {node.desc}
+
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                  marginTop: "auto",
+                }}
+              >
+                {scenario.devices.map((device, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      background: "rgba(255,255,255,0.06)",
+                      borderRadius: "10px",
+                      padding: "10px 14px",
+                      fontSize: "15px",
+                      color: textColor,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
+                    <span style={{ fontSize: "18px" }}>
+                      {device.split(" ")[0]}
+                    </span>
+                    <span>{device.split(" ").slice(1).join(" ")}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         ))}
       </div>
 
-      {/* 底部特性 */}
-      <div style={{
-        marginTop: "80px",
-        display: "flex",
-        gap: "24px",
-        opacity: spring({ frame: frame - 80, fps: 30 }),
-      }}>
-        {["负载均衡", "故障转移", "动态扩展", "健康检查"].map((feature) => (
-          <div key={feature} style={{
-            background: "rgba(255,255,255,0.05)",
-            border: "2px solid rgba(255,255,255,0.2)",
-            borderRadius: "12px",
-            padding: "12px 24px",
-            fontSize: "18px",
-            color: textColor,
-            fontWeight: 600,
-          }}>
-            ✓ {feature}
+      {/* 底部信息区域 */}
+      <div
+        style={{
+          display: "flex",
+          gap: "28px",
+          width: "100%",
+          maxWidth: "1300px",
+          opacity: spring({ frame: frame - 80, fps: 30 }),
+        }}
+      >
+        {/* 左侧：技术特性 */}
+        <div
+          style={{
+            flex: 1,
+            background: "rgba(245, 158, 11, 0.1)",
+            border: "3px solid #F59E0B",
+            borderRadius: "16px",
+            padding: "22px 26px",
+          }}
+        >
+          <div
+            style={{
+              fontSize: "20px",
+              fontWeight: 700,
+              color: "#F59E0B",
+              marginBottom: "16px",
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+            }}
+          >
+            <span style={{ fontSize: "26px" }}>⚙️</span>
+            核心技术特性
           </div>
-        ))}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "14px",
+            }}
+          >
+            {techFeatures.map((feature, i) => (
+              <div
+                key={i}
+                style={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: "10px",
+                }}
+              >
+                <span style={{ fontSize: "20px", lineHeight: 1 }}>
+                  {feature.icon}
+                </span>
+                <div>
+                  <div
+                    style={{
+                      fontSize: "15px",
+                      fontWeight: 600,
+                      color: textColor,
+                      marginBottom: "3px",
+                    }}
+                  >
+                    {feature.title}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "13px",
+                      color: "rgba(255,255,255,0.55)",
+                      lineHeight: 1.3,
+                    }}
+                  >
+                    {feature.desc}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 右侧：系统架构流程 */}
+        <div
+          style={{
+            flex: 1,
+            background: "rgba(59, 130, 246, 0.1)",
+            border: "3px solid #3B82F6",
+            borderRadius: "16px",
+            padding: "22px 26px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+          }}
+        >
+          <div
+            style={{
+              fontSize: "20px",
+              fontWeight: 700,
+              color: "#3B82F6",
+              marginBottom: "18px",
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+            }}
+          >
+            <span style={{ fontSize: "26px" }}>🏗️</span>
+            系统架构流程
+          </div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "12px",
+            }}
+          >
+            {[
+              { label: "Nodes", icon: "🌐", color: "#34D399" },
+              { label: "Agent", icon: "🤖", color: "#3B82F6" },
+              { label: "智能决策", icon: "🧠", color: "#A78BFA" },
+            ].map((step, i) => (
+              <React.Fragment key={i}>
+                <div
+                  style={{
+                    flex: 1,
+                    background: `${step.color}20`,
+                    border: `2px solid ${step.color}`,
+                    borderRadius: "12px",
+                    padding: "14px",
+                    textAlign: "center",
+                  }}
+                >
+                  <div style={{ fontSize: "32px", marginBottom: "6px" }}>
+                    {step.icon}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "16px",
+                      fontWeight: 700,
+                      color: step.color,
+                    }}
+                  >
+                    {step.label}
+                  </div>
+                </div>
+                {i < 2 && (
+                  <div
+                    style={{
+                      fontSize: "24px",
+                      color: "#3B82F6",
+                      fontWeight: 700,
+                    }}
+                  >
+                    →
+                  </div>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+          <div
+            style={{
+              marginTop: "14px",
+              fontSize: "14px",
+              color: "rgba(255,255,255,0.6)",
+              textAlign: "center",
+              lineHeight: 1.4,
+            }}
+          >
+            Nodes 负责执行，Agent 负责决策，协同实现智能化
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -701,51 +1782,164 @@ const MemoryScene: React.FC<{
   accentColor: string;
   textColor: string;
 }> = ({ frame, accentColor, textColor }) => {
-  const titleOpacity = spring({ frame, fps: 30, config: { damping: 15, stiffness: 100 } });
+  const titleOpacity = spring({
+    frame,
+    fps: 30,
+    config: { damping: 15, stiffness: 100 },
+  });
 
   const memoryTypes = [
-    { title: "短期记忆", icon: "💭", desc: "当前对话上下文", color: "#3B82F6", x: 100, y: 150 },
-    { title: "长期记忆", icon: "🗄️", desc: "持久化存储", color: "#10B981", x: 400, y: 150 },
-    { title: "向量存储", icon: "🔍", desc: "语义搜索", color: "#F59E0B", x: 700, y: 150 },
-    { title: "知识图谱", icon: "🕸️", desc: "关系网络", color: "#8B5CF6", x: 1000, y: 150 },
+    {
+      title: "短期记忆",
+      icon: "💭",
+      desc: "当前对话上下文",
+      color: "#3B82F6",
+      x: 100,
+      y: 150,
+    },
+    {
+      title: "长期记忆",
+      icon: "🗄️",
+      desc: "持久化存储",
+      color: "#10B981",
+      x: 400,
+      y: 150,
+    },
+    {
+      title: "向量存储",
+      icon: "🔍",
+      desc: "语义搜索",
+      color: "#F59E0B",
+      x: 700,
+      y: 150,
+    },
+    {
+      title: "知识图谱",
+      icon: "🕸️",
+      desc: "关系网络",
+      color: "#8B5CF6",
+      x: 1000,
+      y: 150,
+    },
   ];
 
   return (
-    <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "60px" }}>
-      <h1 style={{ fontSize: "56px", fontWeight: 800, color: accentColor, margin: "0 0 16px 0", opacity: titleOpacity, textAlign: "center" }}>
-        Memory: 记忆系统
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "60px",
+      }}
+    >
+      <h1
+        style={{
+          fontSize: "56px",
+          fontWeight: 800,
+          color: accentColor,
+          margin: "0 0 16px 0",
+          opacity: titleOpacity,
+          textAlign: "center",
+          minHeight: "70px",
+        }}
+      >
+        {(() => {
+          const title = "Memory: 记忆系统";
+          const typeStartFrame = 5;
+          const durationPerChar = 3;
+          const charsToShow = Math.max(
+            0,
+            Math.min(
+              title.length,
+              Math.floor((frame - typeStartFrame) / durationPerChar),
+            ),
+          );
+          return title.substring(0, charsToShow);
+        })()}
       </h1>
-      <p style={{ fontSize: "24px", color: textColor, margin: "0 0 60px 0", opacity: titleOpacity, textAlign: "center" }}>
-        让 Agent 拥有持久化记忆能力
+      <p
+        style={{
+          fontSize: "24px",
+          color: textColor,
+          margin: "0 0 60px 0",
+          opacity: titleOpacity,
+          textAlign: "center",
+          minHeight: "32px",
+        }}
+      >
+        {(() => {
+          const subtitle = "让 Agent 拥有持久化记忆能力";
+          const typeStartFrame = 18;
+          const durationPerChar = 2;
+          const charsToShow = Math.max(
+            0,
+            Math.min(
+              subtitle.length,
+              Math.floor((frame - typeStartFrame) / durationPerChar),
+            ),
+          );
+          return subtitle.substring(0, charsToShow);
+        })()}
       </p>
 
-      <div style={{ position: "relative", width: "100%", maxWidth: "1300px", height: "350px" }}>
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          maxWidth: "1300px",
+          height: "350px",
+        }}
+      >
         {/* 记忆类型 */}
         {memoryTypes.map((memory, index) => (
-          <div key={index} style={{
-            position: "absolute",
-            left: memory.x,
-            top: memory.y,
-            opacity: spring({ frame: frame - 20 - index * 10, fps: 30 }),
-            transform: `scale(${spring({ frame: frame - 20 - index * 10, fps: 30, config: { damping: 25, stiffness: 100 } })})`,
-            transformOrigin: "center center",
-          }}>
-            <div style={{
-              width: "240px",
-              padding: "24px",
-              background: `${memory.color}22`,
-              border: `3px solid ${memory.color}`,
-              borderRadius: "16px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              boxShadow: `0 8px 32px ${memory.color}44`,
-            }}>
-              <div style={{ fontSize: "48px", marginBottom: "16px" }}>{memory.icon}</div>
-              <div style={{ fontSize: "22px", fontWeight: 700, color: memory.color, marginBottom: "8px", textAlign: "center" }}>
+          <div
+            key={index}
+            style={{
+              position: "absolute",
+              left: memory.x,
+              top: memory.y,
+              opacity: spring({ frame: frame - 20 - index * 10, fps: 30 }),
+              transform: `scale(${spring({ frame: frame - 20 - index * 10, fps: 30, config: { damping: 25, stiffness: 100 } })})`,
+              transformOrigin: "center center",
+            }}
+          >
+            <div
+              style={{
+                width: "240px",
+                padding: "24px",
+                background: `${memory.color}22`,
+                border: `3px solid ${memory.color}`,
+                borderRadius: "16px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                boxShadow: `0 8px 32px ${memory.color}44`,
+              }}
+            >
+              <div style={{ fontSize: "48px", marginBottom: "16px" }}>
+                {memory.icon}
+              </div>
+              <div
+                style={{
+                  fontSize: "22px",
+                  fontWeight: 700,
+                  color: memory.color,
+                  marginBottom: "8px",
+                  textAlign: "center",
+                }}
+              >
                 {memory.title}
               </div>
-              <div style={{ fontSize: "16px", color: "rgba(255,255,255,0.7)", textAlign: "center" }}>
+              <div
+                style={{
+                  fontSize: "16px",
+                  color: "rgba(255,255,255,0.7)",
+                  textAlign: "center",
+                }}
+              >
                 {memory.desc}
               </div>
             </div>
@@ -753,13 +1947,22 @@ const MemoryScene: React.FC<{
         ))}
 
         {/* 连接线 */}
-        <svg style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", pointerEvents: "none" }}>
+        <svg
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            pointerEvents: "none",
+          }}
+        >
           {[0, 1, 2].map((index) => {
             const progress = interpolate(
               frame - 60 - index * 5,
               [0, 30],
               [0, 1],
-              { extrapolateRight: "clamp" }
+              { extrapolateRight: "clamp" },
             );
             const opacity = spring({ frame: frame - 60 - index * 5, fps: 30 });
             const x1 = memoryTypes[index].x + 240;
@@ -783,26 +1986,31 @@ const MemoryScene: React.FC<{
         </svg>
 
         {/* 底部特性 */}
-        <div style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          display: "flex",
-          justifyContent: "center",
-          gap: "20px",
-          opacity: spring({ frame: frame - 90, fps: 30 }),
-        }}>
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            display: "flex",
+            justifyContent: "center",
+            gap: "20px",
+            opacity: spring({ frame: frame - 90, fps: 30 }),
+          }}
+        >
           {["自动整理", "智能检索", "过期清理", "加密存储"].map((feature) => (
-            <div key={feature} style={{
-              background: `${accentColor}22`,
-              border: `2px solid ${accentColor}`,
-              borderRadius: "20px",
-              padding: "8px 20px",
-              fontSize: "16px",
-              fontWeight: 600,
-              color: accentColor,
-            }}>
+            <div
+              key={feature}
+              style={{
+                background: `${accentColor}22`,
+                border: `2px solid ${accentColor}`,
+                borderRadius: "20px",
+                padding: "8px 20px",
+                fontSize: "16px",
+                fontWeight: 600,
+                color: accentColor,
+              }}
+            >
               {feature}
             </div>
           ))}
@@ -821,77 +2029,157 @@ const HeartbeatScene: React.FC<{
   accentColor: string;
   textColor: string;
 }> = ({ frame, accentColor, textColor }) => {
-  const titleOpacity = spring({ frame, fps: 30, config: { damping: 15, stiffness: 100 } });
+  const titleOpacity = spring({
+    frame,
+    fps: 30,
+    config: { damping: 15, stiffness: 100 },
+  });
 
-  const heartbeatScale = interpolate(
-    frame % 60,
-    [0, 30],
-    [1, 1.1],
-    { extrapolateRight: "clamp", extrapolateLeft: "clamp" }
-  );
+  const heartbeatScale = interpolate(frame % 60, [0, 30], [1, 1.1], {
+    extrapolateRight: "clamp",
+    extrapolateLeft: "clamp",
+  });
 
   return (
-    <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "60px" }}>
-      <h1 style={{ fontSize: "56px", fontWeight: 800, color: accentColor, margin: "0 0 16px 0", opacity: titleOpacity, textAlign: "center" }}>
-        Heartbeat: 健康检查
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "60px",
+      }}
+    >
+      <h1
+        style={{
+          fontSize: "56px",
+          fontWeight: 800,
+          color: accentColor,
+          margin: "0 0 16px 0",
+          opacity: titleOpacity,
+          textAlign: "center",
+          minHeight: "70px",
+        }}
+      >
+        {(() => {
+          const title = "Heartbeat: 健康检查";
+          const typeStartFrame = 5;
+          const durationPerChar = 3;
+          const charsToShow = Math.max(
+            0,
+            Math.min(
+              title.length,
+              Math.floor((frame - typeStartFrame) / durationPerChar),
+            ),
+          );
+          return title.substring(0, charsToShow);
+        })()}
       </h1>
-      <p style={{ fontSize: "24px", color: textColor, margin: "0 0 80px 0", opacity: titleOpacity, textAlign: "center" }}>
-        实时监控系统状态，确保服务稳定运行
+      <p
+        style={{
+          fontSize: "24px",
+          color: textColor,
+          margin: "0 0 80px 0",
+          opacity: titleOpacity,
+          textAlign: "center",
+          minHeight: "32px",
+        }}
+      >
+        {(() => {
+          const subtitle = "实时监控系统状态，确保服务稳定运行";
+          const typeStartFrame = 20;
+          const durationPerChar = 2;
+          const charsToShow = Math.max(
+            0,
+            Math.min(
+              subtitle.length,
+              Math.floor((frame - typeStartFrame) / durationPerChar),
+            ),
+          );
+          return subtitle.substring(0, charsToShow);
+        })()}
       </p>
 
       <div style={{ position: "relative", width: "100%", maxWidth: "600px" }}>
         {/* 心跳动画 */}
-        <div style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "40px",
-        }}>
-          <div style={{
-            fontSize: "120px",
-            transform: `scale(${heartbeatScale})`,
-            opacity: spring({ frame: frame - 20, fps: 30 }),
-            filter: "drop-shadow(0 8px 32px rgba(244, 114, 182, 0.6))",
-          }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "40px",
+          }}
+        >
+          <div
+            style={{
+              fontSize: "120px",
+              transform: `scale(${heartbeatScale})`,
+              opacity: spring({ frame: frame - 20, fps: 30 }),
+              filter: "drop-shadow(0 8px 32px rgba(244, 114, 182, 0.6))",
+            }}
+          >
             💓
           </div>
 
           {/* 状态指标 */}
-          <div style={{
-            width: "100%",
-            opacity: spring({ frame: frame - 40, fps: 30 }),
-          }}>
+          <div
+            style={{
+              width: "100%",
+              opacity: spring({ frame: frame - 40, fps: 30 }),
+            }}
+          >
             {[
               { label: "系统运行时间", value: "99.9%", color: "#10B981" },
               { label: "节点健康度", value: "100%", color: "#3B82F6" },
               { label: "响应时间", value: "< 100ms", color: "#F59E0B" },
             ].map((metric, index) => (
-              <div key={index} style={{
-                marginBottom: "20px",
-                opacity: spring({ frame: frame - 50 - index * 10, fps: 30 }),
-              }}>
-                <div style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginBottom: "8px",
-                }}>
-                  <span style={{ fontSize: "18px", color: textColor }}>{metric.label}</span>
-                  <span style={{ fontSize: "24px", fontWeight: 700, color: metric.color }}>{metric.value}</span>
+              <div
+                key={index}
+                style={{
+                  marginBottom: "20px",
+                  opacity: spring({ frame: frame - 50 - index * 10, fps: 30 }),
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: "8px",
+                  }}
+                >
+                  <span style={{ fontSize: "18px", color: textColor }}>
+                    {metric.label}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "24px",
+                      fontWeight: 700,
+                      color: metric.color,
+                    }}
+                  >
+                    {metric.value}
+                  </span>
                 </div>
-                <div style={{
-                  width: "100%",
-                  height: "8px",
-                  background: "rgba(255,255,255,0.1)",
-                  borderRadius: "4px",
-                  overflow: "hidden",
-                }}>
-                  <div style={{
-                    width: index === 2 ? "90%" : "100%",
-                    height: "100%",
-                    background: metric.color,
+                <div
+                  style={{
+                    width: "100%",
+                    height: "8px",
+                    background: "rgba(255,255,255,0.1)",
                     borderRadius: "4px",
-                  }} />
+                    overflow: "hidden",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: index === 2 ? "90%" : "100%",
+                      height: "100%",
+                      background: metric.color,
+                      borderRadius: "4px",
+                    }}
+                  />
                 </div>
               </div>
             ))}
@@ -900,22 +2188,27 @@ const HeartbeatScene: React.FC<{
       </div>
 
       {/* 底部特性 */}
-      <div style={{
-        marginTop: "60px",
-        display: "flex",
-        gap: "24px",
-        opacity: spring({ frame: frame - 100, fps: 30 }),
-      }}>
+      <div
+        style={{
+          marginTop: "60px",
+          display: "flex",
+          gap: "24px",
+          opacity: spring({ frame: frame - 100, fps: 30 }),
+        }}
+      >
         {["自动告警", "故障恢复", "性能监控", "日志记录"].map((feature) => (
-          <div key={feature} style={{
-            background: "rgba(255,255,255,0.05)",
-            border: "2px solid rgba(255,255,255,0.2)",
-            borderRadius: "12px",
-            padding: "12px 24px",
-            fontSize: "18px",
-            color: textColor,
-            fontWeight: 600,
-          }}>
+          <div
+            key={feature}
+            style={{
+              background: "rgba(255,255,255,0.05)",
+              border: "2px solid rgba(255,255,255,0.2)",
+              borderRadius: "12px",
+              padding: "12px 24px",
+              fontSize: "18px",
+              color: textColor,
+              fontWeight: 600,
+            }}
+          >
             ✓ {feature}
           </div>
         ))}
@@ -933,7 +2226,11 @@ const CronScene: React.FC<{
   accentColor: string;
   textColor: string;
 }> = ({ frame, accentColor, textColor }) => {
-  const titleOpacity = spring({ frame, fps: 30, config: { damping: 15, stiffness: 100 } });
+  const titleOpacity = spring({
+    frame,
+    fps: 30,
+    config: { damping: 15, stiffness: 100 },
+  });
 
   const cronExamples = [
     { time: "0 9 * * 1-5", desc: "工作日早上9点", icon: "🌅" },
@@ -942,46 +2239,116 @@ const CronScene: React.FC<{
   ];
 
   return (
-    <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "60px" }}>
-      <h1 style={{ fontSize: "56px", fontWeight: 800, color: accentColor, margin: "0 0 16px 0", opacity: titleOpacity, textAlign: "center" }}>
-        Cron: 定时任务
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "60px",
+      }}
+    >
+      <h1
+        style={{
+          fontSize: "56px",
+          fontWeight: 800,
+          color: accentColor,
+          margin: "0 0 16px 0",
+          opacity: titleOpacity,
+          textAlign: "center",
+          minHeight: "70px",
+        }}
+      >
+        {(() => {
+          const title = "Cron: 定时任务";
+          const typeStartFrame = 5;
+          const durationPerChar = 3;
+          const charsToShow = Math.max(
+            0,
+            Math.min(
+              title.length,
+              Math.floor((frame - typeStartFrame) / durationPerChar),
+            ),
+          );
+          return title.substring(0, charsToShow);
+        })()}
       </h1>
-      <p style={{ fontSize: "24px", color: textColor, margin: "0 0 60px 0", opacity: titleOpacity, textAlign: "center" }}>
-        自动化定时触发，让 Agent 主动工作
+      <p
+        style={{
+          fontSize: "24px",
+          color: textColor,
+          margin: "0 0 60px 0",
+          opacity: titleOpacity,
+          textAlign: "center",
+          minHeight: "32px",
+        }}
+      >
+        {(() => {
+          const subtitle = "自动化定时触发，让 Agent 主动工作";
+          const typeStartFrame = 16;
+          const durationPerChar = 2;
+          const charsToShow = Math.max(
+            0,
+            Math.min(
+              subtitle.length,
+              Math.floor((frame - typeStartFrame) / durationPerChar),
+            ),
+          );
+          return subtitle.substring(0, charsToShow);
+        })()}
       </p>
 
       <div style={{ width: "100%", maxWidth: "1000px" }}>
         {/* Cron 表达式示例 */}
         <div style={{ marginBottom: "60px" }}>
-          <div style={{ fontSize: "28px", fontWeight: 700, color: textColor, marginBottom: "30px", textAlign: "center" }}>
+          <div
+            style={{
+              fontSize: "28px",
+              fontWeight: 700,
+              color: textColor,
+              marginBottom: "30px",
+              textAlign: "center",
+            }}
+          >
             Cron 表达式示例
           </div>
           {cronExamples.map((example, index) => (
-            <div key={index} style={{
-              marginBottom: "20px",
-              opacity: spring({ frame: frame - 20 - index * 10, fps: 30 }),
-              transform: `translateX(${interpolate(frame - 20 - index * 10, [-50, 0], [50, 0], { extrapolateRight: "clamp" })}px)`,
-            }}>
-              <div style={{
-                background: "rgba(255,255,255,0.05)",
-                border: "2px solid rgba(255,255,255,0.2)",
-                borderRadius: "12px",
-                padding: "20px 24px",
-                display: "flex",
-                alignItems: "center",
-                gap: "20px",
-              }}>
+            <div
+              key={index}
+              style={{
+                marginBottom: "20px",
+                opacity: spring({ frame: frame - 20 - index * 10, fps: 30 }),
+                transform: `translateX(${interpolate(frame - 20 - index * 10, [-50, 0], [50, 0], { extrapolateRight: "clamp" })}px)`,
+              }}
+            >
+              <div
+                style={{
+                  background: "rgba(255,255,255,0.05)",
+                  border: "2px solid rgba(255,255,255,0.2)",
+                  borderRadius: "12px",
+                  padding: "20px 24px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "20px",
+                }}
+              >
                 <span style={{ fontSize: "40px" }}>{example.icon}</span>
-                <code style={{
-                  flex: 1,
-                  fontSize: "20px",
-                  color: "#A78BFA",
-                  fontFamily: "monospace",
-                  fontWeight: 600,
-                }}>
+                <code
+                  style={{
+                    flex: 1,
+                    fontSize: "20px",
+                    color: "#A78BFA",
+                    fontFamily: "monospace",
+                    fontWeight: 600,
+                  }}
+                >
                   {example.time}
                 </code>
-                <span style={{ fontSize: "18px", color: "rgba(255,255,255,0.7)" }}>
+                <span
+                  style={{ fontSize: "18px", color: "rgba(255,255,255,0.7)" }}
+                >
                   {example.desc}
                 </span>
               </div>
@@ -990,34 +2357,62 @@ const CronScene: React.FC<{
         </div>
 
         {/* 使用场景 */}
-        <div style={{
-          opacity: spring({ frame: frame - 60, fps: 30 }),
-        }}>
-          <div style={{ fontSize: "28px", fontWeight: 700, color: textColor, marginBottom: "30px", textAlign: "center" }}>
+        <div
+          style={{
+            opacity: spring({ frame: frame - 60, fps: 30 }),
+          }}
+        >
+          <div
+            style={{
+              fontSize: "28px",
+              fontWeight: 700,
+              color: textColor,
+              marginBottom: "30px",
+              textAlign: "center",
+            }}
+          >
             典型使用场景
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "20px",
+            }}
+          >
             {[
               { icon: "📊", title: "数据报表", desc: "每日自动生成" },
               { icon: "🔔", title: "提醒通知", desc: "定时发送" },
               { icon: "🧹", title: "系统清理", desc: "定期维护" },
               { icon: "🔄", title: "数据同步", desc: "自动更新" },
             ].map((scenario, index) => (
-              <div key={index} style={{
-                background: `${accentColor}11`,
-                border: `2px solid ${accentColor}`,
-                borderRadius: "12px",
-                padding: "20px",
-                display: "flex",
-                alignItems: "center",
-                gap: "16px",
-              }}>
+              <div
+                key={index}
+                style={{
+                  background: `${accentColor}11`,
+                  border: `2px solid ${accentColor}`,
+                  borderRadius: "12px",
+                  padding: "20px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "16px",
+                }}
+              >
                 <span style={{ fontSize: "36px" }}>{scenario.icon}</span>
                 <div>
-                  <div style={{ fontSize: "18px", fontWeight: 700, color: textColor, marginBottom: "4px" }}>
+                  <div
+                    style={{
+                      fontSize: "18px",
+                      fontWeight: 700,
+                      color: textColor,
+                      marginBottom: "4px",
+                    }}
+                  >
                     {scenario.title}
                   </div>
-                  <div style={{ fontSize: "14px", color: "rgba(255,255,255,0.6)" }}>
+                  <div
+                    style={{ fontSize: "14px", color: "rgba(255,255,255,0.6)" }}
+                  >
                     {scenario.desc}
                   </div>
                 </div>
@@ -1039,7 +2434,11 @@ const SummaryScene: React.FC<{
   accentColor: string;
   textColor: string;
 }> = ({ frame, accentColor, textColor }) => {
-  const titleOpacity = spring({ frame, fps: 30, config: { damping: 15, stiffness: 100 } });
+  const titleOpacity = spring({
+    frame,
+    fps: 30,
+    config: { damping: 15, stiffness: 100 },
+  });
 
   const modules = [
     { name: "Gateway", icon: "🚪", desc: "网关核心" },
@@ -1053,57 +2452,113 @@ const SummaryScene: React.FC<{
   ];
 
   return (
-    <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "80px" }}>
-      <h1 style={{
-        fontSize: "64px",
-        fontWeight: 800,
-        color: accentColor,
-        margin: "0 0 40px 0",
-        opacity: titleOpacity,
-        textAlign: "center",
-      }}>
-        OpenClaw 完整架构
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "80px",
+      }}
+    >
+      <h1
+        style={{
+          fontSize: "64px",
+          fontWeight: 800,
+          color: accentColor,
+          margin: "0 0 40px 0",
+          opacity: titleOpacity,
+          textAlign: "center",
+          minHeight: "80px",
+        }}
+      >
+        {(() => {
+          const title = "OpenClaw 完整架构";
+          const typeStartFrame = 5;
+          const durationPerChar = 3;
+          const charsToShow = Math.max(
+            0,
+            Math.min(
+              title.length,
+              Math.floor((frame - typeStartFrame) / durationPerChar),
+            ),
+          );
+          return title.substring(0, charsToShow);
+        })()}
       </h1>
 
-      <p style={{
-        fontSize: "28px",
-        color: textColor,
-        margin: "0 0 80px 0",
-        opacity: spring({ frame: frame - 20, fps: 30 }),
-        textAlign: "center",
-        lineHeight: 1.6,
-      }}>
-        八大模块协同工作，打造强大的 AI 助理系统
+      <p
+        style={{
+          fontSize: "28px",
+          color: textColor,
+          margin: "0 0 80px 0",
+          opacity: spring({ frame: frame - 20, fps: 30 }),
+          textAlign: "center",
+          lineHeight: 1.6,
+          minHeight: "48px",
+        }}
+      >
+        {(() => {
+          const subtitle = "八大模块协同工作，打造强大的 AI 助理系统";
+          const typeStartFrame = 20;
+          const durationPerChar = 2;
+          const charsToShow = Math.max(
+            0,
+            Math.min(
+              subtitle.length,
+              Math.floor((frame - typeStartFrame) / durationPerChar),
+            ),
+          );
+          return subtitle.substring(0, charsToShow);
+        })()}
       </p>
 
       {/* 模块网格 */}
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr 1fr 1fr",
-        gap: "30px",
-        width: "100%",
-        maxWidth: "1200px",
-        marginBottom: "80px",
-      }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr 1fr 1fr",
+          gap: "30px",
+          width: "100%",
+          maxWidth: "1200px",
+          marginBottom: "80px",
+        }}
+      >
         {modules.map((module, index) => (
-          <div key={index} style={{
-            opacity: spring({ frame: frame - 40 - index * 8, fps: 30 }),
-            transform: `scale(${spring({ frame: frame - 40 - index * 8, fps: 30, config: { damping: 25, stiffness: 100 } })})`,
-            transformOrigin: "center center",
-          }}>
-            <div style={{
-              background: `${accentColor}22`,
-              border: `3px solid ${accentColor}`,
-              borderRadius: "16px",
-              padding: "32px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              minHeight: "180px",
-              justifyContent: "center",
-            }}>
-              <div style={{ fontSize: "56px", marginBottom: "16px" }}>{module.icon}</div>
-              <div style={{ fontSize: "22px", fontWeight: 700, color: accentColor, marginBottom: "8px" }}>
+          <div
+            key={index}
+            style={{
+              opacity: spring({ frame: frame - 40 - index * 8, fps: 30 }),
+              transform: `scale(${spring({ frame: frame - 40 - index * 8, fps: 30, config: { damping: 25, stiffness: 100 } })})`,
+              transformOrigin: "center center",
+            }}
+          >
+            <div
+              style={{
+                background: `${accentColor}22`,
+                border: `3px solid ${accentColor}`,
+                borderRadius: "16px",
+                padding: "32px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                minHeight: "180px",
+                justifyContent: "center",
+              }}
+            >
+              <div style={{ fontSize: "56px", marginBottom: "16px" }}>
+                {module.icon}
+              </div>
+              <div
+                style={{
+                  fontSize: "22px",
+                  fontWeight: 700,
+                  color: accentColor,
+                  marginBottom: "8px",
+                }}
+              >
                 {module.name}
               </div>
               <div style={{ fontSize: "16px", color: "rgba(255,255,255,0.7)" }}>
@@ -1115,11 +2570,20 @@ const SummaryScene: React.FC<{
       </div>
 
       {/* 底部号召 */}
-      <div style={{
-        opacity: spring({ frame: frame - 120, fps: 30 }),
-        textAlign: "center",
-      }}>
-        <div style={{ fontSize: "32px", fontWeight: 700, color: textColor, marginBottom: "24px" }}>
+      <div
+        style={{
+          opacity: spring({ frame: frame - 120, fps: 30 }),
+          textAlign: "center",
+        }}
+      >
+        <div
+          style={{
+            fontSize: "32px",
+            fontWeight: 700,
+            color: textColor,
+            marginBottom: "24px",
+          }}
+        >
           🚀 开始构建你的 AI 助理
         </div>
         <div style={{ display: "flex", gap: "24px", justifyContent: "center" }}>
@@ -1128,15 +2592,18 @@ const SummaryScene: React.FC<{
             { text: "💻 GitHub", color: "#10B981" },
             { text: "💬 加入社区", color: "#F59E0B" },
           ].map((btn) => (
-            <div key={btn.text} style={{
-              background: `${btn.color}22`,
-              border: `3px solid ${btn.color}`,
-              borderRadius: "16px",
-              padding: "16px 32px",
-              fontSize: "20px",
-              fontWeight: 700,
-              color: btn.color,
-            }}>
+            <div
+              key={btn.text}
+              style={{
+                background: `${btn.color}22`,
+                border: `3px solid ${btn.color}`,
+                borderRadius: "16px",
+                padding: "16px 32px",
+                fontSize: "20px",
+                fontWeight: 700,
+                color: btn.color,
+              }}
+            >
               {btn.text}
             </div>
           ))}
@@ -1152,7 +2619,13 @@ const SummaryScene: React.FC<{
 
 export const OpenClawArchitecture: React.FC<
   z.infer<typeof openClawArchitectureSchema>
-> = ({ backgroundColor, cardBg, accentColor, textColor, secondaryTextColor }) => {
+> = ({
+  backgroundColor,
+  cardBg, // eslint-disable-line @typescript-eslint/no-unused-vars
+  accentColor,
+  textColor,
+  secondaryTextColor, // eslint-disable-line @typescript-eslint/no-unused-vars
+}) => {
   const frame = useCurrentFrame();
   const SCENE_DURATION = 300; // 10 seconds per scene
 
@@ -1166,7 +2639,7 @@ export const OpenClawArchitecture: React.FC<
       }}
     >
       {/* Scene 1: 整体架构概览 */}
-      <Sequence from={0} durationInFrames={SCENE_DURATION}>
+      <Sequence durationInFrames={SCENE_DURATION}>
         <OverallArchitectureScene
           frame={frame}
           accentColor={accentColor}
@@ -1178,7 +2651,6 @@ export const OpenClawArchitecture: React.FC<
       <Sequence from={SCENE_DURATION} durationInFrames={SCENE_DURATION}>
         <GatewayScene
           frame={frame - SCENE_DURATION}
-          backgroundColor={backgroundColor}
           accentColor={accentColor}
           textColor={textColor}
         />
