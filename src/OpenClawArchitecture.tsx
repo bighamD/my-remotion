@@ -3041,6 +3041,7 @@ const CronScene: React.FC<{
           >
             {cronExpressions.map((expr, index) => {
               const fadeInFrame = 60 + index * 10;
+              const checkFrame = fadeInFrame + 40; // 40帧后开始勾选
 
               return (
                 <div
@@ -3076,7 +3077,13 @@ const CronScene: React.FC<{
                       height: "22px",
                       borderRadius: "6px",
                       border: `2px solid ${expr.color}`,
-                      background: "transparent",
+                      background: spring({
+                        frame: checkFrame,
+                        fps: 30,
+                        config: { damping: 15, stiffness: 100 },
+                      }) > 0.5
+                        ? `${expr.color}20`
+                        : "transparent",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -3089,7 +3096,16 @@ const CronScene: React.FC<{
                         height: "11px",
                         background: expr.color,
                         borderRadius: "2px",
-                        opacity: 0,
+                        opacity: spring({
+                          frame: checkFrame,
+                          fps: 30,
+                          config: { damping: 15, stiffness: 100 },
+                        }),
+                        transform: `scale(${spring({
+                          frame: checkFrame,
+                          fps: 30,
+                          config: { damping: 10, stiffness: 120 },
+                        })})`,
                       }}
                     />
                   </div>
@@ -3244,10 +3260,13 @@ const CronScene: React.FC<{
               gap: "16px",
             }}
           >
-            {useCases.map((useCase, index) => (
-              <div
-                key={index}
-                style={{
+            {useCases.map((useCase, index) => {
+              const checkFrame = 125 - index * 5 + 40; // 卡片出现后40帧开始勾选
+
+              return (
+                <div
+                  key={index}
+                  style={{
                   background: `rgba(${parseInt(
                     useCase.color.slice(1, 3),
                     16,
@@ -3286,7 +3305,13 @@ const CronScene: React.FC<{
                       height: "24px",
                       borderRadius: "6px",
                       border: `2px solid ${useCase.color}`,
-                      background: "transparent",
+                      background: spring({
+                        frame: checkFrame,
+                        fps: 30,
+                        config: { damping: 15, stiffness: 100 },
+                      }) > 0.5
+                        ? `${useCase.color}20`
+                        : "transparent",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -3299,7 +3324,16 @@ const CronScene: React.FC<{
                         height: "12px",
                         background: useCase.color,
                         borderRadius: "2px",
-                        opacity: 0,
+                        opacity: spring({
+                          frame: checkFrame,
+                          fps: 30,
+                          config: { damping: 15, stiffness: 100 },
+                        }),
+                        transform: `scale(${spring({
+                          frame: checkFrame,
+                          fps: 30,
+                          config: { damping: 10, stiffness: 120 },
+                        })})`,
                       }}
                     />
                   </div>
@@ -3373,7 +3407,8 @@ const CronScene: React.FC<{
                   ))}
                 </div>
               </div>
-            ))}
+            );
+            })}
           </div>
         </div>
       </div>
