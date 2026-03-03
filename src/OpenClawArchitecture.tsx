@@ -2879,7 +2879,7 @@ const CronScene: React.FC<{
           ];
 
           const typeStartFrame = 20;
-          const durationPerChar = 2;
+          const durationPerChar = 3;
           const totalChars = parts.reduce(
             (sum, p) => sum + p.text.length,
             0,
@@ -2902,26 +2902,23 @@ const CronScene: React.FC<{
           const rendered: React.ReactNode[] = [];
 
           for (const part of parts) {
-            if (currentChar >= charsToShow) break;
+            for (let charIndex = 0; charIndex < part.text.length; charIndex++) {
+              if (currentChar >= charsToShow) break;
 
-            const charsInPart = Math.min(
-              part.text.length,
-              charsToShow - currentChar,
-            );
-            const visibleText = part.text.substring(0, charsInPart);
-
-            rendered.push(
-              <span
-                key={currentChar}
-                style={{
-                  color: part.color,
-                  fontWeight: part.bold ? 700 : 400,
-                }}
-              >
-                {visibleText}
-              </span>,
-            );
-            currentChar += part.text.length;
+              const char = part.text[charIndex];
+              rendered.push(
+                <span
+                  key={currentChar}
+                  style={{
+                    color: part.color,
+                    fontWeight: part.bold ? 700 : 400,
+                  }}
+                >
+                  {char}
+                </span>,
+              );
+              currentChar++;
+            }
           }
 
           return (
