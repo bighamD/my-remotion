@@ -235,103 +235,25 @@ const OverallArchitectureScene: React.FC<{
     config: { damping: 15, stiffness: 100 },
   });
 
-  // 模块组件
-  const ModuleBox: React.FC<{
-    icon: string;
-    title: string;
-    color: string;
-    frame: number;
-    delay: number;
-    x: number;
-    y: number;
-  }> = ({ icon, title, color, frame, delay, x, y }) => {
-    const opacity = spring({
-      frame: frame - delay,
-      fps: 30,
-      config: { damping: 20, stiffness: 100 },
-    });
-    const scale = spring({
-      frame: frame - delay,
-      fps: 30,
-      config: { damping: 25, stiffness: 100 },
-    });
+  // 8个模块数据
+  const modules = [
+    { icon: "🚪", name: "Gateway", color: "#FF4444", row: 0, col: 0 },
+    { icon: "🤖", name: "Agent", color: "#3B82F6", row: 0, col: 1 },
+    { icon: "💼", name: "Skills", color: "#F59E0B", row: 0, col: 2 },
+    { icon: "📡", name: "Channels", color: "#10B981", row: 0, col: 3 },
+    { icon: "🌐", name: "Nodes", color: "#06B6D4", row: 1, col: 0 },
+    { icon: "🧠", name: "Memory", color: "#A78BFA", row: 1, col: 1 },
+    { icon: "💓", name: "Heartbeat", color: "#EC4899", row: 1, col: 2 },
+    { icon: "⏰", name: "Cron", color: "#F97316", row: 1, col: 3 },
+  ];
 
-    return (
-      <div
-        style={{
-          position: "absolute",
-          left: x,
-          top: y,
-          opacity,
-          transform: `scale(${scale})`,
-          transformOrigin: "center center",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "12px",
-          minWidth: "120px",
-        }}
-      >
-        <div
-          style={{
-            fontSize: "72px",
-            filter: `drop-shadow(0 4px 16px ${color}66)`,
-          }}
-        >
-          {icon}
-        </div>
-        <div
-          style={{
-            fontSize: "20px",
-            fontWeight: 600,
-            color,
-          }}
-        >
-          {title}
-        </div>
-      </div>
-    );
-  };
-
-  // 箭头组件
-  const Arrow: React.FC<{
-    x1: number;
-    y1: number;
-    x2: number;
-    y2: number;
-    delay: number;
-  }> = ({ x1, y1, x2, y2, delay }) => {
-    const progress = interpolate(frame - delay, [0, 30], [0, 1], {
-      extrapolateRight: "clamp",
-    });
-    const opacity = spring({ frame: frame - delay, fps: 30 });
-
-    return (
-      <g opacity={opacity}>
-        <defs>
-          <marker
-            id={`arrow-overall-${x1}-${y1}`}
-            markerWidth="10"
-            markerHeight="10"
-            refX="9"
-            refY="3"
-            orient="auto"
-          >
-            <polygon points="0 0, 10 3, 0 6" fill="rgba(255,255,255,0.2)" />
-          </marker>
-        </defs>
-        <line
-          x1={x1}
-          y1={y1}
-          x2={x1 + (x2 - x1) * progress}
-          y2={y1 + (y2 - y1) * progress}
-          stroke="rgba(255,255,255,0.2)"
-          strokeWidth="2"
-          markerEnd={`url(#arrow-overall-${x1}-${y1})`}
-        />
-      </g>
-    );
-  };
+  // 布局参数
+  const cardWidth = 180;
+  const cardHeight = 140;
+  const gapX = 24;
+  const gapY = 24;
+  const startX = 200;
+  const startY = 150;
 
   return (
     <div
@@ -342,15 +264,15 @@ const OverallArchitectureScene: React.FC<{
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "80px",
+        padding: "60px 80px",
         background: "radial-gradient(circle, #2c2c2c 1px, transparent 1px)",
         backgroundSize: "30px 30px",
       }}
     >
       <div
         style={{
-          maxWidth: "1400px",
           width: "100%",
+          maxWidth: "1600px",
         }}
       >
         {/* 标题 */}
@@ -359,198 +281,280 @@ const OverallArchitectureScene: React.FC<{
             fontSize: "52px",
             fontWeight: 800,
             color: textColor,
-            margin: "0 0 80px 0",
+            margin: "0 0 60px 0",
             opacity: titleOpacity,
             textAlign: "center",
             textShadow: "0 0 20px rgba(255,255,255,0.3)",
-            minHeight: "65px",
           }}
         >
-          <span>
-            <span style={{ color: accentColor }}>OpenClaw</span> 核心组成
-          </span>
+          <span style={{ color: accentColor }}>OpenClaw</span> 核心组成
         </h1>
 
-        <div style={{ display: "flex", gap: "60px" }}>
-          {/* 左侧：OpenClaw 核心区 */}
+        {/* 核心展示区 */}
+        <div
+          style={{
+            position: "relative",
+            width: "100%",
+            height: "450px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {/* 左侧：OpenClaw 核心 */}
           <div
             style={{
-              flex: "0 0 280px",
+              position: "absolute",
+              left: 0,
+              top: "50%",
+              transform: "translateY(-50%)",
+              width: "280px",
+              height: "280px",
+              borderRadius: "50%",
+              background: `linear-gradient(135deg, ${accentColor}22 0%, ${accentColor}11 100%)`,
+              border: `4px solid ${accentColor}`,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              borderRight: "2px solid rgba(255,255,255,0.2)",
-              paddingRight: "40px",
+              opacity: spring({ frame: frame - 10, fps: 30 }),
+              transform: `translateY(-50%) scale(${spring({ frame: frame - 10, fps: 30, config: { damping: 20, stiffness: 120 } })})`,
+              boxShadow: `0 0 60px ${accentColor}40, inset 0 0 40px ${accentColor}15`,
             }}
           >
             <div
               style={{
-                fontSize: "120px",
-                marginBottom: "24px",
-                filter: "drop-shadow(0 8px 32px rgba(255,90,54,0.4))",
+                fontSize: "80px",
+                marginBottom: "16px",
+                filter: `drop-shadow(0 4px 20px ${accentColor}66)`,
               }}
             >
               🖥️
             </div>
-            <div style={{ textAlign: "center" }}>
-              <div
-                style={{
-                  fontSize: "48px",
-                  fontWeight: 800,
-                  color: accentColor,
-                  marginBottom: "8px",
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                OpenClaw
-              </div>
-              <div
-                style={{
-                  fontSize: "24px",
-                  color: "rgba(255,255,255,0.5)",
-                }}
-              >
-                AI 私人助理
-              </div>
+            <div
+              style={{
+                fontSize: "36px",
+                fontWeight: 800,
+                color: accentColor,
+                marginBottom: "4px",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              OpenClaw
+            </div>
+            <div
+              style={{
+                fontSize: "18px",
+                color: "rgba(255,255,255,0.6)",
+                fontWeight: 500,
+              }}
+            >
+              AI 智能系统
             </div>
           </div>
 
-          {/* 右侧：模块架构图 */}
+          {/* 右侧：8个模块卡片 */}
           <div
             style={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              paddingLeft: "20px",
-              position: "relative",
-              height: "500px",
+              position: "absolute",
+              left: "320px",
+              right: 0,
+              height: "100%",
             }}
           >
-            {/* 第一行：Gateway → Agent → Skills → Channels */}
-            <ModuleBox
-              icon="🚪"
-              title="Gateway"
-              color="white"
-              frame={frame}
-              delay={20}
-              x={0}
-              y={0}
-            />
-            <ModuleBox
-              icon="🤖"
-              title="Agent"
-              color="white"
-              frame={frame}
-              delay={30}
-              x={280}
-              y={0}
-            />
-            <ModuleBox
-              icon="💼"
-              title="Skills"
-              color="#EAB308"
-              frame={frame}
-              delay={40}
-              x={560}
-              y={0}
-            />
-            <ModuleBox
-              icon="📡"
-              title="Channels"
-              color="#22C55E"
-              frame={frame}
-              delay={50}
-              x={840}
-              y={0}
-            />
+            {/* 模块卡片网格 */}
+            {modules.map((module, index) => {
+              const x = startX + module.col * (cardWidth + gapX);
+              const y = startY + module.row * (cardHeight + gapY);
+              const delay = 20 + index * 8;
 
-            {/* 第二行：Nodes → Memory → Heartbeat → Cron */}
-            <ModuleBox
-              icon="🌐"
-              title="Nodes"
-              color="#34D399"
-              frame={frame}
-              delay={60}
-              x={0}
-              y={250}
-            />
-            <ModuleBox
-              icon="🧠"
-              title="Memory"
-              color="#A78BFA"
-              frame={frame}
-              delay={70}
-              x={280}
-              y={250}
-            />
-            <ModuleBox
-              icon="💓"
-              title="Heartbeat"
-              color="#F472B6"
-              frame={frame}
-              delay={80}
-              x={560}
-              y={250}
-            />
-            <ModuleBox
-              icon="⏰"
-              title="Cron"
-              color="#9333EA"
-              frame={frame}
-              delay={90}
-              x={840}
-              y={250}
-            />
+              const cardOpacity = spring({
+                frame: frame - delay,
+                fps: 30,
+                config: { damping: 20, stiffness: 100 },
+              });
 
-            {/* 箭头连接 */}
-            <svg
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                pointerEvents: "none",
-              }}
-            >
-              {/* 第一行箭头 */}
-              <Arrow x1={140} y1={70} x2={270} y2={70} delay={25} />
-              <Arrow x1={420} y1={70} x2={550} y2={70} delay={35} />
-              <Arrow x1={700} y1={70} x2={830} y2={70} delay={45} />
+              const cardScale = spring({
+                frame: frame - delay,
+                fps: 30,
+                config: { damping: 25, stiffness: 120 },
+              });
 
-              {/* 第二行箭头 */}
-              <Arrow x1={140} y1={320} x2={270} y2={320} delay={65} />
-              <Arrow x1={420} y1={320} x2={550} y2={320} delay={75} />
-              <Arrow x1={700} y1={320} x2={830} y2={320} delay={85} />
-            </svg>
+              return (
+                <div
+                  key={module.name}
+                  style={{
+                    position: "absolute",
+                    left: x,
+                    top: y,
+                    width: cardWidth,
+                    height: cardHeight,
+                    opacity: cardOpacity,
+                    transform: `scale(${cardScale})`,
+                    transformOrigin: "center center",
+                  }}
+                >
+                  {/* 卡片背景 */}
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      background: `linear-gradient(135deg, ${module.color}15 0%, ${module.color}08 100%)`,
+                      border: `2px solid ${module.color}44`,
+                      borderRadius: "16px",
+                      padding: "20px",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "12px",
+                      boxShadow: `0 0 30px ${module.color}20`,
+                      transition: "all 0.3s ease",
+                      position: "relative",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {/* 发光效果 */}
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: `radial-gradient(circle at center, ${module.color}22 0%, transparent 70%)`,
+                        opacity: 0.5,
+                      }}
+                    />
+
+                    {/* 图标 */}
+                    <div
+                      style={{
+                        fontSize: "48px",
+                        filter: `drop-shadow(0 2px 8px ${module.color}88)`,
+                        position: "relative",
+                        zIndex: 1,
+                      }}
+                    >
+                      {module.icon}
+                    </div>
+
+                    {/* 名称 */}
+                    <div
+                      style={{
+                        fontSize: "18px",
+                        fontWeight: 700,
+                        color: module.color,
+                        textAlign: "center",
+                        position: "relative",
+                        zIndex: 1,
+                      }}
+                    >
+                      {module.name}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
+
+          {/* 连接线动画 */}
+          <svg
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              pointerEvents: "none",
+              zIndex: 0,
+            }}
+          >
+            <defs>
+              {modules.map((module, index) => (
+                <linearGradient
+                  key={index}
+                  id={`line-grad-${index}`}
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="0%"
+                >
+                  <stop offset="0%" stopColor={accentColor} stopOpacity="0.8" />
+                  <stop offset="100%" stopColor={module.color} stopOpacity="0.8" />
+                </linearGradient>
+              ))}
+            </defs>
+
+            {modules.map((module, index) => {
+              const cardCenterX = 320 + startX + module.col * (cardWidth + gapX) + cardWidth / 2;
+              const cardCenterY = startY + module.row * (cardHeight + gapY) + cardHeight / 2;
+              const coreCenterX = 140;
+              const coreCenterY = 225;
+
+              const delay = 25 + index * 8;
+              const lineOpacity = spring({
+                frame: frame - delay,
+                fps: 30,
+              });
+
+              return (
+                <g key={index} opacity={lineOpacity * 0.6}>
+                  {/* 连接线 */}
+                  <path
+                    d={`M ${coreCenterX} ${coreCenterY} L ${cardCenterX} ${cardCenterY}`}
+                    stroke={`url(#line-grad-${index})`}
+                    strokeWidth="2"
+                    fill="none"
+                    strokeDasharray="5,5"
+                    opacity={0.5}
+                  />
+
+                  {/* 流动粒子 */}
+                  <circle r="4" fill={module.color}>
+                    <animateMotion
+                      dur={`${2 + index * 0.15}s`}
+                      repeatCount="indefinite"
+                      path={`M ${coreCenterX} ${coreCenterY} L ${cardCenterX} ${cardCenterY}`}
+                    />
+                    <animate
+                      attributeName="opacity"
+                      values="0;1;1;0"
+                      dur={`${2 + index * 0.15}s`}
+                      repeatCount="indefinite"
+                    />
+                  </circle>
+                </g>
+              );
+            })}
+          </svg>
         </div>
 
         {/* 底部说明 */}
         <div
           style={{
-            marginTop: "80px",
-            paddingTop: "40px",
-            borderTop: "1px solid rgba(255,255,255,0.1)",
+            marginTop: "40px",
             textAlign: "center",
-            opacity: spring({ frame: frame - 110, fps: 30 }),
+            opacity: spring({ frame: frame - 120, fps: 30 }),
           }}
         >
-          <div style={{ fontSize: "36px", lineHeight: 1.5 }}>
-            <span style={{ color: "#EAB308", fontWeight: 700 }}>
-              主动执行任务原理：
-            </span>
-            <span
-              style={{
-                fontWeight: 300,
-                letterSpacing: "0.2em",
-                color: "rgba(255,255,255,0.7)",
-              }}
-            >
-              多模块协同响应
-            </span>
+          <div
+            style={{
+              display: "inline-block",
+              padding: "20px 40px",
+              background: "rgba(255,255,255,0.03)",
+              border: "1px solid rgba(255,255,255,0.1)",
+              borderRadius: "16px",
+              backdropFilter: "blur(10px)",
+            }}
+          >
+            <div style={{ fontSize: "28px", lineHeight: 1.6, color: textColor }}>
+              <span style={{ color: "#F59E0B", fontWeight: 700 }}>八大核心模块</span>
+              <span style={{ margin: "0 8px", color: "rgba(255,255,255,0.4)" }}>·</span>
+              <span style={{ color: "rgba(255,255,255,0.8)" }}>协同工作</span>
+              <span style={{ margin: "0 8px", color: "rgba(255,255,255,0.4)" }}>·</span>
+              <span style={{ color: accentColor, fontWeight: 700 }}>智能执行</span>
+            </div>
           </div>
         </div>
       </div>
