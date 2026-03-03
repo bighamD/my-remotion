@@ -575,12 +575,11 @@ const OverallArchitectureScene: React.FC<{
 };
 
 // ============================================
-// 场景 2: Gateway 网关核心（基于 gateway.html）
+// 场景 2: Gateway 网关核心
 // ============================================
 
 const GatewayScene: React.FC<{
   frame: number;
-  accentColor: string;
   textColor: string;
 }> = ({ frame, textColor }) => {
   const titleOpacity = spring({
@@ -589,35 +588,51 @@ const GatewayScene: React.FC<{
     config: { damping: 15, stiffness: 100 },
   });
 
+  // Gateway 核心功能
   const gatewayFunctions = [
     {
+      icon: "🔐",
       title: "身份验证",
-      icon: "📋",
+      desc: "验证用户身份和权限",
       color: "#FF4444",
-      desc: "验证用户身份",
-      delay: 40,
+      delay: 30,
     },
     {
-      title: "连接管理",
       icon: "🔗",
-      color: "#00CC66",
-      desc: "管理连接状态",
-      delay: 50,
+      title: "连接管理",
+      desc: "管理多渠道连接状态",
+      color: "#10B981",
+      delay: 45,
     },
     {
+      icon: "🛡️",
       title: "多用户隔离",
-      icon: "🔄",
-      color: "#3399FF",
-      desc: "用户数据隔离",
+      desc: "用户数据完全隔离",
+      color: "#3B82F6",
       delay: 60,
     },
     {
-      title: "请求路由",
-      icon: "➡️",
-      color: "#00CC66",
+      icon: "🧭",
+      title: "智能路由",
       desc: "路由到目标模块",
-      delay: 70,
+      color: "#F59E0B",
+      delay: 75,
     },
+  ];
+
+  // 输入渠道
+  const inputChannels = [
+    { icon: "💬", name: "聊天", color: "#22C55E" },
+    { icon: "🌐", name: "网页", color: "#3B82F6" },
+    { icon: "📱", name: "API", color: "#A78BFA" },
+  ];
+
+  // 输出目标
+  const outputTargets = [
+    { icon: "🤖", name: "Agent", color: "#3B82F6" },
+    { icon: "💼", name: "Skills", color: "#F59E0B" },
+    { icon: "📡", name: "Channels", color: "#10B981" },
+    { icon: "🧠", name: "Memory", color: "#A78BFA" },
   ];
 
   return (
@@ -628,272 +643,296 @@ const GatewayScene: React.FC<{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        padding: "40px 60px",
+        justifyContent: "center",
+        padding: "60px 80px",
         background: "radial-gradient(circle, #2c2c2c 1px, transparent 1px)",
         backgroundSize: "30px 30px",
       }}
     >
       {/* 标题 */}
-      <h1
-        style={{
-          fontSize: "56px",
-          fontWeight: 800,
-          color: "#FF4444",
-          margin: "0 0 16px 0",
-          opacity: titleOpacity,
-          textAlign: "center",
-          textShadow: "0 0 30px rgba(255,68,68,0.5)",
-          minHeight: "70px",
-        }}
-      >
-        Gateway: 所有请求的第一站
-      </h1>
-      <h3
-        style={{
-          fontSize: "28px",
-          fontWeight: 600,
-          margin: "0 0 50px 0",
-          opacity: titleOpacity,
-          textAlign: "center",
-          minHeight: "40px",
-        }}
-      >
-        {/* 打字机效果 */}
-        {(() => {
-          const parts = [
-            { text: "身份验证", color: "#FF4444", bold: true },
-            { text: "、", color: textColor },
-            { text: "请求路由", color: "#00CC66", bold: true },
-            { text: "、", color: textColor },
-            { text: "多用户隔离", color: "#3399FF", bold: true },
-          ];
-
-          const typeStartFrame = 10;
-          const durationPerChar = 2;
-
-          const result = [];
-          let totalChars = 0;
-
-          for (const part of parts) {
-            const partEnd = totalChars + part.text.length;
-            const charsToShow = Math.max(
-              0,
-              Math.min(
-                part.text.length,
-                Math.floor((frame - typeStartFrame) / durationPerChar) -
-                  totalChars,
-              ),
-            );
-
-            if (charsToShow > 0) {
-              result.push(
-                <span
-                  key={totalChars}
-                  style={{
-                    color: part.color,
-                    fontWeight: part.bold ? 700 : 400,
-                  }}
-                >
-                  {part.text.substring(0, charsToShow)}
-                </span>,
-              );
-            }
-
-            totalChars = partEnd;
-            if (
-              Math.floor((frame - typeStartFrame) / durationPerChar) <=
-              totalChars
-            ) {
-              break;
-            }
-          }
-
-          return result.length > 0 ? result : <span>&nbsp;</span>;
-        })()}
-      </h3>
-
-      {/* 主内容区：使用 flexbox 而不是 absolute */}
       <div
         style={{
-          display: "flex",
-          gap: "60px",
+          textAlign: "center",
+          marginBottom: "50px",
+          opacity: titleOpacity,
+        }}
+      >
+        <h1
+          style={{
+            fontSize: "56px",
+            fontWeight: 800,
+            color: "#FF4444",
+            margin: "0 0 16px 0",
+            textShadow: "0 0 30px rgba(255,68,68,0.5)",
+          }}
+        >
+          Gateway: 所有请求的第一站
+        </h1>
+        <p
+          style={{
+            fontSize: "22px",
+            color: "rgba(255,255,255,0.6)",
+            margin: 0,
+          }}
+        >
+          统一入口 · 安全验证 · 智能分发
+        </p>
+      </div>
+
+      {/* 主内容区：三列布局 */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr auto 1fr",
+          gap: "40px",
           width: "100%",
           maxWidth: "1600px",
-          flex: 1,
           alignItems: "center",
         }}
       >
-        {/* 左侧：用户请求入口 */}
+        {/* 左侧：输入渠道 */}
         <div
           style={{
-            flex: "0 0 420px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
             opacity: spring({ frame: frame - 20, fps: 30 }),
-            transform: `scale(${spring({ frame: frame - 20, fps: 30, config: { damping: 25, stiffness: 100 } })})`,
-            transformOrigin: "center center",
           }}
         >
           <div
             style={{
-              padding: "60px 40px",
-              background: "rgba(255,255,255,0.08)",
-              border: "5px solid rgba(255,255,255,0.4)",
-              borderRadius: "28px",
+              fontSize: "20px",
+              fontWeight: 700,
+              color: textColor,
+              marginBottom: "8px",
+              textAlign: "center",
+            }}
+          >
+            📥 请求来源
+          </div>
+          {inputChannels.map((channel, index) => (
+            <div
+              key={channel.name}
+              style={{
+                padding: "20px 24px",
+                background: `linear-gradient(135deg, ${channel.color}15 0%, ${channel.color}08 100%)`,
+                border: `2px solid ${channel.color}44`,
+                borderRadius: "12px",
+                display: "flex",
+                alignItems: "center",
+                gap: "16px",
+                opacity: spring({ frame: frame - 25 - index * 8, fps: 30 }),
+                transform: `translateX(${interpolate(
+                  frame - 25 - index * 8,
+                  [0, 30],
+                  [-30, 0],
+                  { extrapolateRight: "clamp" }
+                )}px)`,
+              }}
+            >
+              <div style={{ fontSize: "36px" }}>{channel.icon}</div>
+              <div
+                style={{
+                  fontSize: "20px",
+                  fontWeight: 600,
+                  color: channel.color,
+                }}
+              >
+                {channel.name}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* 中间：Gateway 核心 */}
+        <div
+          style={{
+            position: "relative",
+            width: "320px",
+            height: "320px",
+          }}
+        >
+          {/* 背景光晕 */}
+          <div
+            style={{
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+              borderRadius: "50%",
+              background: "radial-gradient(circle, #FF4444 0%, transparent 70%)",
+              opacity: 0.15,
+              animation: "pulse 2s ease-in-out infinite",
+            }}
+          />
+
+          {/* Gateway 圆形 */}
+          <div
+            style={{
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+              borderRadius: "50%",
+              background: `linear-gradient(135deg, #FF4444 0%, #CC0000 100%)`,
+              border: "6px solid rgba(255,255,255,0.2)",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              boxShadow: "0 16px 64px rgba(0,0,0,0.6)",
+              justifyContent: "center",
+              opacity: spring({ frame: frame - 15, fps: 30 }),
+              transform: `scale(${spring({ frame: frame - 15, fps: 30, config: { damping: 20, stiffness: 120 } })})`,
+              boxShadow: "0 0 60px rgba(255,68,68,0.6)",
             }}
           >
-            <div style={{ fontSize: "96px", marginBottom: "24px" }}>🖥️</div>
+            <div style={{ fontSize: "72px", marginBottom: "12px" }}>🚪</div>
             <div
               style={{
                 fontSize: "32px",
-                fontWeight: 700,
-                color: textColor,
-                marginBottom: "16px",
-                textAlign: "center",
+                fontWeight: 800,
+                color: "#FFFFFF",
+                marginBottom: "4px",
               }}
             >
-              用户请求入口
+              Gateway
             </div>
             <div
               style={{
-                fontSize: "20px",
-                color: "rgba(255,255,255,0.6)",
-                textAlign: "center",
+                fontSize: "14px",
+                color: "rgba(255,255,255,0.8)",
+                fontWeight: 500,
               }}
             >
-              网页 / 手机 / 聊天软件
+              网关核心
             </div>
           </div>
+
+          {/* 功能标签环绕 */}
+          {gatewayFunctions.map((func, index) => {
+            const angle = (index * 90 - 45) * (Math.PI / 180);
+            const radius = 180;
+            const x = 160 + Math.cos(angle) * radius;
+            const y = 160 + Math.sin(angle) * radius;
+
+            return (
+              <div
+                key={func.title}
+                style={{
+                  position: "absolute",
+                  left: x,
+                  top: y,
+                  transform: "translate(-50%, -50%)",
+                  padding: "12px 20px",
+                  background: `rgba(255,255,255,0.95)`,
+                  borderRadius: "20px",
+                  boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
+                  opacity: spring({ frame: frame - func.delay, fps: 30 }),
+                  transform: `translate(-50%, -50%) scale(${spring({ frame: frame - func.delay, fps: 30, config: { damping: 25, stiffness: 120 } })})`,
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                  }}
+                >
+                  <span style={{ fontSize: "20px" }}>{func.icon}</span>
+                  <span
+                    style={{
+                      fontSize: "14px",
+                      fontWeight: 700,
+                      color: func.color,
+                    }}
+                  >
+                    {func.title}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
-        {/* 中间箭头 */}
+        {/* 右侧：输出目标 */}
         <div
           style={{
-            flex: "0 0 80px",
             display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            opacity: spring({ frame: frame - 30, fps: 30 }),
+            flexDirection: "column",
+            gap: "20px",
+            opacity: spring({ frame: frame - 20, fps: 30 }),
           }}
         >
           <div
             style={{
-              fontSize: "56px",
-              color: "#FFAA00",
-              transform: `scale(${interpolate(frame - 30, [0, 20], [0.5, 1], { extrapolateRight: "clamp" })})`,
+              fontSize: "20px",
+              fontWeight: 700,
+              color: textColor,
+              marginBottom: "8px",
+              textAlign: "center",
             }}
           >
-            ➡️
+            📤 路由目标
           </div>
-        </div>
-
-        {/* 右侧：Gateway 四个功能模块 */}
-        <div
-          style={{
-            flex: 1,
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gridTemplateRows: "1fr 1fr",
-            gap: "20px",
-          }}
-        >
-          {gatewayFunctions.map((func) => (
+          {outputTargets.map((target, index) => (
             <div
-              key={func.title}
+              key={target.name}
               style={{
-                opacity: spring({ frame: frame - func.delay, fps: 30 }),
-                transform: `scale(${spring({ frame: frame - func.delay, fps: 30, config: { damping: 25, stiffness: 100 } })})`,
-                transformOrigin: "center center",
+                padding: "20px 24px",
+                background: `linear-gradient(135deg, ${target.color}15 0%, ${target.color}08 100%)`,
+                border: `2px solid ${target.color}44`,
+                borderRadius: "12px",
+                display: "flex",
+                alignItems: "center",
+                gap: "16px",
+                opacity: spring({ frame: frame - 25 - index * 8, fps: 30 }),
+                transform: `translateX(${interpolate(
+                  frame - 25 - index * 8,
+                  [0, 30],
+                  [30, 0],
+                  { extrapolateRight: "clamp" }
+                )}px)`,
               }}
             >
               <div
                 style={{
-                  padding: "20px 16px",
-                  background: `${func.color}22`,
-                  border: `3px solid ${func.color}`,
-                  borderRadius: "16px",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  height: "100%",
-                  minHeight: "130px",
-                  justifyContent: "center",
-                  boxShadow: `0 6px 24px ${func.color}44`,
+                  fontSize: "20px",
+                  fontWeight: 600,
+                  color: target.color,
+                  flex: 1,
                 }}
               >
-                <div style={{ fontSize: "40px", marginBottom: "10px" }}>
-                  {func.icon}
-                </div>
-                <div
-                  style={{
-                    fontSize: "20px",
-                    fontWeight: 700,
-                    color: func.color,
-                    marginBottom: "6px",
-                    textAlign: "center",
-                  }}
-                >
-                  {func.title}
-                </div>
-                <div
-                  style={{
-                    fontSize: "14px",
-                    color: "rgba(255,255,255,0.7)",
-                    textAlign: "center",
-                  }}
-                >
-                  {func.desc}
-                </div>
+                {target.name}
               </div>
+              <div style={{ fontSize: "36px" }}>{target.icon}</div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* 底部警告 */}
+      {/* 底部说明 */}
       <div
         style={{
-          marginTop: "40px",
-          marginBottom: "20px",
+          marginTop: "50px",
+          padding: "20px 40px",
+          background: "rgba(255,68,68,0.1)",
+          border: "2px solid rgba(255,68,68,0.3)",
+          borderRadius: "16px",
           opacity: spring({ frame: frame - 90, fps: 30 }),
-          transform: `translateY(${interpolate(frame - 90, [-20, 0], [30, 0], { extrapolateRight: "clamp" })}px)`,
+          textAlign: "center",
         }}
       >
         <div
           style={{
+            fontSize: "20px",
+            color: textColor,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            gap: "20px",
-            padding: "20px 40px",
-            background: "rgba(255,68,68,0.15)",
-            border: "3px solid #FF4444",
-            borderRadius: "20px",
+            gap: "12px",
           }}
         >
-          <div style={{ fontSize: "36px" }}>🚫</div>
-          <div>
-            <div
-              style={{
-                fontSize: "26px",
-                fontWeight: 700,
-                color: "#FF4444",
-                marginBottom: "6px",
-              }}
-            >
-              无Gateway: 系统无法识别用户指令
-            </div>
-            <div
-              style={{
-                fontSize: "16px",
-                color: "rgba(255,255,255,0.7)",
-              }}
-            >
-              所有请求必须通过Gateway进行身份验证和路由
-            </div>
-          </div>
+          <span style={{ fontSize: "24px" }}>⚡</span>
+          <span>所有请求必须通过 </span>
+          <span style={{ color: "#FF4444", fontWeight: 700 }}>Gateway</span>
+          <span> 进行验证和路由</span>
         </div>
       </div>
     </div>
@@ -4126,7 +4165,6 @@ export const OpenClawArchitecture: React.FC<
       <Sequence from={SCENE_DURATION * 2} durationInFrames={SCENE_DURATION}>
         <GatewayScene
           frame={frame - SCENE_DURATION * 2}
-          accentColor={accentColor}
           textColor={textColor}
         />
       </Sequence>
