@@ -384,8 +384,7 @@ const GatewayScene: React.FC<{
   frame: number;
   accentColor: string;
   textColor: string;
-}> = ({ frame, accentColor, textColor }) => {
-  // eslint-disable-line @typescript-eslint/no-unused-vars
+}> = ({ frame, textColor }) => {
   const titleOpacity = spring({
     frame,
     fps: 30,
@@ -442,7 +441,7 @@ const GatewayScene: React.FC<{
           fontSize: "56px",
           fontWeight: 800,
           color: "#FF4444",
-          margin: "0 0 50px 0",
+          margin: "0 0 16px 0",
           opacity: titleOpacity,
           textAlign: "center",
           textShadow: "0 0 30px rgba(255,68,68,0.5)",
@@ -463,6 +462,69 @@ const GatewayScene: React.FC<{
           return title.substring(0, charsToShow);
         })()}
       </h1>
+      <h3
+        style={{
+          fontSize: "28px",
+          fontWeight: 600,
+          margin: "0 0 50px 0",
+          opacity: titleOpacity,
+          textAlign: "center",
+          minHeight: "40px",
+        }}
+      >
+        {/* 打字机效果 */}
+        {(() => {
+          const parts = [
+            { text: "身份验证", color: "#FF4444", bold: true },
+            { text: "、", color: textColor },
+            { text: "请求路由", color: "#00CC66", bold: true },
+            { text: "、", color: textColor },
+            { text: "多用户隔离", color: "#3399FF", bold: true },
+          ];
+
+          const typeStartFrame = 10;
+          const durationPerChar = 2;
+
+          const result = [];
+          let totalChars = 0;
+
+          for (const part of parts) {
+            const partEnd = totalChars + part.text.length;
+            const charsToShow = Math.max(
+              0,
+              Math.min(
+                part.text.length,
+                Math.floor((frame - typeStartFrame) / durationPerChar) -
+                  totalChars,
+              ),
+            );
+
+            if (charsToShow > 0) {
+              result.push(
+                <span
+                  key={totalChars}
+                  style={{
+                    color: part.color,
+                    fontWeight: part.bold ? 700 : 400,
+                  }}
+                >
+                  {part.text.substring(0, charsToShow)}
+                </span>,
+              );
+            }
+
+            totalChars = partEnd;
+            if (
+              Math.floor((frame - typeStartFrame) / durationPerChar) <=
+              totalChars
+            ) {
+              break;
+            }
+          }
+
+          return result.length > 0 ? result : <span>&nbsp;</span>;
+        })()}
+      </h3>
 
       {/* 主内容区：使用 flexbox 而不是 absolute */}
       <div
@@ -727,30 +789,69 @@ const AgentScene: React.FC<{
           return title.substring(0, charsToShow);
         })()}
       </h1>
-      <p
+      <h3
         style={{
-          fontSize: "24px",
-          color: textColor,
+          fontSize: "28px",
+          fontWeight: 600,
           margin: "0 0 60px 0",
           opacity: titleOpacity,
           textAlign: "center",
-          minHeight: "32px",
+          minHeight: "40px",
         }}
       >
+        {/* 打字机效果 */}
         {(() => {
-          const subtitle = "强大的 LLM 驱动，理解并执行复杂任务";
+          const parts = [
+            { text: "LLM", color: "#10B981", bold: true },
+            { text: "驱动，", color: textColor },
+            { text: "理解意图", color: "#3B82F6", bold: true },
+            { text: "并", color: textColor },
+            { text: "执行任务", color: "#F59E0B", bold: true },
+          ];
+
           const typeStartFrame = 18;
           const durationPerChar = 2;
-          const charsToShow = Math.max(
-            0,
-            Math.min(
-              subtitle.length,
-              Math.floor((frame - typeStartFrame) / durationPerChar),
-            ),
-          );
-          return subtitle.substring(0, charsToShow);
+
+          const result = [];
+          let totalChars = 0;
+
+          for (const part of parts) {
+            const partEnd = totalChars + part.text.length;
+            const charsToShow = Math.max(
+              0,
+              Math.min(
+                part.text.length,
+                Math.floor((frame - typeStartFrame) / durationPerChar) -
+                  totalChars,
+              ),
+            );
+
+            if (charsToShow > 0) {
+              result.push(
+                <span
+                  key={totalChars}
+                  style={{
+                    color: part.color,
+                    fontWeight: part.bold ? 700 : 400,
+                  }}
+                >
+                  {part.text.substring(0, charsToShow)}
+                </span>,
+              );
+            }
+
+            totalChars = partEnd;
+            if (
+              Math.floor((frame - typeStartFrame) / durationPerChar) <=
+              totalChars
+            ) {
+              break;
+            }
+          }
+
+          return result.length > 0 ? result : <span>&nbsp;</span>;
         })()}
-      </p>
+      </h3>
 
       <div
         style={{
@@ -1235,30 +1336,73 @@ const ChannelsScene: React.FC<{
           return title.substring(0, charsToShow);
         })()}
       </h1>
-      <p
+      <h3
         style={{
-          fontSize: "24px",
-          color: textColor,
+          fontSize: "28px",
+          fontWeight: 600,
           margin: "0 0 70px 0",
           opacity: titleOpacity,
           textAlign: "center",
-          minHeight: "32px",
+          minHeight: "40px",
         }}
       >
+        {/* 打字机效果 */}
         {(() => {
-          const subtitle = "多渠道消息统一接入";
+          const parts = [
+            { text: "网页", color: "#EF4444", bold: true },
+            { text: "、", color: textColor },
+            { text: "短信", color: "#10B981", bold: true },
+            { text: "、", color: textColor },
+            { text: "Telegram", color: "#3B82F6", bold: true },
+            { text: "、", color: textColor },
+            { text: "飞书", color: "#F59E0B", bold: true },
+            { text: "多渠道", color: textColor },
+            { text: "统一接入", color: "#A78BFA", bold: true },
+          ];
+
           const typeStartFrame = 20;
           const durationPerChar = 2;
-          const charsToShow = Math.max(
-            0,
-            Math.min(
-              subtitle.length,
-              Math.floor((frame - typeStartFrame) / durationPerChar),
-            ),
-          );
-          return subtitle.substring(0, charsToShow);
+
+          const result = [];
+          let totalChars = 0;
+
+          for (const part of parts) {
+            const partEnd = totalChars + part.text.length;
+            const charsToShow = Math.max(
+              0,
+              Math.min(
+                part.text.length,
+                Math.floor((frame - typeStartFrame) / durationPerChar) -
+                  totalChars,
+              ),
+            );
+
+            if (charsToShow > 0) {
+              result.push(
+                <span
+                  key={totalChars}
+                  style={{
+                    color: part.color,
+                    fontWeight: part.bold ? 700 : 400,
+                  }}
+                >
+                  {part.text.substring(0, charsToShow)}
+                </span>,
+              );
+            }
+
+            totalChars = partEnd;
+            if (
+              Math.floor((frame - typeStartFrame) / durationPerChar) <=
+              totalChars
+            ) {
+              break;
+            }
+          }
+
+          return result.length > 0 ? result : <span>&nbsp;</span>;
         })()}
-      </p>
+      </h3>
 
       {/* 渠道图标 */}
       <div
@@ -1482,29 +1626,70 @@ const NodesScene: React.FC<{
             return title.substring(0, charsToShow);
           })()}
         </h1>
-        <p
+        <h3
           style={{
-            fontSize: "22px",
-            color: textColor,
+            fontSize: "28px",
+            fontWeight: 600,
             margin: "0",
             opacity: titleOpacity,
-            minHeight: "30px",
+            minHeight: "40px",
           }}
         >
+          {/* 打字机效果 */}
           {(() => {
-            const subtitle = "在多个设备上部署节点，让助理无处不在";
+            const parts = [
+              { text: "本地电脑", color: "#3B82F6", bold: true },
+              { text: "、", color: textColor },
+              { text: "服务器", color: "#10B981", bold: true },
+              { text: "、", color: textColor },
+              { text: "云主机", color: "#F59E0B", bold: true },
+              { text: "，让助理", color: textColor },
+              { text: "无处不在", color: "#34D399", bold: true },
+            ];
+
             const typeStartFrame = 20;
             const durationPerChar = 2;
-            const charsToShow = Math.max(
-              0,
-              Math.min(
-                subtitle.length,
-                Math.floor((frame - typeStartFrame) / durationPerChar),
-              ),
-            );
-            return subtitle.substring(0, charsToShow);
+
+            const result = [];
+            let totalChars = 0;
+
+            for (const part of parts) {
+              const partEnd = totalChars + part.text.length;
+              const charsToShow = Math.max(
+                0,
+                Math.min(
+                  part.text.length,
+                  Math.floor((frame - typeStartFrame) / durationPerChar) -
+                    totalChars,
+                ),
+              );
+
+              if (charsToShow > 0) {
+                result.push(
+                  <span
+                    key={totalChars}
+                    style={{
+                      color: part.color,
+                      fontWeight: part.bold ? 700 : 400,
+                    }}
+                  >
+                    {part.text.substring(0, charsToShow)}
+                  </span>,
+                );
+              }
+
+              totalChars = partEnd;
+              if (
+                Math.floor((frame - typeStartFrame) / durationPerChar) <=
+                totalChars
+              ) {
+                break;
+              }
+            }
+
+            return result.length > 0 ? result : <span>&nbsp;</span>;
           })()}
-        </p>
+        </h3>
       </div>
 
       {/* 设备场景展示 */}
@@ -1794,32 +1979,24 @@ const MemoryScene: React.FC<{
       icon: "💭",
       desc: "当前对话上下文",
       color: "#3B82F6",
-      x: 100,
-      y: 150,
     },
     {
       title: "长期记忆",
       icon: "🗄️",
-      desc: "持久化存储",
+      desc: "持久化存储，Memory.md",
       color: "#10B981",
-      x: 400,
-      y: 150,
     },
     {
       title: "向量存储",
       icon: "🔍",
-      desc: "语义搜索",
+      desc: "语义搜索（Vector Memory / RAG）",
       color: "#F59E0B",
-      x: 700,
-      y: 150,
     },
     {
       title: "知识图谱",
       icon: "🕸️",
       desc: "关系网络",
       color: "#8B5CF6",
-      x: 1000,
-      y: 150,
     },
   ];
 
@@ -1832,7 +2009,7 @@ const MemoryScene: React.FC<{
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "60px",
+        padding: "60px 80px",
       }}
     >
       <h1
@@ -1860,47 +2037,90 @@ const MemoryScene: React.FC<{
           return title.substring(0, charsToShow);
         })()}
       </h1>
-      <p
+      <h3
         style={{
-          fontSize: "24px",
-          color: textColor,
+          fontSize: "28px",
+          fontWeight: 600,
           margin: "0 0 60px 0",
           opacity: titleOpacity,
           textAlign: "center",
-          minHeight: "32px",
+          minHeight: "40px",
         }}
       >
+        {/* 打字机效果 */}
         {(() => {
-          const subtitle = "让 Agent 拥有持久化记忆能力";
+          const parts = [
+            { text: "短期记忆", color: "#3B82F6", bold: true },
+            { text: "、", color: textColor },
+            { text: "长期记忆", color: "#10B981", bold: true },
+            { text: "、", color: textColor },
+            { text: "向量存储", color: "#A78BFA", bold: true },
+            { text: "，让", color: textColor },
+            { text: "Agent", color: "#F59E0B", bold: true },
+            { text: "拥有", color: textColor },
+            { text: "持久化能力", color: "#EC4899", bold: true },
+          ];
+
           const typeStartFrame = 18;
           const durationPerChar = 2;
-          const charsToShow = Math.max(
-            0,
-            Math.min(
-              subtitle.length,
-              Math.floor((frame - typeStartFrame) / durationPerChar),
-            ),
-          );
-          return subtitle.substring(0, charsToShow);
-        })()}
-      </p>
 
+          const result = [];
+          let totalChars = 0;
+
+          for (const part of parts) {
+            const partEnd = totalChars + part.text.length;
+            const charsToShow = Math.max(
+              0,
+              Math.min(
+                part.text.length,
+                Math.floor((frame - typeStartFrame) / durationPerChar) -
+                  totalChars,
+              ),
+            );
+
+            if (charsToShow > 0) {
+              result.push(
+                <span
+                  key={totalChars}
+                  style={{
+                    color: part.color,
+                    fontWeight: part.bold ? 700 : 400,
+                  }}
+                >
+                  {part.text.substring(0, charsToShow)}
+                </span>,
+              );
+            }
+
+            totalChars = partEnd;
+            if (
+              Math.floor((frame - typeStartFrame) / durationPerChar) <=
+              totalChars
+            ) {
+              break;
+            }
+          }
+
+          return result.length > 0 ? result : <span>&nbsp;</span>;
+        })()}
+      </h3>
+
+      {/* 记忆类型 */}
       <div
         style={{
-          position: "relative",
+          display: "flex",
+          gap: "40px",
+          justifyContent: "center",
+          alignItems: "center",
           width: "100%",
-          maxWidth: "1300px",
-          height: "350px",
+          maxWidth: "1400px",
+          marginBottom: "50px",
         }}
       >
-        {/* 记忆类型 */}
         {memoryTypes.map((memory, index) => (
           <div
             key={index}
             style={{
-              position: "absolute",
-              left: memory.x,
-              top: memory.y,
               opacity: spring({ frame: frame - 20 - index * 10, fps: 30 }),
               transform: `scale(${spring({ frame: frame - 20 - index * 10, fps: 30, config: { damping: 25, stiffness: 100 } })})`,
               transformOrigin: "center center",
@@ -1908,26 +2128,26 @@ const MemoryScene: React.FC<{
           >
             <div
               style={{
-                width: "240px",
-                padding: "24px",
+                width: "260px",
+                padding: "28px",
                 background: `${memory.color}22`,
                 border: `3px solid ${memory.color}`,
-                borderRadius: "16px",
+                borderRadius: "20px",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 boxShadow: `0 8px 32px ${memory.color}44`,
               }}
             >
-              <div style={{ fontSize: "48px", marginBottom: "16px" }}>
+              <div style={{ fontSize: "56px", marginBottom: "18px" }}>
                 {memory.icon}
               </div>
               <div
                 style={{
-                  fontSize: "22px",
+                  fontSize: "24px",
                   fontWeight: 700,
                   color: memory.color,
-                  marginBottom: "8px",
+                  marginBottom: "10px",
                   textAlign: "center",
                 }}
               >
@@ -1938,6 +2158,7 @@ const MemoryScene: React.FC<{
                   fontSize: "16px",
                   color: "rgba(255,255,255,0.7)",
                   textAlign: "center",
+                  lineHeight: 1.4,
                 }}
               >
                 {memory.desc}
@@ -1945,75 +2166,400 @@ const MemoryScene: React.FC<{
             </div>
           </div>
         ))}
+      </div>
 
-        {/* 连接线 */}
+      {/* 连接线 */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          maxWidth: "900px",
+          marginBottom: "50px",
+          opacity: spring({ frame: frame - 60, fps: 30 }),
+        }}
+      >
         <svg
           style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
             width: "100%",
-            height: "100%",
+            height: "60px",
             pointerEvents: "none",
           }}
         >
           {[0, 1, 2].map((index) => {
             const progress = interpolate(
-              frame - 60 - index * 5,
+              frame - 70 - index * 5,
               [0, 30],
               [0, 1],
               { extrapolateRight: "clamp" },
             );
-            const opacity = spring({ frame: frame - 60 - index * 5, fps: 30 });
-            const x1 = memoryTypes[index].x + 240;
-            const x2 = memoryTypes[index + 1].x;
-            const xEnd = x1 + (x2 - x1) * progress;
+            const segmentWidth = 250;
+            const startX = 130 + index * (segmentWidth + 40);
+            const endX = startX + segmentWidth * progress;
 
             return (
               <line
                 key={index}
-                x1={x1}
-                y1={200}
-                x2={xEnd}
-                y2={200}
+                x1={startX}
+                y1={30}
+                x2={endX}
+                y2={30}
                 stroke={accentColor}
                 strokeWidth="3"
                 strokeDasharray="5,5"
-                opacity={opacity}
               />
             );
           })}
         </svg>
+      </div>
 
-        {/* 底部特性 */}
+      {/* 底部环形流程图 */}
+      <div
+        style={{
+          opacity: spring({ frame: frame - 90, fps: 30 }),
+          width: "100%",
+          maxWidth: "1000px",
+        }}
+      >
         <div
           style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            display: "flex",
-            justifyContent: "center",
-            gap: "20px",
-            opacity: spring({ frame: frame - 90, fps: 30 }),
+            fontSize: "20px",
+            fontWeight: 700,
+            color: textColor,
+            marginBottom: "30px",
+            textAlign: "center",
           }}
         >
-          {["自动整理", "智能检索", "过期清理", "加密存储"].map((feature) => (
-            <div
-              key={feature}
-              style={{
-                background: `${accentColor}22`,
-                border: `2px solid ${accentColor}`,
-                borderRadius: "20px",
-                padding: "8px 20px",
-                fontSize: "16px",
-                fontWeight: 600,
-                color: accentColor,
-              }}
-            >
-              {feature}
-            </div>
-          ))}
+          🧠 记忆系统工作流程
+        </div>
+
+        {/* 环形流程 */}
+        <div
+          style={{
+            position: "relative",
+            width: "100%",
+            height: "650px",
+          }}
+        >
+          {(() => {
+            const flowSteps = [
+              {
+                step: 1,
+                title: "用户提问",
+                icon: "❓",
+                color: "#3B82F6",
+                desc: "接收用户输入",
+              },
+              {
+                step: 2,
+                title: "检查短期",
+                icon: "💭",
+                color: "#10B981",
+                desc: "当前上下文",
+              },
+              {
+                step: 3,
+                title: "查询长期",
+                icon: "🗄️",
+                color: "#F59E0B",
+                desc: "memory.md",
+              },
+              {
+                step: 4,
+                title: "向量搜索",
+                icon: "🔍",
+                color: "#8B5CF6",
+                desc: "相关知识",
+              },
+              {
+                step: 5,
+                title: "知识图谱",
+                icon: "🕸️",
+                color: "#EC4899",
+                desc: "结构关系",
+              },
+              {
+                step: 6,
+                title: "组合推理",
+                icon: "🧩",
+                color: "#EF4444",
+                desc: "信息整合",
+              },
+              {
+                step: 7,
+                title: "生成结果",
+                icon: "✨",
+                color: "#14B8A6",
+                desc: "输出回答",
+              },
+              {
+                step: 8,
+                title: "更新记忆",
+                icon: "💾",
+                color: "#6366F1",
+                desc: "持久化存储",
+              },
+            ];
+
+            const centerX = 500;
+            const centerY = 325;
+            const radius = 220;
+
+            return (
+              <>
+                {/* SVG 连接线 */}
+                <svg
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    pointerEvents: "none",
+                  }}
+                >
+                  <defs>
+                    <linearGradient
+                      id="flowGradient"
+                      x1="0%"
+                      y1="0%"
+                      x2="100%"
+                      y2="0%"
+                    >
+                      <stop
+                        offset="0%"
+                        style={{
+                          stopColor: accentColor,
+                          stopOpacity: 0.3,
+                        }}
+                      />
+                      <stop
+                        offset="50%"
+                        style={{
+                          stopColor: accentColor,
+                          stopOpacity: 1,
+                        }}
+                      />
+                      <stop
+                        offset="100%"
+                        style={{
+                          stopColor: accentColor,
+                          stopOpacity: 0.3,
+                        }}
+                      />
+                    </linearGradient>
+                    <marker
+                      id="arrowhead"
+                      markerWidth="10"
+                      markerHeight="10"
+                      refX="5"
+                      refY="5"
+                      orient="auto"
+                    >
+                      <polygon
+                        points="0 0, 10 5, 0 10"
+                        fill={accentColor}
+                        opacity={0.8}
+                      />
+                    </marker>
+                  </defs>
+
+                  {flowSteps.map((step, index) => {
+                    const currentAngle = (index * 45 - 90) * (Math.PI / 180);
+                    const nextAngle = ((index + 1) * 45 - 90) * (Math.PI / 180);
+
+                    const x1 = centerX + Math.cos(currentAngle) * radius;
+                    const y1 = centerY + Math.sin(currentAngle) * radius;
+                    const x2 = centerX + Math.cos(nextAngle) * radius;
+                    const y2 = centerY + Math.sin(nextAngle) * radius;
+
+                    // 计算控制点，使线条弯曲
+                    const controlRadius = radius * 1.3;
+                    const cpX = centerX + Math.cos(currentAngle + 45 * (Math.PI / 180) / 2) * controlRadius;
+                    const cpY = centerY + Math.sin(currentAngle + 45 * (Math.PI / 180) / 2) * controlRadius;
+
+                    const progress = interpolate(frame - 100 - index * 5, [0, 40], [0, 1], {
+                      extrapolateRight: "clamp",
+                    });
+
+                    // 计算当前进度下的点位置
+                    const t = progress;
+                    const invT = 1 - t;
+                    const currentX = invT * invT * x1 + 2 * invT * t * cpX + t * t * x2;
+                    const currentY = invT * invT * y1 + 2 * invT * t * cpY + t * t * y2;
+
+                    const opacity = spring({
+                      frame: frame - 100 - index * 5,
+                      fps: 30,
+                    });
+
+                    return (
+                      <g key={index}>
+                        {/* 弯曲连接线 */}
+                        <path
+                          d={`M ${x1} ${y1} Q ${cpX} ${cpY} ${x2} ${y2}`}
+                          stroke="url(#flowGradient)"
+                          strokeWidth="2"
+                          fill="none"
+                          opacity={opacity * 0.4}
+                          strokeDasharray="8,4"
+                        />
+
+                        {/* 流动动画 */}
+                        <circle
+                          r="4"
+                          fill={step.color}
+                          opacity={opacity}
+                        >
+                          <animateMotion
+                            dur={`${3 + index * 0.5}s`}
+                            repeatCount="indefinite"
+                            path={`M ${x1} ${y1} Q ${cpX} ${cpY} ${x2} ${y2}`}
+                          />
+                        </circle>
+
+                        {/* 箭头 */}
+                        <line
+                          x1={x2}
+                          y1={y2}
+                          x2={x2 - 10}
+                          y2={y2 - 10}
+                          stroke={accentColor}
+                          strokeWidth="2"
+                          opacity={opacity * 0.6}
+                          markerEnd="url(#arrowhead)"
+                          transform={`rotate(${45 + index * 45}, ${x2}, ${y2})`}
+                        />
+                      </g>
+                    );
+                  })}
+                </svg>
+
+                {/* 节点 */}
+                {flowSteps.map((step, index) => {
+                  const angle = (index * 45 - 90) * (Math.PI / 180);
+                  const x = centerX + Math.cos(angle) * radius;
+                  const y = centerY + Math.sin(angle) * radius;
+
+                  return (
+                    <div
+                      key={index}
+                      style={{
+                        position: "absolute",
+                        left: x,
+                        top: y,
+                        transform: "translate(-50%, -50%)",
+                        opacity: spring({
+                          frame: frame - 100 - index * 3,
+                          fps: 30,
+                        }),
+                        transformOrigin: "center center",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: "130px",
+                          background: `${step.color}20`,
+                          border: `3px solid ${step.color}`,
+                          borderRadius: "16px",
+                          padding: "12px",
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          boxShadow: `0 8px 24px ${step.color}40`,
+                          backdropFilter: "blur(10px)",
+                        }}
+                      >
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "-12px",
+                            background: step.color,
+                            color: "white",
+                            width: "28px",
+                            height: "28px",
+                            borderRadius: "50%",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: "14px",
+                            fontWeight: 800,
+                            boxShadow: `0 4px 12px ${step.color}60`,
+                          }}
+                        >
+                          {step.step}
+                        </div>
+                        <div style={{ fontSize: "36px", marginBottom: "6px" }}>
+                          {step.icon}
+                        </div>
+                        <div
+                          style={{
+                            fontSize: "15px",
+                            fontWeight: 700,
+                            color: step.color,
+                            marginBottom: "3px",
+                            textAlign: "center",
+                          }}
+                        >
+                          {step.title}
+                        </div>
+                        <div
+                          style={{
+                            fontSize: "12px",
+                            color: "rgba(255,255,255,0.65)",
+                            textAlign: "center",
+                          }}
+                        >
+                          {step.desc}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {/* 中心标题 */}
+                <div
+                  style={{
+                    position: "absolute",
+                    left: centerX,
+                    top: centerY,
+                    transform: "translate(-50%, -50%)",
+                    textAlign: "center",
+                    opacity: spring({ frame: frame - 90, fps: 30 }),
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: "48px",
+                      marginBottom: "8px",
+                      filter: "drop-shadow(0 0 20px rgba(167, 139, 250, 0.6))",
+                    }}
+                  >
+                    🔄
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "18px",
+                      fontWeight: 700,
+                      color: textColor,
+                      marginBottom: "4px",
+                    }}
+                  >
+                    循环增强
+                  </div>
+                      <div
+                        style={{
+                          fontSize: "13px",
+                          color: "rgba(255,255,255,0.6)",
+                        }}
+                      >
+                    每次交互都会优化记忆
+                      </div>
+                </div>
+              </>
+            );
+          })()}
         </div>
       </div>
     </div>
@@ -2077,30 +2623,71 @@ const HeartbeatScene: React.FC<{
           return title.substring(0, charsToShow);
         })()}
       </h1>
-      <p
+      <h3
         style={{
-          fontSize: "24px",
-          color: textColor,
+          fontSize: "28px",
+          fontWeight: 600,
           margin: "0 0 80px 0",
           opacity: titleOpacity,
           textAlign: "center",
-          minHeight: "32px",
+          minHeight: "40px",
         }}
       >
+        {/* 打字机效果 */}
         {(() => {
-          const subtitle = "实时监控系统状态，确保服务稳定运行";
+          const parts = [
+            { text: "实时监控", color: "#F472B6", bold: true },
+            { text: "、", color: textColor },
+            { text: "故障告警", color: "#EF4444", bold: true },
+            { text: "、", color: textColor },
+            { text: "自动恢复", color: "#10B981", bold: true },
+            { text: "，确保服务", color: textColor },
+            { text: "稳定运行", color: "#3B82F6", bold: true },
+          ];
+
           const typeStartFrame = 20;
           const durationPerChar = 2;
-          const charsToShow = Math.max(
-            0,
-            Math.min(
-              subtitle.length,
-              Math.floor((frame - typeStartFrame) / durationPerChar),
-            ),
-          );
-          return subtitle.substring(0, charsToShow);
+
+          const result = [];
+          let totalChars = 0;
+
+          for (const part of parts) {
+            const partEnd = totalChars + part.text.length;
+            const charsToShow = Math.max(
+              0,
+              Math.min(
+                part.text.length,
+                Math.floor((frame - typeStartFrame) / durationPerChar) -
+                  totalChars,
+              ),
+            );
+
+            if (charsToShow > 0) {
+              result.push(
+                <span
+                  key={totalChars}
+                  style={{
+                    color: part.color,
+                    fontWeight: part.bold ? 700 : 400,
+                  }}
+                >
+                  {part.text.substring(0, charsToShow)}
+                </span>,
+              );
+            }
+
+            totalChars = partEnd;
+            if (
+              Math.floor((frame - typeStartFrame) / durationPerChar) <=
+              totalChars
+            ) {
+              break;
+            }
+          }
+
+          return result.length > 0 ? result : <span>&nbsp;</span>;
         })()}
-      </p>
+      </h3>
 
       <div style={{ position: "relative", width: "100%", maxWidth: "600px" }}>
         {/* 心跳动画 */}
@@ -2275,30 +2862,70 @@ const CronScene: React.FC<{
           return title.substring(0, charsToShow);
         })()}
       </h1>
-      <p
+      <h3
         style={{
-          fontSize: "24px",
-          color: textColor,
+          fontSize: "28px",
+          fontWeight: 600,
           margin: "0 0 60px 0",
           opacity: titleOpacity,
           textAlign: "center",
-          minHeight: "32px",
+          minHeight: "40px",
         }}
       >
+        {/* 打字机效果 */}
         {(() => {
-          const subtitle = "自动化定时触发，让 Agent 主动工作";
+          const parts = [
+            { text: "Cron", color: "#A78BFA", bold: true },
+            { text: "表达式配置，", color: textColor },
+            { text: "定时触发", color: "#10B981", bold: true },
+            { text: "，让", color: textColor },
+            { text: "Agent", color: "#F59E0B", bold: true },
+            { text: "主动工作", color: "#3B82F6", bold: true },
+          ];
+
           const typeStartFrame = 16;
           const durationPerChar = 2;
-          const charsToShow = Math.max(
-            0,
-            Math.min(
-              subtitle.length,
-              Math.floor((frame - typeStartFrame) / durationPerChar),
-            ),
-          );
-          return subtitle.substring(0, charsToShow);
+
+          const result = [];
+          let totalChars = 0;
+
+          for (const part of parts) {
+            const partEnd = totalChars + part.text.length;
+            const charsToShow = Math.max(
+              0,
+              Math.min(
+                part.text.length,
+                Math.floor((frame - typeStartFrame) / durationPerChar) -
+                  totalChars,
+              ),
+            );
+
+            if (charsToShow > 0) {
+              result.push(
+                <span
+                  key={totalChars}
+                  style={{
+                    color: part.color,
+                    fontWeight: part.bold ? 700 : 400,
+                  }}
+                >
+                  {part.text.substring(0, charsToShow)}
+                </span>,
+              );
+            }
+
+            totalChars = partEnd;
+            if (
+              Math.floor((frame - typeStartFrame) / durationPerChar) <=
+              totalChars
+            ) {
+              break;
+            }
+          }
+
+          return result.length > 0 ? result : <span>&nbsp;</span>;
         })()}
-      </p>
+      </h3>
 
       <div style={{ width: "100%", maxWidth: "1000px" }}>
         {/* Cron 表达式示例 */}
@@ -2489,10 +3116,10 @@ const SummaryScene: React.FC<{
         })()}
       </h1>
 
-      <p
+      <h3
         style={{
           fontSize: "28px",
-          color: textColor,
+          fontWeight: 600,
           margin: "0 0 80px 0",
           opacity: spring({ frame: frame - 20, fps: 30 }),
           textAlign: "center",
@@ -2500,20 +3127,64 @@ const SummaryScene: React.FC<{
           minHeight: "48px",
         }}
       >
+        {/* 打字机效果 */}
         {(() => {
-          const subtitle = "八大模块协同工作，打造强大的 AI 助理系统";
+          const parts = [
+            { text: "Gateway", color: "#FF4444", bold: true },
+            { text: "、", color: textColor },
+            { text: "Agent", color: "#3B82F6", bold: true },
+            { text: "、", color: textColor },
+            { text: "Skills", color: "#F59E0B", bold: true },
+            { text: "等", color: textColor },
+            { text: "八大模块", color: "#A78BFA", bold: true },
+            { text: "协同工作，打造", color: textColor },
+            { text: "强大的", color: "#10B981", bold: true },
+            { text: "AI 助理系统", color: "#F472B6", bold: true },
+          ];
+
           const typeStartFrame = 20;
           const durationPerChar = 2;
-          const charsToShow = Math.max(
-            0,
-            Math.min(
-              subtitle.length,
-              Math.floor((frame - typeStartFrame) / durationPerChar),
-            ),
-          );
-          return subtitle.substring(0, charsToShow);
+
+          const result = [];
+          let totalChars = 0;
+
+          for (const part of parts) {
+            const partEnd = totalChars + part.text.length;
+            const charsToShow = Math.max(
+              0,
+              Math.min(
+                part.text.length,
+                Math.floor((frame - typeStartFrame) / durationPerChar) -
+                  totalChars,
+              ),
+            );
+
+            if (charsToShow > 0) {
+              result.push(
+                <span
+                  key={totalChars}
+                  style={{
+                    color: part.color,
+                    fontWeight: part.bold ? 700 : 400,
+                  }}
+                >
+                  {part.text.substring(0, charsToShow)}
+                </span>,
+              );
+            }
+
+            totalChars = partEnd;
+            if (
+              Math.floor((frame - typeStartFrame) / durationPerChar) <=
+              totalChars
+            ) {
+              break;
+            }
+          }
+
+          return result.length > 0 ? result : <span>&nbsp;</span>;
         })()}
-      </p>
+      </h3>
 
       {/* 模块网格 */}
       <div
