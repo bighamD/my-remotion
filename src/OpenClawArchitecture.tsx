@@ -3410,11 +3410,11 @@ const SummaryScene: React.FC<{
   ];
 
   // 树状布局参数
-  const topNodeY = 240;
-  const bottomNodeY = 620;
+  const topNodeY = 190;
+  const bottomNodeY = 500;
   const centerX = 960;
-  const nodeRadius = 50;
-  const topNodeRadius = 75;
+  const nodeRadius = 42;
+  const topNodeRadius = 65;
 
   // 计算底部节点的X坐标（均匀分布）
   const bottomNodesX = modules.map((_, index) => {
@@ -3432,20 +3432,20 @@ const SummaryScene: React.FC<{
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "40px 80px 60px 80px",
+        padding: "30px 60px 40px 60px",
         position: "relative",
       }}
     >
       {/* 标题 */}
       <h1
         style={{
-          fontSize: "56px",
+          fontSize: "42px",
           fontWeight: 800,
           color: accentColor,
-          margin: "0 0 16px 0",
+          margin: "0 0 10px 0",
           opacity: spring({ frame: frame - 10, fps: 30 }),
           textAlign: "center",
-          minHeight: "70px",
+          minHeight: "50px",
           zIndex: 20,
           textShadow: "0 0 30px rgba(167, 139, 250, 0.5)",
         }}
@@ -3456,13 +3456,13 @@ const SummaryScene: React.FC<{
       {/* 副标题 - 打字机效果 */}
       <h3
         style={{
-          fontSize: "24px",
+          fontSize: "18px",
           fontWeight: 600,
-          margin: "0 0 30px 0",
+          margin: "0 0 15px 0",
           opacity: spring({ frame: frame - 20, fps: 30 }),
           color: textColor,
           textAlign: "center",
-          minHeight: "35px",
+          minHeight: "25px",
           zIndex: 20,
         }}
       >
@@ -3606,10 +3606,10 @@ const SummaryScene: React.FC<{
           border: "4px solid rgba(255, 255, 255, 0.2)",
         }}
       >
-        <div style={{ fontSize: "48px", marginBottom: "8px" }}>🤖</div>
+        <div style={{ fontSize: "36px", marginBottom: "6px" }}>🤖</div>
         <div
           style={{
-            fontSize: "20px",
+            fontSize: "16px",
             fontWeight: 700,
             color: "#FFFFFF",
             textAlign: "center",
@@ -3620,9 +3620,9 @@ const SummaryScene: React.FC<{
         </div>
         <div
           style={{
-            fontSize: "14px",
+            fontSize: "11px",
             color: "rgba(255,255,255,0.8)",
-            marginTop: "4px",
+            marginTop: "2px",
           }}
         >
           智能系统
@@ -3662,13 +3662,13 @@ const SummaryScene: React.FC<{
               zIndex: 10,
             }}
           >
-            <div style={{ fontSize: "32px", marginBottom: "6px" }}>{module.icon}</div>
+            <div style={{ fontSize: "24px", marginBottom: "4px" }}>{module.icon}</div>
             <div
               style={{
-                fontSize: "16px",
+                fontSize: "13px",
                 fontWeight: 700,
                 color: module.color,
-                marginBottom: "2px",
+                marginBottom: "1px",
                 textAlign: "center",
               }}
             >
@@ -3676,7 +3676,7 @@ const SummaryScene: React.FC<{
             </div>
             <div
               style={{
-                fontSize: "11px",
+                fontSize: "10px",
                 color: "rgba(255,255,255,0.6)",
                 textAlign: "center",
               }}
@@ -3690,19 +3690,19 @@ const SummaryScene: React.FC<{
       {/* 底部描述文字 */}
       <div
         style={{
-          marginTop: "40px",
+          marginTop: "20px",
           textAlign: "center",
           zIndex: 20,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: "14px",
+          gap: "10px",
         }}
       >
         {/* 第一行：不是只会聊天的机器人 */}
         <div
           style={{
-            fontSize: "18px",
+            fontSize: "15px",
             fontWeight: 600,
             color: textColor,
             opacity: spring({ frame: frame - 120, fps: 30 }),
@@ -3715,7 +3715,7 @@ const SummaryScene: React.FC<{
         <div
           style={{
             display: "flex",
-            gap: "10px",
+            gap: "8px",
             flexWrap: "wrap",
             justifyContent: "center",
             opacity: spring({ frame: frame - 130, fps: 30 }),
@@ -3733,9 +3733,9 @@ const SummaryScene: React.FC<{
               style={{
                 background: `${tag.color}20`,
                 border: `2px solid ${tag.color}`,
-                borderRadius: "20px",
-                padding: "6px 16px",
-                fontSize: "14px",
+                borderRadius: "16px",
+                padding: "4px 12px",
+                fontSize: "12px",
                 fontWeight: 600,
                 color: tag.color,
                 opacity: spring({
@@ -3752,7 +3752,7 @@ const SummaryScene: React.FC<{
         {/* 第三行：数字化助理 */}
         <div
           style={{
-            fontSize: "20px",
+            fontSize: "16px",
             fontWeight: 700,
             color: textColor,
             opacity: spring({ frame: frame - 180, fps: 30 }),
@@ -3764,14 +3764,14 @@ const SummaryScene: React.FC<{
         {/* 第四行：号召 */}
         <div
           style={{
-            fontSize: "26px",
+            fontSize: "20px",
             fontWeight: 800,
             color: accentColor,
-            marginTop: "16px",
-            padding: "14px 36px",
+            marginTop: "10px",
+            padding: "10px 28px",
             background: `${accentColor}15`,
             border: `3px solid ${accentColor}`,
-            borderRadius: "30px",
+            borderRadius: "25px",
             opacity: spring({ frame: frame - 200, fps: 30 }),
             boxShadow: `0 0 40px ${accentColor}40`,
             textShadow: "0 0 20px rgba(167, 139, 250, 0.6)",
