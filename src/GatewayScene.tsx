@@ -196,6 +196,118 @@ const EntrySection: React.FC<{ frame: number }> = ({ frame }) => {
   );
 };
 
+const FunctionalMatrix: React.FC<{ frame: number }> = ({ frame }) => {
+  const gridOpacity = spring({
+    frame: Math.max(0, frame - 120),
+    fps: 30,
+    config: { damping: 15, stiffness: 100 },
+  });
+
+  const modules = [
+    { title: "多用户隔离", color: "#4CAF50", delay: 140 },
+    { title: "请求路由", color: "#2196F3", delay: 160 },
+    { title: "权限验证", color: "#FF9800", delay: 180 },
+    { title: "流量控制", color: "#9C27B0", delay: 200 },
+  ];
+
+  return (
+    <div
+      style={{
+        position: "absolute",
+        right: 100,
+        top: 180,
+        width: 500,
+        height: 400,
+        opacity: gridOpacity,
+      }}
+    >
+      {/* 网格线 - 手绘风格 */}
+      <svg
+        width="100%"
+        height="100%"
+        className="chalk-line"
+        style={{ position: "absolute", top: 0, left: 0 }}
+      >
+        {/* 水平中线 */}
+        <line
+          x1="0"
+          y1="200"
+          x2="500"
+          y2="200"
+          stroke="white"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+        {/* 垂直中线 */}
+        <line
+          x1="250"
+          y1="0"
+          x2="250"
+          y2="400"
+          stroke="white"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+        {/* 边框 */}
+        <rect
+          x="0"
+          y="0"
+          width="500"
+          height="400"
+          fill="none"
+          stroke="white"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+      </svg>
+
+      {/* 四个象限 */}
+      {modules.map((module, index) => {
+        const x = index % 2 === 0 ? 25 : 275;
+        const y = index < 2 ? 25 : 225;
+        const moduleOpacity = spring({
+          frame: Math.max(0, frame - module.delay),
+          fps: 30,
+          config: { damping: 15, stiffness: 100 },
+        });
+
+        return (
+          <div
+            key={index}
+            style={{
+              position: "absolute",
+              left: x,
+              top: y,
+              width: 225,
+              height: 175,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              opacity: moduleOpacity,
+            }}
+          >
+            <div
+              className="chalk-text"
+              style={{
+                fontSize: 28,
+                color: "white",
+                textAlign: "center",
+                padding: 16,
+                border: `2px solid ${module.color}`,
+                borderRadius: 8,
+                backgroundColor: "rgba(26, 26, 46, 0.6)",
+              }}
+            >
+              {module.title}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
 export const GatewayScene: React.FC<GatewaySceneProps> = ({
   frame,
   backgroundColor,
@@ -208,6 +320,7 @@ export const GatewayScene: React.FC<GatewaySceneProps> = ({
     <AbsoluteFill style={{ backgroundColor }}>
       <TitleLayer frame={currentFrame} accentColor={accentColor} />
       <EntrySection frame={currentFrame} />
+      <FunctionalMatrix frame={currentFrame} />
     </AbsoluteFill>
   );
 };
