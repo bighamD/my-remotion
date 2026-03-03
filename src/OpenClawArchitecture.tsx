@@ -3048,22 +3048,8 @@ const CronScene: React.FC<{
 
             {/* 表达式列表 */}
             {cronExpressions.map((expr, index) => {
-              // 打字机效果 - 更早开始，更快完成
-              const typeStartFrame = 60 + index * 25;
-              const durationPerChar = 2; // 加快打字速度
-              const charsToShow = Math.max(
-                0,
-                Math.min(
-                  expr.expression.length,
-                  Math.floor((frame - typeStartFrame) / durationPerChar),
-                ),
-              );
-
-              // 光标闪烁
-              const cursorOpacity =
-                frame > typeStartFrame + expr.expression.length * durationPerChar
-                  ? Math.sin((frame - typeStartFrame) * 0.3) * 0.5 + 0.5
-                  : 1;
+              // 每个表达式依次淡入
+              const fadeInFrame = 50 + index * 10;
 
               return (
                 <div
@@ -3071,7 +3057,7 @@ const CronScene: React.FC<{
                   style={{
                     marginBottom: "14px",
                     opacity: spring({
-                      frame: typeStartFrame - 15,
+                      frame: fadeInFrame,
                       fps: 30,
                     }),
                   }}
@@ -3093,17 +3079,7 @@ const CronScene: React.FC<{
                     <span style={{ marginRight: "10px", opacity: 0.4 }}>
                       {index + 1}.
                     </span>
-                    {expr.expression.substring(0, charsToShow)}
-                    <span
-                      style={{
-                        opacity: cursorOpacity,
-                        background: expr.color,
-                        color: expr.color,
-                        marginLeft: "2px",
-                      }}
-                    >
-                      █
-                    </span>
+                    {expr.expression}
                   </div>
 
                   {/* 描述 */}
@@ -3113,10 +3089,6 @@ const CronScene: React.FC<{
                       color: "#999999",
                       fontStyle: "italic",
                       marginLeft: "32px",
-                      opacity: spring({
-                        frame: typeStartFrame + expr.expression.length * durationPerChar,
-                        fps: 30,
-                      }),
                     }}
                   >
                     # {expr.desc}
