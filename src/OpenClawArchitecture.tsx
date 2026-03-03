@@ -1178,6 +1178,7 @@ export const OpenClawArchitecture: React.FC<
       <Sequence from={SCENE_DURATION} durationInFrames={SCENE_DURATION}>
         <GatewayScene
           frame={frame - SCENE_DURATION}
+          backgroundColor={backgroundColor}
           accentColor={accentColor}
           textColor={textColor}
         />

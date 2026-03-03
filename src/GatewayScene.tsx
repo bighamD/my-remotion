@@ -1,7 +1,6 @@
 import {
   AbsoluteFill,
-  interpolate,
-  spring,
+  useCurrentFrame,
 } from "remotion";
 import { z } from "zod";
 
