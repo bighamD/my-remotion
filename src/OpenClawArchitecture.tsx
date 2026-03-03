@@ -3040,16 +3040,16 @@ const CronScene: React.FC<{
         style={{
           width: "100%",
           maxWidth: "1200px",
-          marginBottom: "40px",
+          marginBottom: "30px",
           opacity: spring({ frame: frame - 120, fps: 30 }),
         }}
       >
         <h2
           style={{
-            fontSize: "32px",
+            fontSize: "28px",
             fontWeight: 700,
             color: textColor,
-            marginBottom: "30px",
+            marginBottom: "20px",
             textAlign: "center",
           }}
         >
@@ -3060,7 +3060,7 @@ const CronScene: React.FC<{
         <div
           style={{
             background: "#1E1E1E",
-            borderRadius: "16px",
+            borderRadius: "12px",
             overflow: "hidden",
             opacity: spring({ frame: frame - 130, fps: 30 }),
             transform: `translateY(${interpolate(
@@ -3076,10 +3076,10 @@ const CronScene: React.FC<{
           <div
             style={{
               background: "#2D2D2D",
-              padding: "16px 20px",
+              padding: "10px 16px",
               display: "flex",
               alignItems: "center",
-              gap: "10px",
+              gap: "8px",
               borderBottom: "1px solid #3D3D3D",
             }}
           >
@@ -3087,34 +3087,34 @@ const CronScene: React.FC<{
             <div
               style={{
                 display: "flex",
-                gap: "10px",
+                gap: "8px",
               }}
             >
               <div
                 style={{
-                  width: "16px",
-                  height: "16px",
+                  width: "12px",
+                  height: "12px",
                   borderRadius: "50%",
                   background: "#FF5F56",
-                  border: "1.5px solid #E0443E",
+                  border: "1px solid #E0443E",
                 }}
               />
               <div
                 style={{
-                  width: "16px",
-                  height: "16px",
+                  width: "12px",
+                  height: "12px",
                   borderRadius: "50%",
                   background: "#FFBD2E",
-                  border: "1.5px solid #DEA123",
+                  border: "1px solid #DEA123",
                 }}
               />
               <div
                 style={{
-                  width: "16px",
-                  height: "16px",
+                  width: "12px",
+                  height: "12px",
                   borderRadius: "50%",
                   background: "#27C93F",
-                  border: "1.5px solid #1AAB29",
+                  border: "1px solid #1AAB29",
                 }}
               />
             </div>
@@ -3123,7 +3123,7 @@ const CronScene: React.FC<{
               style={{
                 flex: 1,
                 textAlign: "center",
-                fontSize: "15px",
+                fontSize: "13px",
                 color: "#999999",
                 fontWeight: 500,
                 fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif",
@@ -3136,7 +3136,7 @@ const CronScene: React.FC<{
           {/* 终端内容区域 */}
           <div
             style={{
-              padding: "40px 40px",
+              padding: "20px 24px",
               fontFamily: '"Menlo", "Monaco", "Courier New", monospace',
               background: "rgba(0, 0, 0, 0.3)",
             }}
@@ -3144,13 +3144,13 @@ const CronScene: React.FC<{
             {/* 提示符和命令 */}
             <div
               style={{
-                fontSize: "28px",
+                fontSize: "22px",
                 fontWeight: 600,
                 color: "#FFFFFF",
-                marginBottom: "32px",
+                marginBottom: "16px",
                 display: "flex",
                 alignItems: "center",
-                gap: "12px",
+                gap: "10px",
                 opacity: spring({ frame: frame - 150, fps: 30 }),
               }}
             >
@@ -3182,7 +3182,7 @@ const CronScene: React.FC<{
                 <div
                   key={index}
                   style={{
-                    marginBottom: "28px",
+                    marginBottom: "16px",
                     opacity: spring({
                       frame: typeStartFrame - 20,
                       fps: 30,
@@ -3192,18 +3192,18 @@ const CronScene: React.FC<{
                   {/* 表达式 */}
                   <div
                     style={{
-                      fontSize: "36px",
+                      fontSize: "28px",
                       fontWeight: 600,
                       color: expr.color,
-                      marginBottom: "8px",
+                      marginBottom: "4px",
                       letterSpacing: "0.05em",
-                      lineHeight: 1.4,
+                      lineHeight: 1.3,
                       fontFamily: '"Menlo", "Monaco", "Courier New", monospace',
                       display: "flex",
                       alignItems: "center",
                     }}
                   >
-                    <span style={{ marginRight: "16px", opacity: 0.4 }}>
+                    <span style={{ marginRight: "12px", opacity: 0.4 }}>
                       {index + 1}.
                     </span>
                     {expr.expression.substring(0, charsToShow)}
@@ -3212,7 +3212,7 @@ const CronScene: React.FC<{
                         opacity: cursorOpacity,
                         background: expr.color,
                         color: expr.color,
-                        marginLeft: "4px",
+                        marginLeft: "3px",
                       }}
                     >
                       █
@@ -3222,10 +3222,10 @@ const CronScene: React.FC<{
                   {/* 描述 */}
                   <div
                     style={{
-                      fontSize: "18px",
+                      fontSize: "14px",
                       color: "#999999",
                       fontStyle: "italic",
-                      marginLeft: "48px",
+                      marginLeft: "38px",
                       opacity: spring({
                         frame: typeStartFrame + expr.expression.length * durationPerChar,
                         fps: 30,
