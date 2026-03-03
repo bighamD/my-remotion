@@ -3161,9 +3161,9 @@ const CronScene: React.FC<{
 
             {/* 表达式列表 */}
             {cronExpressions.map((expr, index) => {
-              // 打字机效果
-              const typeStartFrame = 170 + index * 40;
-              const durationPerChar = 4;
+              // 打字机效果 - 更早开始，更快完成
+              const typeStartFrame = 80 + index * 25;
+              const durationPerChar = 2; // 加快打字速度
               const charsToShow = Math.max(
                 0,
                 Math.min(
@@ -3182,9 +3182,9 @@ const CronScene: React.FC<{
                 <div
                   key={index}
                   style={{
-                    marginBottom: "16px",
+                    marginBottom: "14px",
                     opacity: spring({
-                      frame: typeStartFrame - 20,
+                      frame: typeStartFrame - 15,
                       fps: 30,
                     }),
                   }}
@@ -3192,10 +3192,10 @@ const CronScene: React.FC<{
                   {/* 表达式 */}
                   <div
                     style={{
-                      fontSize: "28px",
+                      fontSize: "22px",
                       fontWeight: 600,
                       color: expr.color,
-                      marginBottom: "4px",
+                      marginBottom: "3px",
                       letterSpacing: "0.05em",
                       lineHeight: 1.3,
                       fontFamily: '"Menlo", "Monaco", "Courier New", monospace',
@@ -3203,7 +3203,7 @@ const CronScene: React.FC<{
                       alignItems: "center",
                     }}
                   >
-                    <span style={{ marginRight: "12px", opacity: 0.4 }}>
+                    <span style={{ marginRight: "10px", opacity: 0.4 }}>
                       {index + 1}.
                     </span>
                     {expr.expression.substring(0, charsToShow)}
@@ -3212,7 +3212,7 @@ const CronScene: React.FC<{
                         opacity: cursorOpacity,
                         background: expr.color,
                         color: expr.color,
-                        marginLeft: "3px",
+                        marginLeft: "2px",
                       }}
                     >
                       █
@@ -3222,10 +3222,10 @@ const CronScene: React.FC<{
                   {/* 描述 */}
                   <div
                     style={{
-                      fontSize: "14px",
+                      fontSize: "12px",
                       color: "#999999",
                       fontStyle: "italic",
-                      marginLeft: "38px",
+                      marginLeft: "32px",
                       opacity: spring({
                         frame: typeStartFrame + expr.expression.length * durationPerChar,
                         fps: 30,
