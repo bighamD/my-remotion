@@ -17,7 +17,211 @@ export const openClawArchitectureSchema = z.object({
 });
 
 // ============================================
-// 场景 1: 整体架构概览（基于 1.html）
+// 场景 0: OpenClaw 核心概念
+// ============================================
+
+const IntroConceptScene: React.FC<{
+  frame: number;
+  accentColor: string;
+  textColor: string;
+}> = ({ frame, accentColor, textColor }) => {
+  const titleOpacity = spring({
+    frame,
+    fps: 30,
+    config: { damping: 15, stiffness: 100 },
+  });
+
+  // 核心特性卡片
+  const features = [
+    {
+      icon: "🤖",
+      title: "AI 智能代理",
+      desc: "基于大语言模型的智能决策系统",
+      color: "#A78BFA",
+      delay: 30,
+    },
+    {
+      icon: "🔌",
+      title: "多渠道集成",
+      desc: "支持飞书、Telegram、Discord 等",
+      color: "#10B981",
+      delay: 50,
+    },
+    {
+      icon: "⚡",
+      title: "自主执行",
+      desc: "主动思考、规划并执行任务",
+      color: "#F59E0B",
+      delay: 70,
+    },
+    {
+      icon: "🛡️",
+      title: "安全可控",
+      desc: "自托管部署，数据完全掌控",
+      color: "#3B82F6",
+      delay: 90,
+    },
+  ];
+
+  return (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "60px 100px",
+        background: "radial-gradient(circle, #2c2c2c 1px, transparent 1px)",
+        backgroundSize: "30px 30px",
+      }}
+    >
+      {/* 标题区 */}
+      <div
+        style={{
+          textAlign: "center",
+          marginBottom: "80px",
+          opacity: titleOpacity,
+        }}
+      >
+        <h1
+          style={{
+            fontSize: "72px",
+            fontWeight: 800,
+            color: textColor,
+            margin: "0 0 20px 0",
+            textShadow: "0 0 30px rgba(255,255,255,0.2)",
+          }}
+        >
+          <span style={{ color: accentColor }}>OpenClaw</span>
+        </h1>
+        <p
+          style={{
+            fontSize: "28px",
+            color: "rgba(255,255,255,0.7)",
+            margin: 0,
+            fontWeight: 300,
+          }}
+        >
+          下一代的 AI 智能助理系统
+        </p>
+      </div>
+
+      {/* 核心概念卡片 */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "32px",
+          width: "100%",
+          maxWidth: "1400px",
+        }}
+      >
+        {features.map((feature) => (
+          <div
+            key={feature.title}
+            style={{
+              padding: "32px",
+              background: `rgba(255,255,255,0.03)`,
+              border: `1px solid ${feature.color}33`,
+              borderRadius: "20px",
+              opacity: spring({
+                frame: frame - feature.delay,
+                fps: 30,
+                config: { damping: 20, stiffness: 100 },
+              }),
+              transform: `translateY(${interpolate(
+                frame - feature.delay,
+                [0, 30],
+                [30, 0],
+                { extrapolateRight: "clamp" },
+              )}px)`,
+              boxShadow: `0 0 30px ${feature.color}15`,
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: "20px",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "48px",
+                  filter: `drop-shadow(0 4px 12px ${feature.color}66)`,
+                }}
+              >
+                {feature.icon}
+              </div>
+              <div style={{ flex: 1 }}>
+                <h3
+                  style={{
+                    fontSize: "24px",
+                    fontWeight: 700,
+                    color: feature.color,
+                    margin: "0 0 8px 0",
+                  }}
+                >
+                  {feature.title}
+                </h3>
+                <p
+                  style={{
+                    fontSize: "16px",
+                    color: "rgba(255,255,255,0.7)",
+                    margin: 0,
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {feature.desc}
+                </p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* 底部标语 */}
+      <div
+        style={{
+          marginTop: "60px",
+          padding: "24px 48px",
+          background: `${accentColor}15`,
+          border: `2px solid ${accentColor}`,
+          borderRadius: "16px",
+          opacity: spring({
+            frame: frame - 110,
+            fps: 30,
+            config: { damping: 20, stiffness: 100 },
+          }),
+          textAlign: "center",
+        }}
+      >
+        <div
+          style={{
+            fontSize: "22px",
+            fontWeight: 600,
+            color: textColor,
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+            justifyContent: "center",
+          }}
+        >
+          <span style={{ color: accentColor }}>✨</span>
+          <span>不只是聊天机器人，而是真正能</span>
+          <span style={{ color: accentColor }}>干活</span>
+          <span>的 AI 助理</span>
+          <span style={{ color: accentColor }}>✨</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ============================================
+// 场景 1: 整体架构概览（原来的场景）
 // ============================================
 
 const OverallArchitectureScene: React.FC<{
@@ -106,7 +310,7 @@ const OverallArchitectureScene: React.FC<{
       <g opacity={opacity}>
         <defs>
           <marker
-            id={`arrow-main-${x1}-${y1}`}
+            id={`arrow-overall-${x1}-${y1}`}
             markerWidth="10"
             markerHeight="10"
             refX="9"
@@ -123,7 +327,7 @@ const OverallArchitectureScene: React.FC<{
           y2={y1 + (y2 - y1) * progress}
           stroke="rgba(255,255,255,0.2)"
           strokeWidth="2"
-          markerEnd={`url(#arrow-main-${x1}-${y1})`}
+          markerEnd={`url(#arrow-overall-${x1}-${y1})`}
         />
       </g>
     );
@@ -147,11 +351,6 @@ const OverallArchitectureScene: React.FC<{
         style={{
           maxWidth: "1400px",
           width: "100%",
-          // border: "4px solid rgba(255,255,255,0.2)",
-          // padding: "60px",
-          // borderRadius: "16px",
-          // background: "rgba(18,18,18,0.9)",
-          // boxShadow: "0 25px 50px rgba(0,0,0,0.5)",
         }}
       >
         {/* 标题 */}
@@ -3776,7 +3975,14 @@ const SummaryScene: React.FC<{
               { text: "会执行", color: "#10B981", icon: "⚡" },
               { text: "自主", color: "#F59E0B", icon: "🎯" },
             ].map((ability, index) => (
-              <span key={index} style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+              <span
+                key={index}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "4px",
+                }}
+              >
                 <span
                   style={{
                     opacity: spring({
@@ -3882,91 +4088,100 @@ export const OpenClawArchitecture: React.FC<
         display: "flex",
       }}
     >
-      {/* Scene 1: 整体架构概览 */}
+      {/* Scene 0: OpenClaw 核心概念（新增开场场景） */}
       <Sequence durationInFrames={SCENE_DURATION}>
-        <OverallArchitectureScene
+        <IntroConceptScene
           frame={frame}
           accentColor={accentColor}
           textColor={textColor}
         />
       </Sequence>
 
-      {/* Scene 2: Gateway 网关核心 */}
+      {/* Scene 1: 整体架构概览 */}
       <Sequence from={SCENE_DURATION} durationInFrames={SCENE_DURATION}>
-        <GatewayScene
+        <OverallArchitectureScene
           frame={frame - SCENE_DURATION}
           accentColor={accentColor}
           textColor={textColor}
         />
       </Sequence>
 
-      {/* Scene 3: Agent 智能代理 */}
+      {/* Scene 2: Gateway 网关核心 */}
       <Sequence from={SCENE_DURATION * 2} durationInFrames={SCENE_DURATION}>
-        <AgentScene
+        <GatewayScene
           frame={frame - SCENE_DURATION * 2}
           accentColor={accentColor}
           textColor={textColor}
         />
       </Sequence>
 
-      {/* Scene 4: Skills 技能系统 */}
+      {/* Scene 3: Agent 智能代理 */}
       <Sequence from={SCENE_DURATION * 3} durationInFrames={SCENE_DURATION}>
-        <SkillsScene
+        <AgentScene
           frame={frame - SCENE_DURATION * 3}
           accentColor={accentColor}
           textColor={textColor}
         />
       </Sequence>
 
-      {/* Scene 5: Channels 渠道层 */}
+      {/* Scene 4: Skills 技能系统 */}
       <Sequence from={SCENE_DURATION * 4} durationInFrames={SCENE_DURATION}>
-        <ChannelsScene
+        <SkillsScene
           frame={frame - SCENE_DURATION * 4}
           accentColor={accentColor}
           textColor={textColor}
         />
       </Sequence>
 
-      {/* Scene 6: Nodes 节点系统 */}
+      {/* Scene 5: Channels 渠道层 */}
       <Sequence from={SCENE_DURATION * 5} durationInFrames={SCENE_DURATION}>
-        <NodesScene
+        <ChannelsScene
           frame={frame - SCENE_DURATION * 5}
           accentColor={accentColor}
           textColor={textColor}
         />
       </Sequence>
 
-      {/* Scene 7: Memory 记忆系统 */}
+      {/* Scene 6: Nodes 节点系统 */}
       <Sequence from={SCENE_DURATION * 6} durationInFrames={SCENE_DURATION}>
-        <MemoryScene
+        <NodesScene
           frame={frame - SCENE_DURATION * 6}
           accentColor={accentColor}
           textColor={textColor}
         />
       </Sequence>
 
-      {/* Scene 8: Heartbeat 健康检查 */}
+      {/* Scene 7: Memory 记忆系统 */}
       <Sequence from={SCENE_DURATION * 7} durationInFrames={SCENE_DURATION}>
-        <HeartbeatScene
+        <MemoryScene
           frame={frame - SCENE_DURATION * 7}
           accentColor={accentColor}
           textColor={textColor}
         />
       </Sequence>
 
-      {/* Scene 9: Cron 定时任务 */}
+      {/* Scene 8: Heartbeat 健康检查 */}
       <Sequence from={SCENE_DURATION * 8} durationInFrames={SCENE_DURATION}>
-        <CronScene
+        <HeartbeatScene
           frame={frame - SCENE_DURATION * 8}
           accentColor={accentColor}
           textColor={textColor}
         />
       </Sequence>
 
-      {/* Scene 10: 总结 */}
+      {/* Scene 9: Cron 定时任务 */}
       <Sequence from={SCENE_DURATION * 9} durationInFrames={SCENE_DURATION}>
-        <SummaryScene
+        <CronScene
           frame={frame - SCENE_DURATION * 9}
+          accentColor={accentColor}
+          textColor={textColor}
+        />
+      </Sequence>
+
+      {/* Scene 10: 总结 */}
+      <Sequence from={SCENE_DURATION * 10} durationInFrames={SCENE_DURATION}>
+        <SummaryScene
+          frame={frame - SCENE_DURATION * 10}
           accentColor={accentColor}
           textColor={textColor}
         />

@@ -30,7 +30,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="OpenClawArchitecture"
         component={OpenClawArchitecture}
-        durationInFrames={3000}
+        durationInFrames={3300}
         fps={30}
         width={1920}
         height={1080}
