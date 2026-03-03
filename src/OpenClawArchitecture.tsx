@@ -2878,8 +2878,8 @@ const CronScene: React.FC<{
             { text: "主动工作", color: "#EC4899", bold: true },
           ];
 
-          const typeStartFrame = 75;
-          const durationPerChar = 4;
+          const typeStartFrame = 20;
+          const durationPerChar = 2;
           const totalChars = parts.reduce(
             (sum, p) => sum + p.text.length,
             0,
