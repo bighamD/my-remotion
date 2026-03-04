@@ -20,7 +20,7 @@ export const openClawArchitectureSchema = z.object({
 // 场景 0: OpenClaw 核心概念
 // ============================================
 
-const IntroConceptScene: React.FC<{
+export const IntroConceptScene: React.FC<{
   frame: number;
   accentColor: string;
   textColor: string;
@@ -383,7 +383,7 @@ const OverallArchitectureScene: React.FC<{
           }}
         >
           <span>
-            <span style={{ color: accentColor }}>OpenClaw</span> 核心组成
+            <span style={{ color: accentColor }}>OpenClaw</span> 架构
           </span>
         </h1>
 
@@ -532,14 +532,56 @@ const OverallArchitectureScene: React.FC<{
               }}
             >
               {/* 第一行箭头 */}
-              <Arrow x1={140} y1={70} x2={270} y2={70} delay={25} color="#EAB308" />
-              <Arrow x1={420} y1={70} x2={550} y2={70} delay={35} color="#3B82F6" />
-              <Arrow x1={700} y1={70} x2={830} y2={70} delay={45} color="#10B981" />
+              <Arrow
+                x1={140}
+                y1={70}
+                x2={270}
+                y2={70}
+                delay={25}
+                color="#EAB308"
+              />
+              <Arrow
+                x1={420}
+                y1={70}
+                x2={550}
+                y2={70}
+                delay={35}
+                color="#3B82F6"
+              />
+              <Arrow
+                x1={700}
+                y1={70}
+                x2={830}
+                y2={70}
+                delay={45}
+                color="#10B981"
+              />
 
               {/* 第二行箭头 */}
-              <Arrow x1={140} y1={320} x2={270} y2={320} delay={65} color="#34D399" />
-              <Arrow x1={420} y1={320} x2={550} y2={320} delay={75} color="#A78BFA" />
-              <Arrow x1={700} y1={320} x2={830} y2={320} delay={85} color="#F472B6" />
+              <Arrow
+                x1={140}
+                y1={320}
+                x2={270}
+                y2={320}
+                delay={65}
+                color="#34D399"
+              />
+              <Arrow
+                x1={420}
+                y1={320}
+                x2={550}
+                y2={320}
+                delay={75}
+                color="#A78BFA"
+              />
+              <Arrow
+                x1={700}
+                y1={320}
+                x2={830}
+                y2={320}
+                delay={85}
+                color="#F472B6"
+              />
             </svg>
           </div>
         </div>
@@ -635,6 +677,25 @@ const GatewayScene: React.FC<{
     { icon: "🧠", name: "Memory", color: "#A78BFA" },
   ];
 
+  const laneWidth = 420;
+  const gatewaySize = 340;
+  const laneGap = 40;
+  const contentWidth = laneWidth * 2 + gatewaySize + laneGap * 2;
+  const contentHeight = 760;
+  const circleSize = 140;
+  const leftCircleTopStart = 150;
+  const leftCircleStep = 155;
+  const rightCircleTopStart = 120;
+  const rightCircleStep = 155;
+
+  const leftLaneX = 0;
+  const middleX = laneWidth + laneGap;
+  const rightLaneX = middleX + gatewaySize + laneGap;
+  const leftCenterX = leftLaneX + laneWidth / 2;
+  const rightCenterX = rightLaneX + laneWidth / 2;
+  const gatewayCenterX = middleX + gatewaySize / 2;
+  const gatewayCenterY = contentHeight / 2;
+
   return (
     <div
       style={{
@@ -650,149 +711,22 @@ const GatewayScene: React.FC<{
         position: "relative",
       }}
     >
-      {/* SVG飞线动画层 */}
-      <svg
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          pointerEvents: "none",
-          zIndex: 10,
-        }}
-      >
-        <defs>
-          {/* 输入渐变 */}
-          {inputChannels.map((channel, index) => (
-            <linearGradient
-              key={`input-${index}`}
-              id={`inputGradient${index}`}
-              x1="0%"
-              y1="0%"
-              x2="100%"
-              y2="100%"
-            >
-              <stop offset="0%" stopColor={channel.color} stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#FF4444" stopOpacity="0.8" />
-            </linearGradient>
-          ))}
-
-          {/* 输出渐变 */}
-          {outputTargets.map((target, index) => (
-            <linearGradient
-              key={`output-${index}`}
-              id={`outputGradient${index}`}
-              x1="0%"
-              y1="0%"
-              x2="100%"
-              y2="100%"
-            >
-              <stop offset="0%" stopColor="#FF4444" stopOpacity="0.8" />
-              <stop offset="100%" stopColor={target.color} stopOpacity="0.8" />
-            </linearGradient>
-          ))}
-        </defs>
-
-        {/* 输入飞线 */}
-        {inputChannels.map((channel, index) => {
-          // 左侧圆形：中心在 80+340=420px，右边缘 420+60=480px
-          // Y位置：60+120+280+60 = 520px（第一个圆的中心）
-          // Gateway：左边缘 80+720=800px，中心 80+720+160=960px
-          const startX = 480;
-          const startY = 520 + index * 130;
-          const endX = 800;
-          const endY = 560;
-          const controlY = (startY + endY) / 2;
-
-          const pathD = `M ${startX} ${startY} Q ${(startX + endX) / 2} ${controlY} ${endX} ${endY}`;
-          const lineOpacity = spring({ frame: frame - 20 - index * 5, fps: 30 });
-
-          return (
-            <g key={`input-${channel.name}`}>
-              {/* 静态连接线 */}
-              <path
-                d={pathD}
-                stroke={`url(#inputGradient${index})`}
-                strokeWidth="2"
-                fill="none"
-                opacity={lineOpacity * 0.3}
-              />
-              {/* 飞线动画 */}
-              <circle r="4" fill={channel.color}>
-                <animateMotion
-                  dur={`${2 + index * 0.2}s`}
-                  repeatCount="indefinite"
-                  path={pathD}
-                />
-                <animate
-                  attributeName="opacity"
-                  values="0;1"
-                  dur={`${2 + index * 0.2}s`}
-                  repeatCount="indefinite"
-                />
-              </circle>
-            </g>
-          );
-        })}
-
-        {/* 输出飞线 */}
-        {outputTargets.map((target, index) => {
-          // Gateway：右边缘 80+720+320=1120px，中心Y 560px
-          // 右侧圆形：中心在 80+1080+340=1500px，左边缘 1500-60=1440px
-          // Y位置：60+120+275+60 = 515px（第一个圆的中心）
-          const startX = 1120;
-          const startY = 560;
-          const endX = 1440;
-          const endY = 515 + index * 130;
-          const controlY = (startY + endY) / 2;
-
-          const pathD = `M ${startX} ${startY} Q ${(startX + endX) / 2} ${controlY} ${endX} ${endY}`;
-          const lineOpacity = spring({ frame: frame - 30 - index * 5, fps: 30 });
-
-          return (
-            <g key={`output-${target.name}`}>
-              {/* 静态连接线 */}
-              <path
-                d={pathD}
-                stroke={`url(#outputGradient${index})`}
-                strokeWidth="2"
-                fill="none"
-                opacity={lineOpacity * 0.3}
-              />
-              {/* 飞线动画 */}
-              <circle r="4" fill={target.color}>
-                <animateMotion
-                  dur={`${2 + index * 0.2}s`}
-                  repeatCount="indefinite"
-                  path={pathD}
-                />
-                <animate
-                  attributeName="opacity"
-                  values="0;1"
-                  dur={`${2 + index * 0.2}s`}
-                  repeatCount="indefinite"
-                />
-              </circle>
-            </g>
-          );
-        })}
-      </svg>
-
       {/* 标题 */}
       <div
         style={{
           textAlign: "center",
-          marginBottom: "50px",
+          marginBottom: "28px",
           opacity: titleOpacity,
+          maxWidth: "92%",
         }}
       >
         <h1
           style={{
-            fontSize: "56px",
+            fontSize: "48px",
             fontWeight: 800,
             color: "#FF4444",
-            margin: "0 0 16px 0",
+            margin: "0 0 12px 0",
+            lineHeight: 1.15,
             textShadow: "0 0 30px rgba(255,68,68,0.5)",
           }}
         >
@@ -800,9 +734,10 @@ const GatewayScene: React.FC<{
         </h1>
         <p
           style={{
-            fontSize: "22px",
+            fontSize: "20px",
             color: "rgba(255,255,255,0.6)",
             margin: 0,
+            lineHeight: 1.3,
           }}
         >
           统一入口 · 安全验证 · 智能分发
@@ -812,29 +747,169 @@ const GatewayScene: React.FC<{
       {/* 主内容区：三列布局 */}
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns: "1fr auto 1fr",
-          gap: "40px",
-          width: "100%",
-          maxWidth: "1600px",
-          alignItems: "center",
+          position: "relative",
+          width: `${contentWidth}px`,
+          height: `${contentHeight}px`,
+          maxWidth: "100%",
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "center",
         }}
       >
+        {/* SVG飞线动画层 */}
+        <svg
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            pointerEvents: "none",
+            zIndex: 5,
+          }}
+          viewBox={`0 0 ${contentWidth} ${contentHeight}`}
+        >
+          <defs>
+            {inputChannels.map((channel, index) => (
+              <linearGradient
+                key={`input-${index}`}
+                id={`inputGradient${index}`}
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <stop offset="0%" stopColor={channel.color} stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#FF4444" stopOpacity="0.8" />
+              </linearGradient>
+            ))}
+            {outputTargets.map((target, index) => (
+              <linearGradient
+                key={`output-${index}`}
+                id={`outputGradient${index}`}
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <stop offset="0%" stopColor="#FF4444" stopOpacity="0.8" />
+                <stop
+                  offset="100%"
+                  stopColor={target.color}
+                  stopOpacity="0.8"
+                />
+              </linearGradient>
+            ))}
+          </defs>
+
+          {inputChannels.map((channel, index) => {
+            const startX = leftCenterX + circleSize / 2;
+            const startY =
+              leftCircleTopStart + index * leftCircleStep + circleSize / 2;
+            const endX = gatewayCenterX - gatewaySize / 2;
+            const endY = gatewayCenterY;
+            const horizontal = endX - startX;
+            const bendY = (index - 1) * 42;
+            const c1x = startX + horizontal * 0.32;
+            const c2x = startX + horizontal * 0.78;
+            const c1y = startY + bendY - 32;
+            const c2y = endY + bendY + 24;
+            const pathD = `M ${startX} ${startY} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${endX} ${endY}`;
+            const lineOpacity = spring({
+              frame: frame - 20 - index * 5,
+              fps: 30,
+            });
+            return (
+              <g key={`input-${channel.name}`}>
+                <path
+                  d={pathD}
+                  stroke={`url(#inputGradient${index})`}
+                  strokeWidth="2.5"
+                  fill="none"
+                  strokeLinecap="round"
+                  opacity={lineOpacity * 0.35}
+                />
+                <circle r="4" fill={channel.color}>
+                  <animateMotion
+                    dur={`${2 + index * 0.2}s`}
+                    repeatCount="indefinite"
+                    path={pathD}
+                  />
+                  <animate
+                    attributeName="opacity"
+                    values="0;1"
+                    dur={`${2 + index * 0.2}s`}
+                    repeatCount="indefinite"
+                  />
+                </circle>
+              </g>
+            );
+          })}
+
+          {outputTargets.map((target, index) => {
+            const startX = gatewayCenterX + gatewaySize / 2;
+            const startY = gatewayCenterY;
+            const endX = rightCenterX - circleSize / 2;
+            const endY =
+              rightCircleTopStart + index * rightCircleStep + circleSize / 2;
+            const horizontal = endX - startX;
+            const bendY = (index - 1.5) * 34;
+            const c1x = startX + horizontal * 0.22;
+            const c2x = startX + horizontal * 0.72;
+            const c1y = startY + bendY - 28;
+            const c2y = endY + bendY + 20;
+            const pathD = `M ${startX} ${startY} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${endX} ${endY}`;
+            const lineOpacity = spring({
+              frame: frame - 30 - index * 5,
+              fps: 30,
+            });
+            return (
+              <g key={`output-${target.name}`}>
+                <path
+                  d={pathD}
+                  stroke={`url(#outputGradient${index})`}
+                  strokeWidth="2.5"
+                  fill="none"
+                  strokeLinecap="round"
+                  opacity={lineOpacity * 0.35}
+                />
+                <circle r="4" fill={target.color}>
+                  <animateMotion
+                    dur={`${2 + index * 0.2}s`}
+                    repeatCount="indefinite"
+                    path={pathD}
+                  />
+                  <animate
+                    attributeName="opacity"
+                    values="0;1"
+                    dur={`${2 + index * 0.2}s`}
+                    repeatCount="indefinite"
+                  />
+                </circle>
+              </g>
+            );
+          })}
+        </svg>
+
         {/* 左侧：输入渠道 */}
         <div
           style={{
             position: "relative",
-            width: "100%",
-            height: "800px",
+            width: `${laneWidth}px`,
+            height: `${contentHeight}px`,
             opacity: spring({ frame: frame - 15, fps: 30 }),
+            zIndex: 20,
           }}
         >
           <div
             style={{
-              fontSize: "20px",
+              position: "absolute",
+              left: "50%",
+              top: "88px",
+              transform: "translateX(-50%)",
+              fontSize: "24px",
               fontWeight: 700,
               color: textColor,
-              marginBottom: "8px",
               textAlign: "center",
             }}
           >
@@ -846,10 +921,10 @@ const GatewayScene: React.FC<{
               style={{
                 position: "absolute",
                 left: "50%",
-                top: 280 + index * 130,
+                top: leftCircleTopStart + index * leftCircleStep,
                 transform: "translate(-50%, 0)",
-                width: "120px",
-                height: "120px",
+                width: `${circleSize}px`,
+                height: `${circleSize}px`,
                 background: `linear-gradient(135deg, ${channel.color}15 0%, ${channel.color}08 100%)`,
                 border: `3px solid ${channel.color}44`,
                 borderRadius: "50%",
@@ -862,10 +937,10 @@ const GatewayScene: React.FC<{
                 transition: "transform 0.3s ease",
               }}
             >
-              <div style={{ fontSize: "42px" }}>{channel.icon}</div>
+              <div style={{ fontSize: "48px" }}>{channel.icon}</div>
               <div
                 style={{
-                  fontSize: "16px",
+                  fontSize: "18px",
                   fontWeight: 600,
                   color: channel.color,
                 }}
@@ -880,18 +955,25 @@ const GatewayScene: React.FC<{
         <div
           style={{
             position: "relative",
-            width: "320px",
-            height: "320px",
+            width: `${gatewaySize}px`,
+            height: `${contentHeight}px`,
+            marginLeft: `${laneGap}px`,
+            marginRight: `${laneGap}px`,
+            zIndex: 20,
           }}
         >
           {/* 背景光晕 */}
           <div
             style={{
               position: "absolute",
-              width: "100%",
-              height: "100%",
+              left: 0,
+              top: "50%",
+              width: `${gatewaySize}px`,
+              height: `${gatewaySize}px`,
+              transform: "translateY(-46%)",
               borderRadius: "50%",
-              background: "radial-gradient(circle, #FF4444 0%, transparent 70%)",
+              background:
+                "radial-gradient(circle, #FF4444 0%, transparent 70%)",
               opacity: 0.15,
             }}
           />
@@ -900,8 +982,11 @@ const GatewayScene: React.FC<{
           <div
             style={{
               position: "absolute",
-              width: "100%",
-              height: "100%",
+              left: 0,
+              top: "50%",
+              width: `${gatewaySize}px`,
+              height: `${gatewaySize}px`,
+              transform: `translateY(-46%) scale(${spring({ frame: frame - 10, fps: 30, config: { damping: 20, stiffness: 120 } })})`,
               borderRadius: "50%",
               background: `linear-gradient(135deg, #FF4444 0%, #CC0000 100%)`,
               border: "6px solid rgba(255,255,255,0.2)",
@@ -910,14 +995,13 @@ const GatewayScene: React.FC<{
               alignItems: "center",
               justifyContent: "center",
               opacity: spring({ frame: frame - 10, fps: 30 }),
-              transform: `scale(${spring({ frame: frame - 10, fps: 30, config: { damping: 20, stiffness: 120 } })})`,
               boxShadow: "0 0 60px rgba(255,68,68,0.6)",
             }}
           >
-            <div style={{ fontSize: "72px", marginBottom: "12px" }}>🚪</div>
+            <div style={{ fontSize: "78px", marginBottom: "14px" }}>🚪</div>
             <div
               style={{
-                fontSize: "32px",
+                fontSize: "34px",
                 fontWeight: 800,
                 color: "#FFFFFF",
                 marginBottom: "4px",
@@ -927,7 +1011,7 @@ const GatewayScene: React.FC<{
             </div>
             <div
               style={{
-                fontSize: "14px",
+                fontSize: "15px",
                 color: "rgba(255,255,255,0.8)",
                 fontWeight: 500,
               }}
@@ -941,7 +1025,7 @@ const GatewayScene: React.FC<{
             const angle = (index * 90 - 45) * (Math.PI / 180);
             const radius = 180;
             const x = 160 + Math.cos(angle) * radius;
-            const y = 160 + Math.sin(angle) * radius;
+            const y = contentHeight / 2 + Math.sin(angle) * radius;
 
             return (
               <div
@@ -986,17 +1070,21 @@ const GatewayScene: React.FC<{
         <div
           style={{
             position: "relative",
-            width: "100%",
-            height: "800px",
+            width: `${laneWidth}px`,
+            height: `${contentHeight}px`,
             opacity: spring({ frame: frame - 15, fps: 30 }),
+            zIndex: 20,
           }}
         >
           <div
             style={{
-              fontSize: "20px",
+              position: "absolute",
+              left: "50%",
+              top: "58px",
+              transform: "translateX(-50%)",
+              fontSize: "24px",
               fontWeight: 700,
               color: textColor,
-              marginBottom: "8px",
               textAlign: "center",
             }}
           >
@@ -1008,10 +1096,10 @@ const GatewayScene: React.FC<{
               style={{
                 position: "absolute",
                 left: "50%",
-                top: 275 + index * 130,
+                top: rightCircleTopStart + index * rightCircleStep,
                 transform: "translate(-50%, 0)",
-                width: "120px",
-                height: "120px",
+                width: `${circleSize}px`,
+                height: `${circleSize}px`,
                 background: `linear-gradient(135deg, ${target.color}15 0%, ${target.color}08 100%)`,
                 border: `3px solid ${target.color}44`,
                 borderRadius: "50%",
@@ -1024,10 +1112,10 @@ const GatewayScene: React.FC<{
                 transition: "transform 0.3s ease",
               }}
             >
-              <div style={{ fontSize: "42px" }}>{target.icon}</div>
+              <div style={{ fontSize: "48px" }}>{target.icon}</div>
               <div
                 style={{
-                  fontSize: "16px",
+                  fontSize: "18px",
                   fontWeight: 600,
                   color: target.color,
                 }}
@@ -1042,8 +1130,9 @@ const GatewayScene: React.FC<{
       {/* 底部说明 */}
       <div
         style={{
-          marginTop: "50px",
-          padding: "20px 40px",
+          marginTop: "18px",
+          maxWidth: "90%",
+          padding: "14px 28px",
           background: "rgba(255,68,68,0.1)",
           border: "2px solid rgba(255,68,68,0.3)",
           borderRadius: "16px",
@@ -1053,12 +1142,14 @@ const GatewayScene: React.FC<{
       >
         <div
           style={{
-            fontSize: "20px",
+            fontSize: "18px",
             color: textColor,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             gap: "12px",
+            flexWrap: "wrap",
+            lineHeight: 1.35,
           }}
         >
           <span style={{ fontSize: "24px" }}>⚡</span>
@@ -1632,6 +1723,18 @@ const ChannelsScene: React.FC<{
     { name: "飞书", icon: "🚀", color: "#F59E0B" },
   ];
 
+  const cardSize = 160;
+  const cardGap = 50;
+  const flowWidth = 1400;
+  const flowHeight = 640;
+  const channelsWidth =
+    channels.length * cardSize + (channels.length - 1) * cardGap;
+  const channelsStartX = (flowWidth - channelsWidth) / 2;
+  const channelsTop = 0;
+  const convertBoxWidth = 620;
+  const convertBoxTop = 320;
+  const convertCenterX = flowWidth / 2;
+
   return (
     <div
       style={{
@@ -1725,133 +1828,207 @@ const ChannelsScene: React.FC<{
         })()}
       </h3>
 
-      {/* 渠道图标 */}
       <div
         style={{
-          display: "flex",
-          gap: "50px",
-          marginBottom: "60px",
+          position: "relative",
           width: "100%",
-          maxWidth: "1400px",
-          justifyContent: "center",
+          maxWidth: `${flowWidth}px`,
+          height: `${flowHeight}px`,
         }}
       >
-        {channels.map((channel, index) => (
+        <svg
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            pointerEvents: "none",
+            zIndex: 5,
+          }}
+          viewBox={`0 0 ${flowWidth} ${flowHeight}`}
+        >
+          <defs>
+            {channels.map((channel, index) => (
+              <linearGradient
+                key={`channel-line-${index}`}
+                id={`channelGradient${index}`}
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <stop
+                  offset="0%"
+                  stopColor={channel.color}
+                  stopOpacity="0.85"
+                />
+                <stop
+                  offset="100%"
+                  stopColor={accentColor}
+                  stopOpacity="0.85"
+                />
+              </linearGradient>
+            ))}
+          </defs>
+          {channels.map((channel, index) => {
+            const startX =
+              channelsStartX + index * (cardSize + cardGap) + cardSize / 2;
+            const startY = channelsTop + cardSize;
+            const endX = convertCenterX + (index - 1.5) * 68;
+            const endY = convertBoxTop;
+            const c1x = startX;
+            const c1y = startY + 70;
+            const c2x = endX;
+            const c2y = endY - 90;
+            const pathD = `M ${startX} ${startY} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${endX} ${endY}`;
+            const lineOpacity = spring({
+              frame: frame - 58 - index * 5,
+              fps: 30,
+            });
+            return (
+              <g key={`flow-${channel.name}`}>
+                <path
+                  d={pathD}
+                  stroke={`url(#channelGradient${index})`}
+                  strokeWidth="2.5"
+                  fill="none"
+                  strokeLinecap="round"
+                  opacity={lineOpacity * 0.4}
+                />
+                <circle r="4" fill={channel.color}>
+                  <animateMotion
+                    dur={`${2 + index * 0.18}s`}
+                    repeatCount="indefinite"
+                    path={pathD}
+                  />
+                  <animate
+                    attributeName="opacity"
+                    values="0;1"
+                    dur={`${2 + index * 0.18}s`}
+                    repeatCount="indefinite"
+                  />
+                </circle>
+              </g>
+            );
+          })}
+        </svg>
+
+        <div
+          style={{
+            position: "absolute",
+            left: channelsStartX,
+            top: channelsTop,
+            display: "flex",
+            gap: `${cardGap}px`,
+            zIndex: 20,
+          }}
+        >
+          {channels.map((channel, index) => (
+            <div
+              key={channel.name}
+              style={{
+                opacity: spring({
+                  frame: frame - 20 - index * 10,
+                  fps: 30,
+                }),
+                transform: `scale(${spring({
+                  frame: frame - 20 - index * 10,
+                  fps: 30,
+                  config: { damping: 25, stiffness: 100 },
+                })})`,
+                transformOrigin: "center center",
+              }}
+            >
+              <div
+                style={{
+                  width: `${cardSize}px`,
+                  height: `${cardSize}px`,
+                  background: `${channel.color}22`,
+                  border: `4px solid ${channel.color}`,
+                  borderRadius: "20px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: `0 8px 32px ${channel.color}44`,
+                }}
+              >
+                <div style={{ fontSize: "64px", marginBottom: "16px" }}>
+                  {channel.icon}
+                </div>
+                <div
+                  style={{
+                    fontSize: "24px",
+                    fontWeight: 700,
+                    color: channel.color,
+                  }}
+                >
+                  {channel.name}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div
+          style={{
+            position: "absolute",
+            left: `${(flowWidth - convertBoxWidth) / 2}px`,
+            top: `${convertBoxTop}px`,
+            width: `${convertBoxWidth}px`,
+            opacity: spring({ frame: frame - 80, fps: 30 }),
+            transform: `scale(${spring({
+              frame: frame - 80,
+              fps: 30,
+              config: { damping: 25, stiffness: 100 },
+            })})`,
+            transformOrigin: "center center",
+            zIndex: 20,
+          }}
+        >
           <div
-            key={index}
             style={{
-              opacity: spring({
-                frame: frame - 20 - index * 10,
-                fps: 30,
-              }),
-              transform: `scale(${spring({
-                frame: frame - 20 - index * 10,
-                fps: 30,
-                config: { damping: 25, stiffness: 100 },
-              })})`,
-              transformOrigin: "center center",
+              background: `${accentColor}22`,
+              border: `3px solid ${accentColor}`,
+              borderRadius: "16px",
+              padding: "28px 40px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginBottom: "40px",
             }}
           >
             <div
               style={{
-                width: "160px",
-                height: "160px",
-                background: `${channel.color}22`,
-                border: `4px solid ${channel.color}`,
-                borderRadius: "20px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                boxShadow: `0 8px 32px ${channel.color}44`,
+                fontSize: "22px",
+                color: accentColor,
+                fontWeight: 600,
+                textAlign: "center",
               }}
             >
-              <div style={{ fontSize: "64px", marginBottom: "16px" }}>
-                {channel.icon}
-              </div>
-              <div
-                style={{
-                  fontSize: "24px",
-                  fontWeight: 700,
-                  color: channel.color,
-                }}
-              >
-                {channel.name}
-              </div>
+              消息统一转换成系统能理解的格式
             </div>
           </div>
-        ))}
-      </div>
 
-      {/* 箭头 */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          marginBottom: "50px",
-          opacity: spring({ frame: frame - 70, fps: 30 }),
-        }}
-      >
-        <div style={{ fontSize: "56px" }}>⬇️</div>
-      </div>
-
-      {/* 中间转换框 */}
-      <div
-        style={{
-          maxWidth: "600px",
-          width: "100%",
-          opacity: spring({ frame: frame - 80, fps: 30 }),
-          transform: `scale(${spring({
-            frame: frame - 80,
-            fps: 30,
-            config: { damping: 25, stiffness: 100 },
-          })})`,
-          transformOrigin: "center center",
-        }}
-      >
-        <div
-          style={{
-            background: `${accentColor}22`,
-            border: `3px solid ${accentColor}`,
-            borderRadius: "16px",
-            padding: "28px 40px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            marginBottom: "40px",
-          }}
-        >
           <div
             style={{
-              fontSize: "22px",
-              color: accentColor,
-              fontWeight: 600,
               textAlign: "center",
+              opacity: spring({ frame: frame - 100, fps: 30 }),
             }}
           >
-            消息统一转换成系统能理解的格式
-          </div>
-        </div>
-
-        {/* 输出说明 */}
-        <div
-          style={{
-            textAlign: "center",
-            opacity: spring({ frame: frame - 100, fps: 30 }),
-          }}
-        >
-          <div
-            style={{
-              fontSize: "26px",
-              color: "#10B981",
-              fontWeight: 700,
-              marginBottom: "12px",
-            }}
-          >
-            ✓ 指令准确送达 Agent
-          </div>
-          <div style={{ fontSize: "18px", color: textColor }}>
-            换通信方式不换助理，依然听懂指令
+            <div
+              style={{
+                fontSize: "26px",
+                color: "#10B981",
+                fontWeight: 700,
+                marginBottom: "12px",
+              }}
+            >
+              ✓ 指令准确送达 Agent
+            </div>
+            <div style={{ fontSize: "18px", color: textColor }}>
+              换通信方式不换助理，依然听懂指令
+            </div>
           </div>
         </div>
       </div>
@@ -4251,6 +4428,187 @@ const SummaryScene: React.FC<{
 };
 
 // ============================================
+// 场景 11: 产品对比
+// ============================================
+const ComparisonScene: React.FC<{
+  frame: number;
+  accentColor: string;
+  textColor: string;
+}> = ({ frame, accentColor, textColor }) => {
+  const titleOpacity = spring({
+    frame,
+    fps: 30,
+    config: { damping: 15, stiffness: 100 },
+  });
+
+  const products = [
+    {
+      name: "OpenClaw（原版）",
+      type: "开源 Agent 框架",
+      model: "自选模型",
+      deploy: "高门槛",
+      audience: "开发者 / 自定义场景",
+      guide: "教程：https://docs.openclaw.ai/install/index · https://docs.openclaw.ai/wizard",
+      pros: "最灵活、可本地运行、技能生态丰富",
+      cons: "部署复杂、需自行做安全与运维",
+      color: "#A78BFA",
+    },
+    {
+      name: "Kimi Claw",
+      type: "云端托管 OpenClaw",
+      model: "内置 Kimi K2.5",
+      deploy: "低门槛",
+      audience: "非技术用户首选",
+      guide:
+        "教程：https://www.kimi.com/resources/kimi-claw-introduction · https://www.kimi.com/resources/kimi-claw-upgrade",
+      pros: "开箱即用、国内访问友好、技能商店丰富",
+      cons: "高级自定义能力受限",
+      color: "#10B981",
+    },
+    {
+      name: "MaxClaw（MiniMax）",
+      type: "云端托管变体",
+      model: "MiniMax M2.5",
+      deploy: "低门槛",
+      audience: "非技术用户首选",
+      guide:
+        "教程：https://platform.minimaxi.com/docs/coding-plan/openclaw · https://platform.minimaxi.com/docs/solutions/moltbot",
+      pros: "持续执行稳定、推理快、可免费体验",
+      cons: "平台依赖强、积分策略限制连续运行",
+      color: "#3B82F6",
+    },
+    {
+      name: "云厂商一键部署",
+      type: "托管部署镜像",
+      model: "Qwen / DeepSeek / 千帆等",
+      deploy: "低-中门槛",
+      audience: "企业 / 团队级应用",
+      guide: "教程：https://docs.openclaw.ai/vps · https://docs.openclaw.ai/gateway/remote",
+      pros: "部署快、对接飞书/企微/钉钉、企业 SLA",
+      cons: "仍需购买服务器并承担成本",
+      color: "#F59E0B",
+    },
+  ];
+
+  return (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "50px 70px",
+        background: "radial-gradient(circle, #2c2c2c 1px, transparent 1px)",
+        backgroundSize: "30px 30px",
+      }}
+    >
+      <div style={{ textAlign: "center", marginBottom: "34px", opacity: titleOpacity }}>
+        <h1
+          style={{
+            fontSize: "52px",
+            fontWeight: 800,
+            color: accentColor,
+            margin: "0 0 12px 0",
+          }}
+        >
+          产品对比：国内云端方案 vs OpenClaw
+        </h1>
+        <p
+          style={{
+            fontSize: "22px",
+            color: "rgba(255,255,255,0.72)",
+            margin: 0,
+          }}
+        >
+          选型关键：部署成本、可控性、模型自由度
+        </p>
+      </div>
+
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "1720px",
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "18px",
+        }}
+      >
+        {products.map((item, index) => (
+          <div
+            key={item.name}
+            style={{
+              background: `linear-gradient(135deg, ${item.color}14 0%, rgba(22,22,35,0.94) 100%)`,
+              border: `1px solid ${item.color}66`,
+              borderRadius: "16px",
+              padding: "20px 22px",
+              opacity: spring({ frame: frame - 18 - index * 8, fps: 30 }),
+              transform: `translateY(${interpolate(frame - 18 - index * 8, [0, 22], [24, 0], {
+                extrapolateRight: "clamp",
+              })}px)`,
+              boxShadow: `0 8px 24px ${item.color}22`,
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
+              <div style={{ fontSize: "28px", fontWeight: 800, color: item.color }}>{item.name}</div>
+              <div
+                style={{
+                  fontSize: "14px",
+                  color: item.color,
+                  border: `1px solid ${item.color}88`,
+                  borderRadius: "999px",
+                  padding: "4px 10px",
+                }}
+              >
+                {item.deploy}
+              </div>
+            </div>
+
+            <div style={{ fontSize: "16px", color: textColor, opacity: 0.9, marginBottom: "8px" }}>
+              类型：{item.type}
+            </div>
+            <div style={{ fontSize: "16px", color: textColor, opacity: 0.86, marginBottom: "12px" }}>
+              模型底层：{item.model}
+            </div>
+            <div
+              style={{
+                fontSize: "14px",
+                color: item.color,
+                marginBottom: "12px",
+                border: `1px solid ${item.color}66`,
+                borderRadius: "8px",
+                padding: "4px 10px",
+                display: "inline-block",
+              }}
+            >
+              适用人群：{item.audience}
+            </div>
+            <div
+              style={{
+                fontSize: "13px",
+                color: "rgba(255,255,255,0.78)",
+                lineHeight: 1.4,
+                marginBottom: "10px",
+              }}
+            >
+              {item.guide}
+            </div>
+
+            <div style={{ fontSize: "15px", color: "#34D399", marginBottom: "6px" }}>
+              ✓ 优势：{item.pros}
+            </div>
+            <div style={{ fontSize: "15px", color: "#FCA5A5" }}>
+              ✕ 劣势：{item.cons}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// ============================================
 // 主组件
 // ============================================
 
@@ -4275,98 +4633,95 @@ export const OpenClawArchitecture: React.FC<
         display: "flex",
       }}
     >
-      {/* Scene 0: OpenClaw 核心概念（新增开场场景） */}
+      {/* Scene 1: 整体架构概览 */}
       <Sequence durationInFrames={SCENE_DURATION}>
-        <IntroConceptScene
+        <OverallArchitectureScene
           frame={frame}
           accentColor={accentColor}
           textColor={textColor}
         />
       </Sequence>
 
-      {/* Scene 1: 整体架构概览 */}
-      <Sequence from={SCENE_DURATION} durationInFrames={SCENE_DURATION}>
-        <OverallArchitectureScene
-          frame={frame - SCENE_DURATION}
-          accentColor={accentColor}
-          textColor={textColor}
-        />
-      </Sequence>
-
       {/* Scene 2: Gateway 网关核心 */}
-      <Sequence from={SCENE_DURATION * 2} durationInFrames={SCENE_DURATION}>
-        <GatewayScene
-          frame={frame - SCENE_DURATION * 2}
-          textColor={textColor}
-        />
+      <Sequence from={SCENE_DURATION} durationInFrames={SCENE_DURATION}>
+        <GatewayScene frame={frame - SCENE_DURATION} textColor={textColor} />
       </Sequence>
 
       {/* Scene 3: Agent 智能代理 */}
-      <Sequence from={SCENE_DURATION * 3} durationInFrames={SCENE_DURATION}>
+      <Sequence from={SCENE_DURATION * 2} durationInFrames={SCENE_DURATION}>
         <AgentScene
-          frame={frame - SCENE_DURATION * 3}
+          frame={frame - SCENE_DURATION * 2}
           accentColor={accentColor}
           textColor={textColor}
         />
       </Sequence>
 
       {/* Scene 4: Skills 技能系统 */}
-      <Sequence from={SCENE_DURATION * 4} durationInFrames={SCENE_DURATION}>
+      <Sequence from={SCENE_DURATION * 3} durationInFrames={SCENE_DURATION}>
         <SkillsScene
-          frame={frame - SCENE_DURATION * 4}
+          frame={frame - SCENE_DURATION * 3}
           accentColor={accentColor}
           textColor={textColor}
         />
       </Sequence>
 
       {/* Scene 5: Channels 渠道层 */}
-      <Sequence from={SCENE_DURATION * 5} durationInFrames={SCENE_DURATION}>
+      <Sequence from={SCENE_DURATION * 4} durationInFrames={SCENE_DURATION}>
         <ChannelsScene
-          frame={frame - SCENE_DURATION * 5}
+          frame={frame - SCENE_DURATION * 4}
           accentColor={accentColor}
           textColor={textColor}
         />
       </Sequence>
 
       {/* Scene 6: Nodes 节点系统 */}
-      <Sequence from={SCENE_DURATION * 6} durationInFrames={SCENE_DURATION}>
+      <Sequence from={SCENE_DURATION * 5} durationInFrames={SCENE_DURATION}>
         <NodesScene
-          frame={frame - SCENE_DURATION * 6}
+          frame={frame - SCENE_DURATION * 5}
           accentColor={accentColor}
           textColor={textColor}
         />
       </Sequence>
 
       {/* Scene 7: Memory 记忆系统 */}
-      <Sequence from={SCENE_DURATION * 7} durationInFrames={SCENE_DURATION}>
+      <Sequence from={SCENE_DURATION * 6} durationInFrames={SCENE_DURATION}>
         <MemoryScene
-          frame={frame - SCENE_DURATION * 7}
+          frame={frame - SCENE_DURATION * 6}
           accentColor={accentColor}
           textColor={textColor}
         />
       </Sequence>
 
       {/* Scene 8: Heartbeat 健康检查 */}
-      <Sequence from={SCENE_DURATION * 8} durationInFrames={SCENE_DURATION}>
+      <Sequence from={SCENE_DURATION * 7} durationInFrames={SCENE_DURATION}>
         <HeartbeatScene
-          frame={frame - SCENE_DURATION * 8}
+          frame={frame - SCENE_DURATION * 7}
           accentColor={accentColor}
           textColor={textColor}
         />
       </Sequence>
 
       {/* Scene 9: Cron 定时任务 */}
-      <Sequence from={SCENE_DURATION * 9} durationInFrames={SCENE_DURATION}>
+      <Sequence from={SCENE_DURATION * 8} durationInFrames={SCENE_DURATION}>
         <CronScene
-          frame={frame - SCENE_DURATION * 9}
+          frame={frame - SCENE_DURATION * 8}
           accentColor={accentColor}
           textColor={textColor}
         />
       </Sequence>
 
       {/* Scene 10: 总结 */}
-      <Sequence from={SCENE_DURATION * 10} durationInFrames={SCENE_DURATION}>
+      <Sequence from={SCENE_DURATION * 9} durationInFrames={SCENE_DURATION}>
         <SummaryScene
+          frame={frame - SCENE_DURATION * 9}
+          accentColor={accentColor}
+          textColor={textColor}
+        />
+      </Sequence>
+
+      {/* Scene 11: 产品对比 */}
+      <Sequence from={SCENE_DURATION * 10} durationInFrames={SCENE_DURATION}>
+        <ComparisonScene
           frame={frame - SCENE_DURATION * 10}
           accentColor={accentColor}
           textColor={textColor}

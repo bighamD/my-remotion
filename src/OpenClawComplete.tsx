@@ -12,7 +12,7 @@ export const openClawCompleteSchema = z.object({
   secondaryTextColor: zColor(),
 });
 
-const TUTORIAL_DURATION = 2700;
+const TUTORIAL_DURATION = 2250;
 const ARCHITECTURE_DURATION = 3300;
 
 export const OpenClawComplete: React.FC<z.infer<typeof openClawCompleteSchema>> =

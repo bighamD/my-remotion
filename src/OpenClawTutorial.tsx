@@ -1,9 +1,11 @@
 import {
   AbsoluteFill,
+  Img,
   interpolate,
   useCurrentFrame,
   Sequence,
   spring,
+  staticFile,
 } from "remotion";
 import { z } from "zod";
 import { zColor } from "@remotion/zod-types";
@@ -99,12 +101,9 @@ const FeatureCard: React.FC<{
     config: { damping: 20, stiffness: 100 },
   });
 
-  const cardTranslateY = interpolate(
-    frame - delay,
-    [0, 30],
-    [50, 0],
-    { extrapolateRight: "clamp" }
-  );
+  const cardTranslateY = interpolate(frame - delay, [0, 30], [50, 0], {
+    extrapolateRight: "clamp",
+  });
 
   return (
     <div
@@ -253,6 +252,7 @@ const TerminalCommand: React.FC<{
   textColor: string;
   outputTypewriter?: boolean;
   outputCharsPerFrame?: number;
+  commandCharsPerFrame?: number;
   outputFontSize?: number;
   outputLineHeight?: number;
   outputPadding?: string;
@@ -265,6 +265,7 @@ const TerminalCommand: React.FC<{
   textColor,
   outputTypewriter = false,
   outputCharsPerFrame = 2.8,
+  commandCharsPerFrame = 0.5,
   outputFontSize = 19,
   outputLineHeight = 1.6,
   outputPadding = "18px 24px",
@@ -276,19 +277,14 @@ const TerminalCommand: React.FC<{
   });
 
   const cmdCharCount = Math.min(
-    Math.floor((frame - delay) / 2),
-    command.length
+    Math.floor((frame - delay) * commandCharsPerFrame),
+    command.length,
   );
 
   const outputOpacity = output
-    ? interpolate(
-        frame - delay - command.length * 2 - 30,
-        [0, 30],
-        [0, 1],
-        {
-          extrapolateRight: "clamp",
-        }
-      )
+    ? interpolate(frame - delay - command.length * 2 - 30, [0, 30], [0, 1], {
+        extrapolateRight: "clamp",
+      })
     : 0;
 
   const outputRevealStart = delay + command.length * 2 + 30;
@@ -298,10 +294,10 @@ const TerminalCommand: React.FC<{
           0,
           Math.min(
             output.length,
-            Math.floor((frame - outputRevealStart) * outputCharsPerFrame)
-          )
+            Math.floor((frame - outputRevealStart) * outputCharsPerFrame),
+          ),
         )
-      : output?.length ?? 0;
+      : (output?.length ?? 0);
   const outputText =
     output && outputTypewriter ? output.slice(0, outputTypedLength) : output;
 
@@ -312,7 +308,8 @@ const TerminalCommand: React.FC<{
           background: "rgba(18, 18, 30, 0.92)",
           borderRadius: "14px",
           padding: "24px 28px",
-          fontFamily: "'SF Mono', 'Monaco', 'Inconsolata', 'Menlo', 'Consolas', monospace",
+          fontFamily:
+            "'SF Mono', 'Monaco', 'Inconsolata', 'Menlo', 'Consolas', monospace",
           fontSize: "22px",
           border: `1px solid ${accentColor}44`,
           boxShadow: `0 10px 35px rgba(0, 0, 0, 0.45), 0 0 24px ${accentColor}1F, inset 0 1px 0 rgba(255, 255, 255, 0.08)`,
@@ -353,7 +350,8 @@ const TerminalCommand: React.FC<{
           style={{
             marginTop: "12px",
             padding: outputPadding,
-            fontFamily: "'SF Mono', 'Monaco', 'Inconsolata', 'Menlo', 'Consolas', monospace",
+            fontFamily:
+              "'SF Mono', 'Monaco', 'Inconsolata', 'Menlo', 'Consolas', monospace",
             fontSize: `${outputFontSize}px`,
             color: textColor,
             opacity: outputOpacity * 0.85,
@@ -374,6 +372,327 @@ const TerminalCommand: React.FC<{
   );
 };
 
+// 场景 2: OpenClaw 能做什么（案例占位）
+const WhatCanOpenClawDoScene: React.FC<{
+  frame: number;
+  accentColor: string;
+  cardBg: string;
+  textColor: string;
+}> = ({ frame, accentColor, cardBg, textColor }) => {
+  const cards = [
+    {
+      title: "我的案例",
+      subtitle: "这里展示你的真实业务落地案例",
+      color: "#10B981",
+      delay: 0,
+    },
+    {
+      title: "社区案例",
+      subtitle: "社区里优秀的 OpenClaw 实践",
+      color: "#3B82F6",
+      delay: 12,
+    },
+  ];
+
+  return (
+    <SceneShell>
+      <SceneTitle
+        title="openclaw能做什么"
+        subtitle="真实落地案例与社区实践"
+        accentColor={accentColor}
+        textColor={textColor}
+      />
+
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "1460px",
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "28px",
+        }}
+      >
+        {cards.map((card) => (
+          <div
+            key={card.title}
+            style={{
+              opacity: spring({
+                frame: frame - card.delay,
+                fps: 30,
+                config: { damping: 20, stiffness: 100 },
+              }),
+              transform: `translateY(${interpolate(
+                frame - card.delay,
+                [0, 24],
+                [24, 0],
+                { extrapolateRight: "clamp" },
+              )}px)`,
+              minHeight: "420px",
+              borderRadius: "24px",
+              border: `2px solid ${card.color}66`,
+              background: `linear-gradient(145deg, ${cardBg}EE 0%, rgba(17, 18, 30, 0.96) 100%)`,
+              boxShadow: `0 12px 36px rgba(0, 0, 0, 0.35), 0 0 34px ${card.color}22`,
+              display: "flex",
+              flexDirection: "column",
+              padding: "30px",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "36px",
+                fontWeight: 800,
+                color: card.color,
+                marginBottom: "10px",
+              }}
+            >
+              {card.title}
+            </div>
+            <div
+              style={{
+                fontSize: "20px",
+                color: textColor,
+                opacity: 0.82,
+                marginBottom: "28px",
+                lineHeight: 1.5,
+              }}
+            >
+              {card.subtitle}
+            </div>
+
+            {card.title === "我的案例" ? (
+              <div
+                style={{
+                  flex: 1,
+                  borderRadius: "18px",
+                  border: `2px solid ${card.color}66`,
+                  background: `linear-gradient(180deg, ${card.color}14 0%, rgba(255,255,255,0.02) 100%)`,
+                  padding: "16px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "12px",
+                }}
+              >
+                <div
+                  style={{
+                    borderRadius: "12px",
+                    border: "1px solid rgba(255,255,255,0.12)",
+                    background: "rgba(20, 26, 38, 0.72)",
+                    padding: "14px 14px 12px",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: "13px",
+                      fontWeight: 700,
+                      color: "#86EFAC",
+                      marginBottom: "6px",
+                      letterSpacing: "0.4px",
+                    }}
+                  >
+                    CASE 01
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "22px",
+                      fontWeight: 800,
+                      color: textColor,
+                      marginBottom: "6px",
+                    }}
+                  >
+                    系统瘦身助手
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "16px",
+                      lineHeight: 1.45,
+                      color: "rgba(224,224,224,0.82)",
+                    }}
+                  >
+                    每天定时自动分类整理散乱脏文件，并执行磁盘清理。
+                  </div>
+                </div>
+                <div
+                  style={{
+                    borderRadius: "12px",
+                    border: "1px solid rgba(255,255,255,0.12)",
+                    background: "rgba(20, 26, 38, 0.72)",
+                    padding: "14px 14px 12px",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: "13px",
+                      fontWeight: 700,
+                      color: "#93C5FD",
+                      marginBottom: "6px",
+                      letterSpacing: "0.4px",
+                    }}
+                  >
+                    CASE 02
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "22px",
+                      fontWeight: 800,
+                      color: textColor,
+                      marginBottom: "6px",
+                    }}
+                  >
+                    热点内容自动发布
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "16px",
+                      lineHeight: 1.45,
+                      color: "rgba(224,224,224,0.82)",
+                    }}
+                  >
+                    每天定时抓取openclaw社区热点，AI 润色并结合本地 ComfyUI
+                    出图，自动发布到社区。
+                  </div>
+                </div>
+                <div
+                  style={{
+                    borderRadius: "12px",
+                    border: "1px solid rgba(255,255,255,0.12)",
+                    background: "rgba(20, 26, 38, 0.72)",
+                    padding: "14px 14px 12px",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: "13px",
+                      fontWeight: 700,
+                      color: "#FCD34D",
+                      marginBottom: "6px",
+                      letterSpacing: "0.4px",
+                    }}
+                  >
+                    CASE 03
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "22px",
+                      fontWeight: 800,
+                      color: textColor,
+                      marginBottom: "6px",
+                    }}
+                  >
+                    每日 7 点热点推送
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "16px",
+                      lineHeight: 1.45,
+                      color: "rgba(224,224,224,0.82)",
+                    }}
+                  >
+                    每天 7 点定时推送国内外热点科技新闻。
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div
+                style={{
+                  flex: 1,
+                  borderRadius: "18px",
+                  border: `2px solid ${card.color}66`,
+                  background: `linear-gradient(180deg, ${card.color}14 0%, rgba(255,255,255,0.02) 100%)`,
+                  padding: "16px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "12px",
+                }}
+              >
+                {[
+                  {
+                    id: "CASE A",
+                    title: "多渠道 AI 客服",
+                    desc: "统一 WhatsApp / Instagram / Email / Google Reviews，7x24 自动回复。",
+                  },
+                  {
+                    id: "CASE B",
+                    title: "电话语音个人助理",
+                    desc: "通过电话/SMS 访问 OpenClaw，免手动操作完成日常事务。",
+                  },
+                  {
+                    id: "CASE C",
+                    title: "会议纪要自动执行",
+                    desc: "把会议转录整理成 Action Items，并自动同步 Jira/Linear/Todoist。",
+                  },
+                ].map((item) => (
+                  <div
+                    key={item.id}
+                    style={{
+                      borderRadius: "12px",
+                      border: "1px solid rgba(255,255,255,0.12)",
+                      background: "rgba(20, 26, 38, 0.72)",
+                      padding: "12px 14px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: "13px",
+                        fontWeight: 700,
+                        color: "#93C5FD",
+                        marginBottom: "5px",
+                        letterSpacing: "0.4px",
+                      }}
+                    >
+                      {item.id}
+                    </div>
+                    <div
+                      style={{
+                        fontSize: "23px",
+                        fontWeight: 800,
+                        color: textColor,
+                        marginBottom: "5px",
+                      }}
+                    >
+                      {item.title}
+                    </div>
+                    <div
+                      style={{
+                        fontSize: "16px",
+                        lineHeight: 1.4,
+                        color: "rgba(224,224,224,0.82)",
+                      }}
+                    >
+                      {item.desc}
+                    </div>
+                  </div>
+                ))}
+                <div
+                  style={{
+                    marginTop: "2px",
+                    fontSize: "13px",
+                    lineHeight: 1.35,
+                    color: "rgba(224,224,224,0.58)",
+                    borderTop: "1px dashed rgba(147,197,253,0.35)",
+                    paddingTop: "8px",
+                    wordBreak: "break-all",
+                  }}
+                >
+                  来源:{" "}
+                  <a
+                    href="https://github.com/hesamsheikh/awesome-openclaw-usecases"
+                    style={{
+                      color: "#60A5FA",
+                      textDecoration: "underline",
+                    }}
+                  >
+                    https://github.com/hesamsheikh/awesome-openclaw-usecases
+                  </a>
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </SceneShell>
+  );
+};
+
 // 场景 2: 核心特性
 const FeaturesScene: React.FC<{
   frame: number;
@@ -385,29 +704,25 @@ const FeaturesScene: React.FC<{
     {
       icon: "①",
       title: "环境检查",
-      description:
-        "确认 Node.js 与网络环境，确保后续安装和守护进程启动稳定。",
+      description: "确认 Node.js 与网络环境，确保后续安装和守护进程启动稳定。",
       color: "#3B82F6",
     },
     {
       icon: "②",
       title: "CLI 安装",
-      description:
-        "安装 OpenClaw CLI 并验证命令可用，为自动化操作准备入口。",
+      description: "安装 OpenClaw CLI 并验证命令可用，为自动化操作准备入口。",
       color: "#10B981",
     },
     {
       icon: "③",
       title: "Onboarding 配置",
-      description:
-        "一次性完成模型认证、网关参数和渠道接入配置。",
+      description: "一次性完成模型认证、网关参数和渠道接入配置。",
       color: "#A78BFA",
     },
     {
       icon: "④",
       title: "联调验证",
-      description:
-        "查看 Gateway 状态并发送首条消息，闭环验证系统已可用。",
+      description: "查看 Gateway 状态并发送首条消息，闭环验证系统已可用。",
       color: "#F59E0B",
     },
   ];
@@ -480,6 +795,7 @@ const InstallScene: React.FC<{
   textColor: string;
   step: number;
 }> = ({ frame, accentColor, textColor, step }) => {
+  const commandSpacing = step === 1 ? 120 : step === 2 ? 130 : 300;
   // 根据步骤返回不同的命令
   const getCommands = () => {
     if (step === 1) {
@@ -488,16 +804,17 @@ const InstallScene: React.FC<{
           command: "node -v",
           output:
             "v20.12.2\n⚠️ 当前版本低于要求\n\nOpenClaw 官方要求: Node.js 22+\n文档: docs.openclaw.ai/install/node",
+          outputTypewriter: true,
+          outputCharsPerFrame: 5.2,
+          commandCharsPerFrame: 1.2,
         },
         {
           command: "brew install node && node -v",
           output:
             "==> Installing node...\n==> node 22.13.1 installed\nv22.13.1 ✓\n环境满足 OpenClaw 最低要求 (Node.js 22+)",
-        },
-        {
-          command: "npm -v",
-          output:
-            "10.9.2 ✓\nNode.js 与 npm 均可用，下一步可执行 OpenClaw CLI 安装",
+          outputTypewriter: true,
+          outputCharsPerFrame: 5.6,
+          commandCharsPerFrame: 1.25,
         },
       ];
     }
@@ -519,10 +836,6 @@ const InstallScene: React.FC<{
         {
           command: "openclaw --version",
           output: "OpenClaw CLI v2.4.1\n安装验证通过！",
-        },
-        {
-          command: "which openclaw",
-          output: "/usr/local/bin/openclaw\n✓ 命令行工具已就绪",
         },
       ];
     }
@@ -594,7 +907,7 @@ const InstallScene: React.FC<{
             key={index}
             {...cmd}
             frame={frame}
-            delay={index * 300}
+            delay={"delay" in cmd ? cmd.delay : index * commandSpacing}
             accentColor={accentColor}
             textColor={textColor}
             outputFontSize={step === 3 ? 15 : 19}
@@ -613,16 +926,34 @@ const GatewayScene: React.FC<{
   accentColor: string;
   textColor: string;
 }> = ({ frame, accentColor, textColor }) => {
+  const subtitleFullText = "检查网关状态并打开控制面板";
+  const subtitleStartFrame = 12;
+  const subtitleCharsPerFrame = 2.2;
+  const subtitleCharCount = Math.max(
+    0,
+    Math.min(
+      subtitleFullText.length,
+      Math.floor((frame - subtitleStartFrame) * subtitleCharsPerFrame),
+    ),
+  );
+  const subtitleText = subtitleFullText.slice(0, subtitleCharCount);
+
   const commands = [
     {
       command: "openclaw gateway status",
       output:
         "状态: 运行中 ✓\n端口: 18789\n绑定: loopback\n运行时间: 2小时34分\n活跃会话: 3",
+      outputTypewriter: true,
+      outputCharsPerFrame: 4.8,
+      delay: 0,
     },
     {
       command: "openclaw dashboard",
       output:
         "正在打开控制面板...\n✓ 控制面板: http://127.0.0.1:18789/\n✓ 浏览器已打开\n\n现在可以与你的 AI Agent 聊天了！",
+      outputTypewriter: true,
+      outputCharsPerFrame: 5.2,
+      delay: 130,
     },
   ];
 
@@ -631,7 +962,7 @@ const GatewayScene: React.FC<{
       <StepIndicator step={4} total={5} accentColor={accentColor} />
       <SceneTitle
         title="开始使用 OpenClaw"
-        subtitle="检查网关状态并打开控制面板"
+        subtitle={`${subtitleText}${subtitleCharCount < subtitleFullText.length && frame % 10 < 5 ? "▋" : ""}`}
         accentColor={accentColor}
         textColor={textColor}
       />
@@ -642,7 +973,7 @@ const GatewayScene: React.FC<{
             key={index}
             {...cmd}
             frame={frame}
-            delay={index * 240}
+            delay={"delay" in cmd ? cmd.delay : index * 240}
             accentColor={accentColor}
             textColor={textColor}
           />
@@ -658,35 +989,308 @@ const MessageScene: React.FC<{
   accentColor: string;
   textColor: string;
 }> = ({ frame, accentColor, textColor }) => {
-  const commands = [
+  const bubbles = [
     {
-      command: 'openclaw message send --target +8618476697664 --channel imessage --message "长官，飞书通道配置完成！✅ 已成功配对，现在可以在飞书中正常使用了。重复插件也已清理完毕 😎"',
-      output:
-        "正在发送消息...\n\n✓ 消息已发送\n✓ 目标: +8618476697664 (iMessage)\n✓ 状态: 已送达\n\n试试与你的 AI Agent 聊天吧！",
+      role: "user" as const,
+      text: "二等兵甘，把电脑截图发给我",
+      delay: 20,
+    },
+    {
+      role: "agent" as const,
+      text: "报告长官，已经完成截图, 请长官验收",
+      delay: 60,
+      imageSrc: staticFile("screenshots/macos-terminal-real.png"),
+    },
+    {
+      role: "user" as const,
+      text: "这是我的个人画像，你可以快速认识我",
+      delay: 108,
+    },
+    {
+      role: "agent" as const,
+      text: "报告长官，我会快速阅读你的个人画像，并为你提供服务",
+      delay: 148,
     },
   ];
 
   return (
-    <SceneShell padding="0 120px">
+    <SceneShell padding="0 70px">
       <StepIndicator step={5} total={5} accentColor={accentColor} />
       <SceneTitle
         title="发送测试消息"
-        subtitle="通过命令行向任意渠道发送消息"
+        subtitle="在 WebUI 聊天面板里直接对话并查看执行结果"
         accentColor={accentColor}
         textColor={textColor}
       />
 
-      <div style={{ width: "100%", maxWidth: "1000px" }}>
-        {commands.map((cmd, index) => (
-          <TerminalCommand
-            key={index}
-            {...cmd}
-            frame={frame}
-            delay={0}
-            accentColor={accentColor}
-            textColor={textColor}
-          />
-        ))}
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "1600px",
+          height: "650px",
+          borderRadius: "20px",
+          border: `1px solid ${accentColor}44`,
+          background:
+            "linear-gradient(145deg, rgba(14, 17, 30, 0.96) 0%, rgba(10, 13, 24, 0.98) 100%)",
+          boxShadow: `0 14px 40px rgba(0,0,0,0.45), 0 0 30px ${accentColor}22`,
+          display: "flex",
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            width: "250px",
+            borderRight: `1px solid ${accentColor}22`,
+            background: "rgba(18, 22, 36, 0.65)",
+            padding: "20px 14px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+          }}
+        >
+          <div
+            style={{
+              fontSize: "20px",
+              color: textColor,
+              opacity: 0.9,
+              fontWeight: 700,
+            }}
+          >
+            OPENCLAW
+          </div>
+          {["聊天", "概览", "渠道", "实例", "会话", "日志"].map(
+            (item, index) => (
+              <div
+                key={item}
+                style={{
+                  padding: "10px 12px",
+                  borderRadius: "10px",
+                  fontSize: "16px",
+                  color: item === "聊天" ? "#fff" : "rgba(224,224,224,0.72)",
+                  background:
+                    item === "聊天" ? `${accentColor}30` : "transparent",
+                  border:
+                    item === "聊天"
+                      ? `1px solid ${accentColor}66`
+                      : "1px solid transparent",
+                  opacity: spring({ frame: frame - index * 4, fps: 30 }),
+                }}
+              >
+                {item}
+              </div>
+            ),
+          )}
+        </div>
+
+        <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+          <div
+            style={{
+              height: "50px",
+              borderBottom: `1px solid ${accentColor}1F`,
+              background: "rgba(12, 15, 25, 0.95)",
+              display: "flex",
+              alignItems: "center",
+              padding: "0 14px",
+              gap: "10px",
+            }}
+          >
+            <div style={{ display: "flex", gap: "6px", marginRight: "2px" }}>
+              <div
+                style={{
+                  width: "10px",
+                  height: "10px",
+                  borderRadius: "50%",
+                  background: "#FF5F57",
+                }}
+              />
+              <div
+                style={{
+                  width: "10px",
+                  height: "10px",
+                  borderRadius: "50%",
+                  background: "#FEBC2E",
+                }}
+              />
+              <div
+                style={{
+                  width: "10px",
+                  height: "10px",
+                  borderRadius: "50%",
+                  background: "#28C840",
+                }}
+              />
+            </div>
+            <div
+              style={{
+                flex: 1,
+                height: "30px",
+                borderRadius: "8px",
+                border: `1px solid ${accentColor}30`,
+                background: "rgba(28, 34, 50, 0.88)",
+                color: "rgba(224,224,224,0.86)",
+                fontSize: "14px",
+                display: "flex",
+                alignItems: "center",
+                padding: "0 12px",
+                fontFamily:
+                  "'SF Mono', 'Monaco', 'Inconsolata', 'Menlo', 'Consolas', monospace",
+              }}
+            >
+              http://127.0.0.1:18789/chat
+            </div>
+          </div>
+
+          <div
+            style={{
+              height: "66px",
+              borderBottom: `1px solid ${accentColor}22`,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: "0 20px",
+              background: "rgba(15, 18, 28, 0.82)",
+            }}
+          >
+            <div
+              style={{ fontSize: "20px", fontWeight: 700, color: textColor }}
+            >
+              聊天
+            </div>
+            <div
+              style={{
+                fontSize: "14px",
+                color: "#86EFAC",
+                border: "1px solid rgba(134,239,172,0.4)",
+                borderRadius: "999px",
+                padding: "6px 12px",
+                background: "rgba(34,197,94,0.12)",
+              }}
+            >
+              健康状态 正常
+            </div>
+          </div>
+
+          <div
+            style={{
+              flex: 1,
+              padding: "22px 24px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "16px",
+            }}
+          >
+            {bubbles.map((bubble, index) => {
+              const bubbleOpacity = spring({
+                frame: frame - bubble.delay,
+                fps: 30,
+                config: { damping: 20, stiffness: 100 },
+              });
+              const xOffset =
+                bubble.role === "user"
+                  ? interpolate(frame - bubble.delay, [0, 20], [36, 0], {
+                      extrapolateRight: "clamp",
+                    })
+                  : interpolate(frame - bubble.delay, [0, 20], [-36, 0], {
+                      extrapolateRight: "clamp",
+                    });
+              const isUser = bubble.role === "user";
+
+              return (
+                <div
+                  key={`${bubble.text}-${index}`}
+                  style={{
+                    display: "flex",
+                    justifyContent: isUser ? "flex-end" : "flex-start",
+                    opacity: bubbleOpacity,
+                    transform: `translateX(${xOffset}px)`,
+                  }}
+                >
+                  <div
+                    style={{
+                      maxWidth: "72%",
+                      borderRadius: "14px",
+                      padding: "14px 16px",
+                      fontSize: "18px",
+                      lineHeight: 1.45,
+                      color: isUser ? "#FFEDE8" : textColor,
+                      background: isUser
+                        ? `linear-gradient(135deg, ${accentColor}4D 0%, rgba(255,90,54,0.2) 100%)`
+                        : "rgba(32, 38, 58, 0.92)",
+                      border: isUser
+                        ? `1px solid ${accentColor}88`
+                        : "1px solid rgba(255,255,255,0.08)",
+                      boxShadow: isUser
+                        ? `0 0 20px ${accentColor}2A`
+                        : "0 8px 24px rgba(0,0,0,0.25)",
+                    }}
+                  >
+                    <div>{bubble.text}</div>
+                    {"imageSrc" in bubble ? (
+                      <div
+                        style={{
+                          marginTop: "12px",
+                          borderRadius: "10px",
+                          overflow: "hidden",
+                          border: "1px solid rgba(255,255,255,0.15)",
+                          background: "rgba(0,0,0,0.25)",
+                        }}
+                      >
+                        <Img
+                          src={bubble.imageSrc as string}
+                          style={{
+                            width: "56%",
+                            maxWidth: "420px",
+                            maxHeight: "180px",
+                            objectFit: "contain",
+                            display: "block",
+                            margin: "0 auto",
+                          }}
+                        />
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div
+            style={{
+              height: "88px",
+              borderTop: `1px solid ${accentColor}22`,
+              padding: "16px 20px",
+              background: "rgba(15, 18, 28, 0.8)",
+            }}
+          >
+            <div
+              style={{
+                height: "100%",
+                borderRadius: "12px",
+                border: `1px solid ${accentColor}44`,
+                background: "rgba(20, 24, 38, 0.86)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "0 16px",
+                color: "rgba(224,224,224,0.55)",
+                fontSize: "16px",
+              }}
+            >
+              <span>Message（支持多渠道对话）</span>
+              <span
+                style={{
+                  color: "#fff",
+                  background: `${accentColor}AA`,
+                  padding: "8px 14px",
+                  borderRadius: "10px",
+                  fontWeight: 700,
+                }}
+              >
+                Send
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </SceneShell>
   );
@@ -724,70 +1328,76 @@ const OutroScene: React.FC<{
           height: "100%",
         }}
       >
-      <div
-        style={{
-          fontSize: "80px",
-          marginBottom: "32px",
-        }}
-      >
-        🚀
-      </div>
+        <div
+          style={{
+            fontSize: "80px",
+            marginBottom: "32px",
+          }}
+        >
+          🚀
+        </div>
 
-      <h2
-        style={{
-          fontSize: "64px",
-          fontWeight: 800,
-          color: accentColor,
-          margin: "0 0 24px 0",
-          textAlign: "center",
-        }}
-      >
-        准备就绪！
-      </h2>
+        <h2
+          style={{
+            fontSize: "64px",
+            fontWeight: 800,
+            color: accentColor,
+            margin: "0 0 24px 0",
+            textAlign: "center",
+          }}
+        >
+          准备就绪！
+        </h2>
 
-      <p
-        style={{
-          fontSize: "28px",
-          color: textColor,
-          margin: "0 0 48px 0",
-          textAlign: "center",
-          opacity: 0.8,
-          lineHeight: 1.6,
-        }}
-      >
-        开始使用 OpenClaw 构建 AI 驱动工作流
-      </p>
+        <p
+          style={{
+            fontSize: "28px",
+            color: textColor,
+            margin: "0 0 48px 0",
+            textAlign: "center",
+            opacity: 0.8,
+            lineHeight: 1.6,
+          }}
+        >
+          开始使用 OpenClaw 构建 AI 驱动工作流
+        </p>
 
-      <div
-        style={{
-          display: "flex",
-          gap: "24px",
-          flexWrap: "wrap",
-          justifyContent: "center",
-        }}
-      >
-        {[
-          { text: "📚 文档: docs.openclaw.ai", url: "https://docs.openclaw.ai" },
-          { text: "💻 GitHub: github.com/openclaw", url: "https://github.com/openclaw" },
-          { text: "💬 社区 Discord", url: "#" },
-        ].map((link) => (
-          <div
-            key={link.text}
-            style={{
-              background: "rgba(20, 20, 34, 0.75)",
-              border: `1px solid ${accentColor}66`,
-              borderRadius: "14px",
-              padding: "16px 24px",
-              fontSize: "20px",
-              fontWeight: 600,
-              color: accentColor,
-              boxShadow: `0 0 24px ${accentColor}26`,
-            }}
-          >
-            {link.text}
-          </div>
-        ))}
-      </div>
+        <div
+          style={{
+            display: "flex",
+            gap: "24px",
+            flexWrap: "wrap",
+            justifyContent: "center",
+          }}
+        >
+          {[
+            {
+              text: "📚 文档: docs.openclaw.ai",
+              url: "https://docs.openclaw.ai",
+            },
+            {
+              text: "💻 GitHub: github.com/openclaw",
+              url: "https://github.com/openclaw",
+            },
+            { text: "💬 社区 Discord", url: "#" },
+          ].map((link) => (
+            <div
+              key={link.text}
+              style={{
+                background: "rgba(20, 20, 34, 0.75)",
+                border: `1px solid ${accentColor}66`,
+                borderRadius: "14px",
+                padding: "16px 24px",
+                fontSize: "20px",
+                fontWeight: 600,
+                color: accentColor,
+                boxShadow: `0 0 24px ${accentColor}26`,
+              }}
+            >
+              {link.text}
+            </div>
+          ))}
+        </div>
       </div>
     </SceneShell>
   );
@@ -820,9 +1430,9 @@ export const OpenClawTutorial: React.FC<z.infer<typeof openClawSchema>> = ({
         />
       </Sequence>
 
-      {/* Scene 2: Features (180-360 frames, 6 seconds) - 缩短了一半 */}
+      {/* Scene 2: What can OpenClaw do? (180-360 frames, 6 seconds) */}
       <Sequence from={180} durationInFrames={180}>
-        <FeaturesScene
+        <WhatCanOpenClawDoScene
           frame={frame - 180}
           accentColor={accentColor}
           cardBg={cardBg}
@@ -830,58 +1440,68 @@ export const OpenClawTutorial: React.FC<z.infer<typeof openClawSchema>> = ({
         />
       </Sequence>
 
-      {/* Scene 3: Install - Step 1 (360-960 frames, 20 seconds) */}
-      <Sequence from={360} durationInFrames={600}>
-        <InstallScene
+      {/* Scene 3: Features (360-540 frames, 6 seconds) */}
+      <Sequence from={360} durationInFrames={180}>
+        <FeaturesScene
           frame={frame - 360}
+          accentColor={accentColor}
+          cardBg={cardBg}
+          textColor={textColor}
+        />
+      </Sequence>
+
+      {/* Scene 4: Install - Step 1 (540-870 frames, 11 seconds) */}
+      <Sequence from={540} durationInFrames={330}>
+        <InstallScene
+          frame={frame - 540}
           accentColor={accentColor}
           textColor={textColor}
           step={1}
         />
       </Sequence>
 
-      {/* Scene 4: Install - Step 2 (960-1440 frames, 16 seconds) */}
-      <Sequence from={960} durationInFrames={480}>
+      {/* Scene 5: Install - Step 2 (870-1260 frames, 13 seconds) */}
+      <Sequence from={870} durationInFrames={390}>
         <InstallScene
-          frame={frame - 960}
+          frame={frame - 870}
           accentColor={accentColor}
           textColor={textColor}
           step={2}
         />
       </Sequence>
 
-      {/* Scene 5: Install - Step 3 (1440-1800 frames, 12 seconds) */}
-      <Sequence from={1440} durationInFrames={360}>
+      {/* Scene 6: Install - Step 3 (1260-1560 frames, 10 seconds) */}
+      <Sequence from={1260} durationInFrames={300}>
         <InstallScene
-          frame={frame - 1440}
+          frame={frame - 1260}
           accentColor={accentColor}
           textColor={textColor}
           step={3}
         />
       </Sequence>
 
-      {/* Scene 6: Gateway (1800-2160 frames, 12 seconds) */}
-      <Sequence from={1800} durationInFrames={360}>
+      {/* Scene 7: Gateway (1560-1830 frames, 9 seconds) */}
+      <Sequence from={1560} durationInFrames={270}>
         <GatewayScene
-          frame={frame - 1800}
+          frame={frame - 1560}
           accentColor={accentColor}
           textColor={textColor}
         />
       </Sequence>
 
-      {/* Scene 7: Message (2160-2520 frames, 12 seconds) */}
-      <Sequence from={2160} durationInFrames={360}>
+      {/* Scene 8: Message (1830-2100 frames, 9 seconds) */}
+      <Sequence from={1830} durationInFrames={270}>
         <MessageScene
-          frame={frame - 2160}
+          frame={frame - 1830}
           accentColor={accentColor}
           textColor={textColor}
         />
       </Sequence>
 
-      {/* Scene 8: Outro (2520-2700 frames, 6 seconds) */}
-      <Sequence from={2520} durationInFrames={180}>
+      {/* Scene 9: Outro (2100-2250 frames, 5 seconds) */}
+      <Sequence from={2100} durationInFrames={150}>
         <OutroScene
-          frame={frame - 2520}
+          frame={frame - 2100}
           accentColor={accentColor}
           textColor={textColor}
         />
