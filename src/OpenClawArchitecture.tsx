@@ -647,8 +647,138 @@ const GatewayScene: React.FC<{
         padding: "60px 80px",
         background: "radial-gradient(circle, #2c2c2c 1px, transparent 1px)",
         backgroundSize: "30px 30px",
+        position: "relative",
       }}
     >
+      {/* SVG飞线动画层 */}
+      <svg
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          pointerEvents: "none",
+          zIndex: 10,
+        }}
+      >
+        <defs>
+          {/* 输入渐变 */}
+          {inputChannels.map((channel, index) => (
+            <linearGradient
+              key={`input-${index}`}
+              id={`inputGradient${index}`}
+              x1="0%"
+              y1="0%"
+              x2="100%"
+              y2="100%"
+            >
+              <stop offset="0%" stopColor={channel.color} stopOpacity="0.8" />
+              <stop offset="100%" stopColor="#FF4444" stopOpacity="0.8" />
+            </linearGradient>
+          ))}
+
+          {/* 输出渐变 */}
+          {outputTargets.map((target, index) => (
+            <linearGradient
+              key={`output-${index}`}
+              id={`outputGradient${index}`}
+              x1="0%"
+              y1="0%"
+              x2="100%"
+              y2="100%"
+            >
+              <stop offset="0%" stopColor="#FF4444" stopOpacity="0.8" />
+              <stop offset="100%" stopColor={target.color} stopOpacity="0.8" />
+            </linearGradient>
+          ))}
+        </defs>
+
+        {/* 输入飞线 */}
+        {inputChannels.map((channel, index) => {
+          // 左侧圆形：中心在 80+340=420px，右边缘 420+60=480px
+          // Y位置：60+120+280+60 = 520px（第一个圆的中心）
+          // Gateway：左边缘 80+720=800px，中心 80+720+160=960px
+          const startX = 480;
+          const startY = 520 + index * 130;
+          const endX = 800;
+          const endY = 560;
+          const controlY = (startY + endY) / 2;
+
+          const pathD = `M ${startX} ${startY} Q ${(startX + endX) / 2} ${controlY} ${endX} ${endY}`;
+          const lineOpacity = spring({ frame: frame - 20 - index * 5, fps: 30 });
+
+          return (
+            <g key={`input-${channel.name}`}>
+              {/* 静态连接线 */}
+              <path
+                d={pathD}
+                stroke={`url(#inputGradient${index})`}
+                strokeWidth="2"
+                fill="none"
+                opacity={lineOpacity * 0.3}
+              />
+              {/* 飞线动画 */}
+              <circle r="4" fill={channel.color}>
+                <animateMotion
+                  dur={`${2 + index * 0.2}s`}
+                  repeatCount="indefinite"
+                  path={pathD}
+                />
+                <animate
+                  attributeName="opacity"
+                  values="0;1"
+                  dur={`${2 + index * 0.2}s`}
+                  repeatCount="indefinite"
+                />
+              </circle>
+            </g>
+          );
+        })}
+
+        {/* 输出飞线 */}
+        {outputTargets.map((target, index) => {
+          // Gateway：右边缘 80+720+320=1120px，中心Y 560px
+          // 右侧圆形：中心在 80+1080+340=1500px，左边缘 1500-60=1440px
+          // Y位置：60+120+275+60 = 515px（第一个圆的中心）
+          const startX = 1120;
+          const startY = 560;
+          const endX = 1440;
+          const endY = 515 + index * 130;
+          const controlY = (startY + endY) / 2;
+
+          const pathD = `M ${startX} ${startY} Q ${(startX + endX) / 2} ${controlY} ${endX} ${endY}`;
+          const lineOpacity = spring({ frame: frame - 30 - index * 5, fps: 30 });
+
+          return (
+            <g key={`output-${target.name}`}>
+              {/* 静态连接线 */}
+              <path
+                d={pathD}
+                stroke={`url(#outputGradient${index})`}
+                strokeWidth="2"
+                fill="none"
+                opacity={lineOpacity * 0.3}
+              />
+              {/* 飞线动画 */}
+              <circle r="4" fill={target.color}>
+                <animateMotion
+                  dur={`${2 + index * 0.2}s`}
+                  repeatCount="indefinite"
+                  path={pathD}
+                />
+                <animate
+                  attributeName="opacity"
+                  values="0;1"
+                  dur={`${2 + index * 0.2}s`}
+                  repeatCount="indefinite"
+                />
+              </circle>
+            </g>
+          );
+        })}
+      </svg>
+
       {/* 标题 */}
       <div
         style={{
@@ -693,10 +823,10 @@ const GatewayScene: React.FC<{
         {/* 左侧：输入渠道 */}
         <div
           style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "20px",
-            opacity: spring({ frame: frame - 20, fps: 30 }),
+            position: "relative",
+            width: "100%",
+            height: "800px",
+            opacity: spring({ frame: frame - 15, fps: 30 }),
           }}
         >
           <div
@@ -714,26 +844,28 @@ const GatewayScene: React.FC<{
             <div
               key={channel.name}
               style={{
-                padding: "20px 24px",
+                position: "absolute",
+                left: "50%",
+                top: 280 + index * 130,
+                transform: "translate(-50%, 0)",
+                width: "120px",
+                height: "120px",
                 background: `linear-gradient(135deg, ${channel.color}15 0%, ${channel.color}08 100%)`,
-                border: `2px solid ${channel.color}44`,
-                borderRadius: "12px",
+                border: `3px solid ${channel.color}44`,
+                borderRadius: "50%",
                 display: "flex",
+                flexDirection: "column",
                 alignItems: "center",
-                gap: "16px",
-                opacity: spring({ frame: frame - 25 - index * 8, fps: 30 }),
-                transform: `translateX(${interpolate(
-                  frame - 25 - index * 8,
-                  [0, 30],
-                  [-30, 0],
-                  { extrapolateRight: "clamp" }
-                )}px)`,
+                justifyContent: "center",
+                gap: "8px",
+                opacity: spring({ frame: frame - 20 - index * 6, fps: 30 }),
+                transition: "transform 0.3s ease",
               }}
             >
-              <div style={{ fontSize: "36px" }}>{channel.icon}</div>
+              <div style={{ fontSize: "42px" }}>{channel.icon}</div>
               <div
                 style={{
-                  fontSize: "20px",
+                  fontSize: "16px",
                   fontWeight: 600,
                   color: channel.color,
                 }}
@@ -761,7 +893,6 @@ const GatewayScene: React.FC<{
               borderRadius: "50%",
               background: "radial-gradient(circle, #FF4444 0%, transparent 70%)",
               opacity: 0.15,
-              animation: "pulse 2s ease-in-out infinite",
             }}
           />
 
@@ -778,8 +909,8 @@ const GatewayScene: React.FC<{
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              opacity: spring({ frame: frame - 15, fps: 30 }),
-              transform: `scale(${spring({ frame: frame - 15, fps: 30, config: { damping: 20, stiffness: 120 } })})`,
+              opacity: spring({ frame: frame - 10, fps: 30 }),
+              transform: `scale(${spring({ frame: frame - 10, fps: 30, config: { damping: 20, stiffness: 120 } })})`,
               boxShadow: "0 0 60px rgba(255,68,68,0.6)",
             }}
           >
@@ -819,13 +950,13 @@ const GatewayScene: React.FC<{
                   position: "absolute",
                   left: x,
                   top: y,
-                  transform: "translate(-50%, -50%)",
-                  padding: "12px 20px",
+                  padding: "14px 28px",
                   background: `rgba(255,255,255,0.95)`,
-                  borderRadius: "20px",
+                  borderRadius: "24px",
                   boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
                   opacity: spring({ frame: frame - func.delay, fps: 30 }),
                   transform: `translate(-50%, -50%) scale(${spring({ frame: frame - func.delay, fps: 30, config: { damping: 25, stiffness: 120 } })})`,
+                  whiteSpace: "nowrap",
                 }}
               >
                 <div
@@ -838,7 +969,7 @@ const GatewayScene: React.FC<{
                   <span style={{ fontSize: "20px" }}>{func.icon}</span>
                   <span
                     style={{
-                      fontSize: "14px",
+                      fontSize: "15px",
                       fontWeight: 700,
                       color: func.color,
                     }}
@@ -854,10 +985,10 @@ const GatewayScene: React.FC<{
         {/* 右侧：输出目标 */}
         <div
           style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "20px",
-            opacity: spring({ frame: frame - 20, fps: 30 }),
+            position: "relative",
+            width: "100%",
+            height: "800px",
+            opacity: spring({ frame: frame - 15, fps: 30 }),
           }}
         >
           <div
@@ -875,33 +1006,34 @@ const GatewayScene: React.FC<{
             <div
               key={target.name}
               style={{
-                padding: "20px 24px",
+                position: "absolute",
+                left: "50%",
+                top: 275 + index * 130,
+                transform: "translate(-50%, 0)",
+                width: "120px",
+                height: "120px",
                 background: `linear-gradient(135deg, ${target.color}15 0%, ${target.color}08 100%)`,
-                border: `2px solid ${target.color}44`,
-                borderRadius: "12px",
+                border: `3px solid ${target.color}44`,
+                borderRadius: "50%",
                 display: "flex",
+                flexDirection: "column",
                 alignItems: "center",
-                gap: "16px",
-                opacity: spring({ frame: frame - 25 - index * 8, fps: 30 }),
-                transform: `translateX(${interpolate(
-                  frame - 25 - index * 8,
-                  [0, 30],
-                  [30, 0],
-                  { extrapolateRight: "clamp" }
-                )}px)`,
+                justifyContent: "center",
+                gap: "8px",
+                opacity: spring({ frame: frame - 20 - index * 6, fps: 30 }),
+                transition: "transform 0.3s ease",
               }}
             >
+              <div style={{ fontSize: "42px" }}>{target.icon}</div>
               <div
                 style={{
-                  fontSize: "20px",
+                  fontSize: "16px",
                   fontWeight: 600,
                   color: target.color,
-                  flex: 1,
                 }}
               >
                 {target.name}
               </div>
-              <div style={{ fontSize: "36px" }}>{target.icon}</div>
             </div>
           ))}
         </div>
@@ -915,7 +1047,7 @@ const GatewayScene: React.FC<{
           background: "rgba(255,68,68,0.1)",
           border: "2px solid rgba(255,68,68,0.3)",
           borderRadius: "16px",
-          opacity: spring({ frame: frame - 90, fps: 30 }),
+          opacity: spring({ frame: frame - 100, fps: 30 }),
           textAlign: "center",
         }}
       >
