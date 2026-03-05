@@ -6,6 +6,7 @@ import {
   Sequence,
   spring,
   staticFile,
+  useVideoConfig,
 } from "remotion";
 import { z } from "zod";
 import { zColor } from "@remotion/zod-types";
@@ -47,12 +48,86 @@ const SceneShell: React.FC<{ children: React.ReactNode; padding?: string }> = ({
   );
 };
 
+const SkillsSubtitle: React.FC<{
+  frame: number;
+  textColor: string;
+  subtitle: string;
+}> = ({ frame, textColor, subtitle }) => {
+  const titleOpacity = spring({
+    frame,
+    fps: 30,
+    config: { damping: 15, stiffness: 100 },
+  });
+
+  const typeStartFrame = 10;
+  const durationPerChar = 2;
+
+  const tokens = subtitle.split(/(Agent|Skills)/g).filter(Boolean);
+  const parts = tokens.map((token) => {
+    if (token === "Agent") {
+      return { text: token, color: "#3B82F6", bold: true };
+    }
+    if (token === "Skills") {
+      return { text: token, color: "#F59E0B", bold: true };
+    }
+    return { text: token, color: textColor, bold: false };
+  });
+
+  const rendered: React.ReactNode[] = [];
+  let totalChars = 0;
+  for (const part of parts) {
+    const charsToShow = Math.max(
+      0,
+      Math.min(
+        part.text.length,
+        Math.floor((frame - typeStartFrame) / durationPerChar) - totalChars,
+      ),
+    );
+
+    if (charsToShow > 0) {
+      rendered.push(
+        <span
+          key={`${part.text}-${totalChars}`}
+          style={{
+            color: part.color,
+            fontWeight: part.bold ? 700 : 400,
+          }}
+        >
+          {part.text.substring(0, charsToShow)}
+        </span>,
+      );
+    }
+
+    totalChars += part.text.length;
+    if (Math.floor((frame - typeStartFrame) / durationPerChar) <= totalChars) {
+      break;
+    }
+  }
+
+  return (
+    <h3
+      style={{
+        fontSize: "28px",
+        fontWeight: 600,
+        margin: "0 0 52px 0",
+        opacity: titleOpacity,
+        textAlign: "center",
+        minHeight: "40px",
+        color: textColor,
+      }}
+    >
+      {rendered.length > 0 ? rendered : <span>&nbsp;</span>}
+    </h3>
+  );
+};
+
 const SceneTitle: React.FC<{
   title: string;
   subtitle: string;
   accentColor: string;
   textColor: string;
-}> = ({ title, subtitle, accentColor, textColor }) => {
+  frame: number;
+}> = ({ title, subtitle, accentColor, textColor, frame }) => {
   return (
     <>
       <h2
@@ -68,19 +143,116 @@ const SceneTitle: React.FC<{
         {title}
       </h2>
 
-      <p
+      {subtitle ? (
+        <SkillsSubtitle frame={frame} textColor={textColor} subtitle={subtitle} />
+      ) : null}
+    </>
+  );
+};
+
+// 演示辅助 HUD：每个场景的剩余时间与进度
+const ScenePresenterHud: React.FC<{
+  sceneFrame: number;
+  sceneDuration: number;
+  fps: number;
+  accentColor: string;
+  nextSceneLabel: string;
+}> = ({ sceneFrame, sceneDuration, fps, accentColor, nextSceneLabel }) => {
+  const { width } = useVideoConfig();
+  const clampedFrame = Math.max(0, Math.min(sceneDuration, sceneFrame));
+  const progress = clampedFrame / sceneDuration;
+  const remainingFrames = Math.max(0, sceneDuration - clampedFrame);
+  const remainingSeconds = remainingFrames / fps;
+  const inLast2Seconds = remainingSeconds <= 2;
+  const inLast1Second = remainingSeconds <= 1;
+  const pulse = 0.75 + Math.sin(sceneFrame / 3) * 0.25;
+  const hudWidth = Math.min(300, Math.max(210, width * 0.24));
+  const hudInset = Math.max(18, width * 0.015);
+
+  return (
+    <AbsoluteFill style={{ pointerEvents: "none" }}>
+      <div
         style={{
-          fontSize: "24px",
-          color: textColor,
-          margin: "0 0 52px 0",
-          textAlign: "center",
-          opacity: 0.78,
-          lineHeight: 1.5,
+          position: "absolute",
+          top: hudInset,
+          left: hudInset,
+          right: hudInset,
+          display: "flex",
+          justifyContent: "flex-end",
+          boxSizing: "border-box",
         }}
       >
-        {subtitle}
-      </p>
-    </>
+        <div
+          style={{
+            width: hudWidth,
+            maxWidth: "100%",
+            borderRadius: 14,
+            padding: "10px 12px",
+            border: `1px solid ${inLast2Seconds ? accentColor : "#8E96AE66"}`,
+            background: "rgba(14, 16, 30, 0.55)",
+            boxShadow: inLast2Seconds
+              ? `0 0 ${16 + pulse * 8}px ${accentColor}66`
+              : "0 0 0 rgba(0, 0, 0, 0)",
+            backdropFilter: "blur(6px)",
+            opacity: inLast2Seconds ? 0.96 : 0.72,
+            transition: "opacity 200ms linear",
+          }}
+        >
+          <div
+            style={{
+              fontSize: 15,
+              fontWeight: 700,
+              color: inLast2Seconds ? accentColor : "#CFD6E8",
+              marginBottom: 8,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 10,
+            }}
+          >
+            <span
+              style={{
+                minWidth: 0,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              下一场景：{nextSceneLabel}
+            </span>
+            <span
+              style={{
+                flexShrink: 0,
+                color: inLast2Seconds ? "#FFD36A" : "#E5ECFF",
+                fontVariantNumeric: "tabular-nums",
+              }}
+            >
+              {remainingSeconds.toFixed(1)}s
+            </span>
+          </div>
+          <div
+            style={{
+              height: 6,
+              borderRadius: 999,
+              background: "rgba(207, 214, 232, 0.22)",
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                width: `${progress * 100}%`,
+                height: "100%",
+                borderRadius: 999,
+                background: inLast1Second
+                  ? `linear-gradient(90deg, #FFD36A 0%, ${accentColor} 100%)`
+                  : "linear-gradient(90deg, #95B8FF 0%, #62E1FF 100%)",
+                boxShadow: inLast2Seconds ? `0 0 10px ${accentColor}88` : "none",
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    </AbsoluteFill>
   );
 };
 
@@ -152,52 +324,6 @@ const FeatureCard: React.FC<{
         >
           {description}
         </p>
-      </div>
-    </div>
-  );
-};
-
-// 步骤指示器
-const StepIndicator: React.FC<{
-  step: number;
-  total: number;
-  accentColor: string;
-}> = ({ step, total, accentColor }) => {
-  return (
-    <div
-      style={{
-        display: "flex",
-        gap: "16px",
-        marginBottom: "36px",
-        alignItems: "center",
-        padding: "12px 18px",
-        borderRadius: "999px",
-        border: `1px solid ${accentColor}55`,
-        background: "rgba(15, 15, 26, 0.65)",
-        boxShadow: `0 0 24px ${accentColor}22`,
-      }}
-    >
-      {Array.from({ length: total }).map((_, i) => (
-        <div
-          key={i}
-          style={{
-            width: i === step - 1 ? "48px" : "16px",
-            height: "16px",
-            borderRadius: "8px",
-            backgroundColor: i < step ? accentColor : `${accentColor}33`,
-            boxShadow: i < step ? `0 0 10px ${accentColor}66` : "none",
-          }}
-        />
-      ))}
-      <div
-        style={{
-          fontSize: "16px",
-          fontWeight: 600,
-          color: accentColor,
-          marginLeft: "12px",
-        }}
-      >
-        {step}/{total}
       </div>
     </div>
   );
@@ -379,14 +505,6 @@ const WhatProblemsOpenClawSolvesScene: React.FC<{
   textColor: string;
   cardBg: string;
 }> = ({ frame, accentColor, textColor, cardBg }) => {
-  const subtitlePrefix = "大模型越来越强，但";
-  const subtitleTyped = "“无法自动干活”";
-  const subtitleRevealProgress = interpolate(frame, [12, 64], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-  const showCursor = frame % 12 < 6;
-
   const pulse = 0.82 + Math.sin(frame / 12) * 0.18;
   const leftFloat = Math.sin(frame / 20) * 4;
   const rightFloat = Math.sin(frame / 22 + 1.3) * 4;
@@ -403,15 +521,30 @@ const WhatProblemsOpenClawSolvesScene: React.FC<{
     config: { damping: 20, stiffness: 120 },
   });
 
-  const bottomOpacity = spring({
-    frame: frame - 24,
+  const agentEnter = spring({
+    frame: frame - 8,
     fps: 30,
-    config: { damping: 18, stiffness: 100 },
+    config: { damping: 20, stiffness: 120 },
   });
-
-  const sweepX = interpolate(frame % 90, [0, 89], [-40, 110], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
+  const toolEnter = spring({
+    frame: frame - 34,
+    fps: 30,
+    config: { damping: 16, stiffness: 120 },
+  });
+  const modelEnter = spring({
+    frame: frame - 60,
+    fps: 30,
+    config: { damping: 15, stiffness: 115 },
+  });
+  const line1Progress = spring({
+    frame: frame - 44,
+    fps: 30,
+    config: { damping: 20, stiffness: 100 },
+  });
+  const line2Progress = spring({
+    frame: frame - 70,
+    fps: 30,
+    config: { damping: 20, stiffness: 100 },
   });
 
   return (
@@ -428,51 +561,262 @@ const WhatProblemsOpenClawSolvesScene: React.FC<{
       >
         OpenClaw解决了什么问题？
       </h2>
-      <p
+      <SkillsSubtitle
+        frame={frame}
+        textColor={textColor}
+        subtitle="大模型越来越强，但“无法自动干活”"
+      />
+
+      <div
         style={{
-          fontSize: "30px",
-          margin: "0 0 42px 0",
-          textAlign: "center",
-          lineHeight: 1.5,
-          fontWeight: 600,
-          color: "#D9D9EE",
+          width: "100%",
+          maxWidth: "980px",
+          marginBottom: "26px",
+          padding: "0",
         }}
       >
-        {subtitlePrefix}
-        <span
+
+        <div
           style={{
-            marginLeft: "8px",
-            color: "#FFC06A",
-            textShadow: "0 0 16px rgba(255, 192, 106, 0.45)",
-            display: "inline-block",
-            position: "relative",
-            paddingRight: "12px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "8px",
+            width: "100%",
+            alignItems: "center",
           }}
         >
-          <span
+          <div
             style={{
-              display: "inline-block",
-              whiteSpace: "nowrap",
-              clipPath: `inset(0 ${100 - subtitleRevealProgress * 100}% 0 0)`,
+              position: "relative",
+              width: "900px",
+              height: "470px",
             }}
           >
-            {subtitleTyped}
-          </span>
-          {showCursor ? (
-            <span
+            <svg
+              width="900"
+              height="470"
               style={{
-                color: accentColor,
                 position: "absolute",
-                left: `${subtitleRevealProgress * 100}%`,
+                left: 0,
                 top: 0,
-                transform: "translateX(2px)",
+                pointerEvents: "none",
+                zIndex: 1,
               }}
             >
-              ▋
-            </span>
-          ) : null}
-        </span>
-      </p>
+              <defs>
+                <linearGradient id="flyLine1" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#FF9D83" stopOpacity={0.92} />
+                  <stop offset="100%" stopColor="#5FE0B1" stopOpacity={0.92} />
+                </linearGradient>
+                <linearGradient id="flyLine2" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#5FE0B1" stopOpacity={0.92} />
+                  <stop offset="100%" stopColor="#8FC5FF" stopOpacity={0.92} />
+                </linearGradient>
+                <marker
+                  id="arrowHead1"
+                  markerWidth="10"
+                  markerHeight="10"
+                  refX="8"
+                  refY="3"
+                  orient="auto"
+                >
+                  <path d="M0,0 L8,3 L0,6 Z" fill="#88D8B8" />
+                </marker>
+                <marker
+                  id="arrowHead2"
+                  markerWidth="10"
+                  markerHeight="10"
+                  refX="8"
+                  refY="3"
+                  orient="auto"
+                >
+                  <path d="M0,0 L8,3 L0,6 Z" fill="#98C7FF" />
+                </marker>
+              </defs>
+
+              <path
+                d="M 300 132 C 350 168, 392 196, 455 236"
+                stroke="url(#flyLine1)"
+                strokeWidth="3"
+                fill="none"
+                strokeDasharray="8,4"
+                opacity={line1Progress * 0.35}
+              />
+              <line
+                x1="442"
+                y1="224"
+                x2="455"
+                y2="236"
+                stroke="#88D8B8"
+                strokeWidth="3"
+                markerEnd="url(#arrowHead1)"
+                opacity={line1Progress}
+              />
+              <circle r="4" fill="#5FE0B1" opacity={0.95}>
+                <animateMotion
+                  dur="2.2s"
+                  repeatCount="indefinite"
+                  path="M 300 132 C 350 168, 392 196, 455 236"
+                />
+                <animate
+                  attributeName="opacity"
+                  values="0;1;1;0"
+                  dur="2.2s"
+                  repeatCount="indefinite"
+                />
+              </circle>
+              <path
+                d="M 540 266 C 595 308, 640 334, 716 372"
+                stroke="url(#flyLine2)"
+                strokeWidth="3"
+                fill="none"
+                strokeDasharray="8,4"
+                opacity={line2Progress * 0.35}
+              />
+              <line
+                x1="701"
+                y1="364"
+                x2="716"
+                y2="372"
+                stroke="#98C7FF"
+                strokeWidth="3"
+                markerEnd="url(#arrowHead2)"
+                opacity={line2Progress}
+              />
+              <circle r="4" fill="#8FC5FF" opacity={0.95}>
+                <animateMotion
+                  dur="2.5s"
+                  repeatCount="indefinite"
+                  path="M 540 266 C 595 308, 640 334, 716 372"
+                />
+                <animate
+                  attributeName="opacity"
+                  values="0;1;1;0"
+                  dur="2.5s"
+                  repeatCount="indefinite"
+                />
+              </circle>
+            </svg>
+
+            <div
+              style={{
+                position: "absolute",
+                left: "72px",
+                top: "22px",
+                width: "620px",
+                borderRadius: "18px",
+                border: "1px solid #FF8E6B99",
+                background:
+                  "linear-gradient(135deg, rgba(255, 108, 76, 0.28) 0%, rgba(45, 24, 20, 0.82) 100%)",
+                boxShadow: `0 12px 38px rgba(0,0,0,0.42), 0 0 ${22 + agentEnter * 24}px rgba(255,120,86,0.4)`,
+                padding: "18px 22px",
+                opacity: agentEnter,
+                zIndex: 4,
+                transform: `translateY(${interpolate(agentEnter, [0, 1], [-20, 0], {
+                  extrapolateLeft: "clamp",
+                  extrapolateRight: "clamp",
+                })}px) scale(${interpolate(agentEnter, [0, 1], [1.05, 1], {
+                  extrapolateLeft: "clamp",
+                  extrapolateRight: "clamp",
+                })})`,
+              }}
+            >
+              <div style={{ fontSize: "31px", color: "#FF9A7A", fontWeight: 900 }}>
+                Agent系统层
+              </div>
+              <div
+                style={{
+                  marginTop: "4px",
+                  fontSize: "23px",
+                  color: textColor,
+                  opacity: 0.95,
+                  fontWeight: 800,
+                }}
+              >
+                OpenClaw
+                <span style={{ marginLeft: "14px", color: "#FFCAB7" }}>“持续执行系统”</span>
+              </div>
+            </div>
+
+            <div
+              style={{
+                position: "absolute",
+                left: "218px",
+                top: "188px",
+                width: "560px",
+                borderRadius: "16px",
+                border: "1px solid #5FE0B188",
+                background:
+                  "linear-gradient(135deg, rgba(62, 184, 138, 0.23) 0%, rgba(20, 36, 34, 0.8) 100%)",
+                boxShadow: `0 10px 28px rgba(0,0,0,0.35), 0 0 ${14 + toolEnter * 12}px rgba(95,224,177,0.26)`,
+                padding: "16px 20px",
+                opacity: toolEnter,
+                zIndex: 3,
+                transform: `translateY(${interpolate(toolEnter, [0, 1], [-28, 0], {
+                  extrapolateLeft: "clamp",
+                  extrapolateRight: "clamp",
+                })}px)`,
+              }}
+            >
+              <div style={{ fontSize: "28px", color: "#5FE0B1", fontWeight: 800 }}>
+                编程工具层
+              </div>
+              <div
+                style={{
+                  marginTop: "4px",
+                  fontSize: "22px",
+                  color: textColor,
+                  opacity: 0.92,
+                  fontWeight: 700,
+                }}
+              >
+                Claude Code / Codex
+                <span style={{ marginLeft: "14px", color: "#A5F0D7" }}>“效率放大器”</span>
+              </div>
+            </div>
+
+            <div
+              style={{
+                position: "absolute",
+                left: "390px",
+                top: "320px",
+                width: "470px",
+                borderRadius: "16px",
+                border: "1px solid #6AA7FF88",
+                background:
+                  "linear-gradient(135deg, rgba(86, 132, 224, 0.26) 0%, rgba(22, 28, 44, 0.82) 100%)",
+                boxShadow: `0 8px 28px rgba(0,0,0,0.35), 0 0 ${18 + modelEnter * 16}px rgba(106,167,255,0.3)`,
+                padding: "16px 20px",
+                opacity: modelEnter,
+                zIndex: 2,
+                transform: `translateY(${interpolate(modelEnter, [0, 1], [36, 0], {
+                  extrapolateLeft: "clamp",
+                  extrapolateRight: "clamp",
+                })}px) scale(${interpolate(modelEnter, [0, 1], [0.97, 1], {
+                  extrapolateLeft: "clamp",
+                  extrapolateRight: "clamp",
+                })})`,
+              }}
+            >
+              <div style={{ fontSize: "28px", color: "#8DC2FF", fontWeight: 800 }}>
+                模型层
+              </div>
+              <div
+                style={{
+                  marginTop: "4px",
+                  fontSize: "22px",
+                  color: textColor,
+                  opacity: 0.92,
+                  fontWeight: 700,
+                }}
+              >
+                Claude / GPT
+                <span style={{ marginLeft: "14px", color: "#AED4FF" }}>“大脑”</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div
         style={{
@@ -571,10 +915,10 @@ const WhatProblemsOpenClawSolvesScene: React.FC<{
               extrapolateRight: "clamp",
             }) + rightFloat}px)`,
             borderRadius: "24px",
-            border: `2px solid ${accentColor}66`,
+            border: "2px solid rgba(95, 224, 177, 0.55)",
             background:
-              "linear-gradient(160deg, rgba(35, 28, 26, 0.95) 0%, rgba(18, 18, 30, 0.98) 100%)",
-            boxShadow: `0 10px 34px rgba(0, 0, 0, 0.35), 0 0 ${30 + pulse * 12}px ${accentColor}33`,
+              "linear-gradient(160deg, rgba(18, 36, 30, 0.96) 0%, rgba(10, 24, 22, 0.98) 100%)",
+            boxShadow: `0 10px 34px rgba(0, 0, 0, 0.35), 0 0 ${30 + pulse * 12}px rgba(95, 224, 177, 0.35)`,
             padding: "30px",
           }}
         >
@@ -582,7 +926,7 @@ const WhatProblemsOpenClawSolvesScene: React.FC<{
             style={{
               fontSize: "38px",
               fontWeight: 800,
-              color: accentColor,
+              color: "#5FE0B1",
               marginBottom: "8px",
             }}
           >
@@ -591,8 +935,8 @@ const WhatProblemsOpenClawSolvesScene: React.FC<{
           <div
             style={{
               fontSize: "22px",
-              color: textColor,
-              opacity: 0.86,
+              color: "#A5F0D7",
+              opacity: 0.95,
               marginBottom: "14px",
             }}
           >
@@ -604,7 +948,7 @@ const WhatProblemsOpenClawSolvesScene: React.FC<{
               gridTemplateColumns: "1fr 1fr",
               gap: "10px 14px",
               fontSize: "22px",
-              color: textColor,
+              color: "#D7FFF0",
               lineHeight: 1.4,
             }}
           >
@@ -636,7 +980,7 @@ const WhatProblemsOpenClawSolvesScene: React.FC<{
                     )}px)`,
                   }}
                 >
-                  <span style={{ color: accentColor }}>✓</span>
+                  <span style={{ color: "#5FE0B1" }}>✓</span>
                   <span>{item}</span>
                 </div>
               );
@@ -645,56 +989,6 @@ const WhatProblemsOpenClawSolvesScene: React.FC<{
         </div>
       </div>
 
-      <div
-        style={{
-          opacity: bottomOpacity,
-          transform: `translateY(${interpolate(frame - 24, [0, 20], [18, 0], {
-            extrapolateRight: "clamp",
-          })}px)`,
-          width: "100%",
-          maxWidth: "1500px",
-          borderRadius: "16px",
-          border: `1px solid ${accentColor}66`,
-          background: "rgba(20, 20, 30, 0.82)",
-          padding: "20px 26px",
-          position: "relative",
-          overflow: "hidden",
-          textAlign: "center",
-          fontSize: "28px",
-          color: textColor,
-          lineHeight: 1.45,
-          boxShadow: `0 0 26px ${accentColor}22`,
-        }}
-      >
-        <div style={{ position: "relative", zIndex: 2 }}>
-          解决
-          <span style={{ color: "#FFCB7A", fontWeight: 800 }}>
-            “AI 不能持续运行”
-          </span>
-          、
-          <span style={{ color: accentColor, fontWeight: 800 }}>
-            “不能跨系统协作”
-          </span>
-          、
-          <span style={{ color: "#9FDBFF", fontWeight: 800 }}>
-            “不能调度任务”
-          </span>
-          的问题
-        </div>
-        <div
-          style={{
-            position: "absolute",
-            left: `${sweepX}%`,
-            top: 0,
-            width: "24%",
-            height: "100%",
-            transform: "skewX(-18deg)",
-            background:
-              "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%)",
-            zIndex: 1,
-          }}
-        />
-      </div>
     </SceneShell>
   );
 };
@@ -728,6 +1022,7 @@ const WhatCanOpenClawDoScene: React.FC<{
         subtitle="真实落地案例与社区实践"
         accentColor={accentColor}
         textColor={textColor}
+        frame={frame}
       />
 
       <div
@@ -1061,6 +1356,7 @@ const FeaturesScene: React.FC<{
         subtitle="这一段聚焦“怎么落地”，不是“有什么能力”"
         accentColor={accentColor}
         textColor={textColor}
+        frame={frame}
       />
 
       <div
@@ -1208,7 +1504,6 @@ const InstallScene: React.FC<{
 
   return (
     <SceneShell padding="0 80px">
-      <StepIndicator step={step} total={5} accentColor={accentColor} />
       <SceneTitle
         title={
           step === 1
@@ -1226,6 +1521,7 @@ const InstallScene: React.FC<{
         }
         accentColor={accentColor}
         textColor={textColor}
+        frame={frame}
       />
 
       <div style={{ width: "100%", maxWidth: "1600px" }}>
@@ -1253,18 +1549,6 @@ const GatewayScene: React.FC<{
   accentColor: string;
   textColor: string;
 }> = ({ frame, accentColor, textColor }) => {
-  const subtitleFullText = "检查网关状态并打开控制面板";
-  const subtitleStartFrame = 12;
-  const subtitleCharsPerFrame = 2.2;
-  const subtitleCharCount = Math.max(
-    0,
-    Math.min(
-      subtitleFullText.length,
-      Math.floor((frame - subtitleStartFrame) * subtitleCharsPerFrame),
-    ),
-  );
-  const subtitleText = subtitleFullText.slice(0, subtitleCharCount);
-
   const commands = [
     {
       command: "openclaw gateway status",
@@ -1286,12 +1570,12 @@ const GatewayScene: React.FC<{
 
   return (
     <SceneShell padding="0 120px">
-      <StepIndicator step={4} total={5} accentColor={accentColor} />
       <SceneTitle
         title="开始使用 OpenClaw"
-        subtitle={`${subtitleText}${subtitleCharCount < subtitleFullText.length && frame % 10 < 5 ? "▋" : ""}`}
+        subtitle="检查网关状态并打开控制面板"
         accentColor={accentColor}
         textColor={textColor}
+        frame={frame}
       />
 
       <div style={{ width: "100%", maxWidth: "1000px" }}>
@@ -1342,12 +1626,12 @@ const MessageScene: React.FC<{
 
   return (
     <SceneShell padding="0 70px">
-      <StepIndicator step={5} total={5} accentColor={accentColor} />
       <SceneTitle
         title="发送测试消息"
         subtitle="在 WebUI 聊天面板里直接对话并查看执行结果"
         accentColor={accentColor}
         textColor={textColor}
+        frame={frame}
       />
 
       <div
@@ -1755,6 +2039,13 @@ export const OpenClawTutorial: React.FC<z.infer<typeof openClawSchema>> = ({
           accentColor={accentColor}
           textColor={textColor}
         />
+        <ScenePresenterHud
+          sceneFrame={frame}
+          sceneDuration={180}
+          fps={30}
+          accentColor={accentColor}
+          nextSceneLabel="OpenClaw解决了什么问题？"
+        />
       </Sequence>
 
       {/* Scene 2: What problems does OpenClaw solve? (180-360 frames, 6 seconds) */}
@@ -1764,6 +2055,13 @@ export const OpenClawTutorial: React.FC<z.infer<typeof openClawSchema>> = ({
           accentColor={accentColor}
           textColor={textColor}
           cardBg={cardBg}
+        />
+        <ScenePresenterHud
+          sceneFrame={frame - 180}
+          sceneDuration={180}
+          fps={30}
+          accentColor={accentColor}
+          nextSceneLabel="openclaw能做什么"
         />
       </Sequence>
 
@@ -1775,6 +2073,13 @@ export const OpenClawTutorial: React.FC<z.infer<typeof openClawSchema>> = ({
           cardBg={cardBg}
           textColor={textColor}
         />
+        <ScenePresenterHud
+          sceneFrame={frame - 360}
+          sceneDuration={180}
+          fps={30}
+          accentColor={accentColor}
+          nextSceneLabel="15 分钟部署路线图"
+        />
       </Sequence>
 
       {/* Scene 4: Features (540-720 frames, 6 seconds) */}
@@ -1784,6 +2089,13 @@ export const OpenClawTutorial: React.FC<z.infer<typeof openClawSchema>> = ({
           accentColor={accentColor}
           cardBg={cardBg}
           textColor={textColor}
+        />
+        <ScenePresenterHud
+          sceneFrame={frame - 540}
+          sceneDuration={180}
+          fps={30}
+          accentColor={accentColor}
+          nextSceneLabel="Node.js 环境检查"
         />
       </Sequence>
 
@@ -1795,6 +2107,13 @@ export const OpenClawTutorial: React.FC<z.infer<typeof openClawSchema>> = ({
           textColor={textColor}
           step={1}
         />
+        <ScenePresenterHud
+          sceneFrame={frame - 720}
+          sceneDuration={330}
+          fps={30}
+          accentColor={accentColor}
+          nextSceneLabel="安装 OpenClaw"
+        />
       </Sequence>
 
       {/* Scene 6: Install - Step 2 (1050-1440 frames, 13 seconds) */}
@@ -1804,6 +2123,13 @@ export const OpenClawTutorial: React.FC<z.infer<typeof openClawSchema>> = ({
           accentColor={accentColor}
           textColor={textColor}
           step={2}
+        />
+        <ScenePresenterHud
+          sceneFrame={frame - 1050}
+          sceneDuration={390}
+          fps={30}
+          accentColor={accentColor}
+          nextSceneLabel="运行配置向导"
         />
       </Sequence>
 
@@ -1815,6 +2141,13 @@ export const OpenClawTutorial: React.FC<z.infer<typeof openClawSchema>> = ({
           textColor={textColor}
           step={3}
         />
+        <ScenePresenterHud
+          sceneFrame={frame - 1440}
+          sceneDuration={300}
+          fps={30}
+          accentColor={accentColor}
+          nextSceneLabel="开始使用 OpenClaw"
+        />
       </Sequence>
 
       {/* Scene 8: Gateway (1740-2010 frames, 9 seconds) */}
@@ -1823,6 +2156,13 @@ export const OpenClawTutorial: React.FC<z.infer<typeof openClawSchema>> = ({
           frame={frame - 1740}
           accentColor={accentColor}
           textColor={textColor}
+        />
+        <ScenePresenterHud
+          sceneFrame={frame - 1740}
+          sceneDuration={270}
+          fps={30}
+          accentColor={accentColor}
+          nextSceneLabel="发送测试消息"
         />
       </Sequence>
 
@@ -1833,6 +2173,13 @@ export const OpenClawTutorial: React.FC<z.infer<typeof openClawSchema>> = ({
           accentColor={accentColor}
           textColor={textColor}
         />
+        <ScenePresenterHud
+          sceneFrame={frame - 2010}
+          sceneDuration={270}
+          fps={30}
+          accentColor={accentColor}
+          nextSceneLabel="准备就绪！"
+        />
       </Sequence>
 
       {/* Scene 10: Outro (2280-2430 frames, 5 seconds) */}
@@ -1841,6 +2188,13 @@ export const OpenClawTutorial: React.FC<z.infer<typeof openClawSchema>> = ({
           frame={frame - 2280}
           accentColor={accentColor}
           textColor={textColor}
+        />
+        <ScenePresenterHud
+          sceneFrame={frame - 2280}
+          sceneDuration={150}
+          fps={30}
+          accentColor={accentColor}
+          nextSceneLabel="OpenClaw 架构篇"
         />
       </Sequence>
     </AbsoluteFill>

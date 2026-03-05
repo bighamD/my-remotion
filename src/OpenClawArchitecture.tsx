@@ -4,6 +4,7 @@ import {
   useCurrentFrame,
   spring,
   Sequence,
+  useVideoConfig,
 } from "remotion";
 import { z } from "zod";
 import { zColor } from "@remotion/zod-types";
@@ -15,6 +16,110 @@ export const openClawArchitectureSchema = z.object({
   textColor: zColor(),
   secondaryTextColor: zColor(),
 });
+
+const ScenePresenterHud: React.FC<{
+  sceneFrame: number;
+  sceneDuration: number;
+  fps: number;
+  accentColor: string;
+  nextSceneLabel: string;
+}> = ({ sceneFrame, sceneDuration, fps, accentColor, nextSceneLabel }) => {
+  const { width } = useVideoConfig();
+  const clampedFrame = Math.max(0, Math.min(sceneDuration, sceneFrame));
+  const progress = clampedFrame / sceneDuration;
+  const remainingSeconds = Math.max(0, sceneDuration - clampedFrame) / fps;
+  const inLast2Seconds = remainingSeconds <= 2;
+  const inLast1Second = remainingSeconds <= 1;
+  const pulse = 0.75 + Math.sin(sceneFrame / 3) * 0.25;
+  const hudWidth = Math.min(300, Math.max(210, width * 0.24));
+  const hudInset = Math.max(18, width * 0.015);
+
+  return (
+    <AbsoluteFill style={{ pointerEvents: "none" }}>
+      <div
+        style={{
+          position: "absolute",
+          top: hudInset,
+          left: hudInset,
+          right: hudInset,
+          display: "flex",
+          justifyContent: "flex-end",
+          boxSizing: "border-box",
+        }}
+      >
+        <div
+          style={{
+            width: hudWidth,
+            maxWidth: "100%",
+            borderRadius: 14,
+            padding: "10px 12px",
+            border: `1px solid ${inLast2Seconds ? accentColor : "#8E96AE66"}`,
+            background: "rgba(14, 16, 30, 0.55)",
+            boxShadow: inLast2Seconds
+              ? `0 0 ${16 + pulse * 8}px ${accentColor}66`
+              : "0 0 0 rgba(0, 0, 0, 0)",
+            backdropFilter: "blur(6px)",
+            opacity: inLast2Seconds ? 0.96 : 0.72,
+            transition: "opacity 200ms linear",
+          }}
+        >
+          <div
+            style={{
+              fontSize: 15,
+              fontWeight: 700,
+              color: inLast2Seconds ? accentColor : "#CFD6E8",
+              marginBottom: 8,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 10,
+            }}
+          >
+            <span
+              style={{
+                minWidth: 0,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              下一场景：{nextSceneLabel}
+            </span>
+            <span
+              style={{
+                flexShrink: 0,
+                color: inLast2Seconds ? "#FFD36A" : "#E5ECFF",
+                fontVariantNumeric: "tabular-nums",
+              }}
+            >
+              {remainingSeconds.toFixed(1)}s
+            </span>
+          </div>
+          <div
+            style={{
+              height: 6,
+              borderRadius: 999,
+              background: "rgba(207, 214, 232, 0.22)",
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                width: `${progress * 100}%`,
+                height: "100%",
+                borderRadius: 999,
+                background: inLast1Second
+                  ? `linear-gradient(90deg, #FFD36A 0%, ${accentColor} 100%)`
+                  : "linear-gradient(90deg, #95B8FF 0%, #62E1FF 100%)",
+                boxShadow: inLast2Seconds ? `0 0 10px ${accentColor}88` : "none",
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    </AbsoluteFill>
+  );
+};
 
 // ============================================
 // 场景 0: OpenClaw 核心概念
@@ -734,13 +839,63 @@ const GatewayScene: React.FC<{
         </h1>
         <p
           style={{
-            fontSize: "20px",
+            fontSize: "28px",
             color: "rgba(255,255,255,0.6)",
             margin: 0,
-            lineHeight: 1.3,
+            lineHeight: 1.35,
+            minHeight: "40px",
           }}
         >
-          统一入口 · 安全验证 · 智能分发
+          {(() => {
+            const parts = [
+              { text: "统一入口", color: "#FFB4A2", bold: true },
+              { text: " · ", color: "rgba(255,255,255,0.55)" },
+              { text: "安全验证", color: "#FFD36A", bold: true },
+              { text: " · ", color: "rgba(255,255,255,0.55)" },
+              { text: "智能分发", color: "#95B8FF", bold: true },
+            ];
+
+            const typeStartFrame = 12;
+            const durationPerChar = 2;
+
+            const rendered: React.ReactNode[] = [];
+            let totalChars = 0;
+
+            for (const part of parts) {
+              const charsToShow = Math.max(
+                0,
+                Math.min(
+                  part.text.length,
+                  Math.floor((frame - typeStartFrame) / durationPerChar) -
+                    totalChars,
+                ),
+              );
+
+              if (charsToShow > 0) {
+                rendered.push(
+                  <span
+                    key={`${part.text}-${totalChars}`}
+                    style={{
+                      color: part.color,
+                      fontWeight: part.bold ? 700 : 400,
+                    }}
+                  >
+                    {part.text.substring(0, charsToShow)}
+                  </span>,
+                );
+              }
+
+              totalChars += part.text.length;
+              if (
+                Math.floor((frame - typeStartFrame) / durationPerChar) <=
+                totalChars
+              ) {
+                break;
+              }
+            }
+
+            return rendered.length > 0 ? rendered : <span>&nbsp;</span>;
+          })()}
         </p>
       </div>
 
@@ -4640,11 +4795,25 @@ export const OpenClawArchitecture: React.FC<
           accentColor={accentColor}
           textColor={textColor}
         />
+        <ScenePresenterHud
+          sceneFrame={frame}
+          sceneDuration={SCENE_DURATION}
+          fps={30}
+          accentColor={accentColor}
+          nextSceneLabel="Gateway 网关核心"
+        />
       </Sequence>
 
       {/* Scene 2: Gateway 网关核心 */}
       <Sequence from={SCENE_DURATION} durationInFrames={SCENE_DURATION}>
         <GatewayScene frame={frame - SCENE_DURATION} textColor={textColor} />
+        <ScenePresenterHud
+          sceneFrame={frame - SCENE_DURATION}
+          sceneDuration={SCENE_DURATION}
+          fps={30}
+          accentColor={accentColor}
+          nextSceneLabel="Agent 智能代理"
+        />
       </Sequence>
 
       {/* Scene 3: Agent 智能代理 */}
@@ -4653,6 +4822,13 @@ export const OpenClawArchitecture: React.FC<
           frame={frame - SCENE_DURATION * 2}
           accentColor={accentColor}
           textColor={textColor}
+        />
+        <ScenePresenterHud
+          sceneFrame={frame - SCENE_DURATION * 2}
+          sceneDuration={SCENE_DURATION}
+          fps={30}
+          accentColor={accentColor}
+          nextSceneLabel="Skills 技能系统"
         />
       </Sequence>
 
@@ -4663,6 +4839,13 @@ export const OpenClawArchitecture: React.FC<
           accentColor={accentColor}
           textColor={textColor}
         />
+        <ScenePresenterHud
+          sceneFrame={frame - SCENE_DURATION * 3}
+          sceneDuration={SCENE_DURATION}
+          fps={30}
+          accentColor={accentColor}
+          nextSceneLabel="Channels 渠道层"
+        />
       </Sequence>
 
       {/* Scene 5: Channels 渠道层 */}
@@ -4671,6 +4854,13 @@ export const OpenClawArchitecture: React.FC<
           frame={frame - SCENE_DURATION * 4}
           accentColor={accentColor}
           textColor={textColor}
+        />
+        <ScenePresenterHud
+          sceneFrame={frame - SCENE_DURATION * 4}
+          sceneDuration={SCENE_DURATION}
+          fps={30}
+          accentColor={accentColor}
+          nextSceneLabel="Nodes 节点系统"
         />
       </Sequence>
 
@@ -4681,6 +4871,13 @@ export const OpenClawArchitecture: React.FC<
           accentColor={accentColor}
           textColor={textColor}
         />
+        <ScenePresenterHud
+          sceneFrame={frame - SCENE_DURATION * 5}
+          sceneDuration={SCENE_DURATION}
+          fps={30}
+          accentColor={accentColor}
+          nextSceneLabel="Memory 记忆系统"
+        />
       </Sequence>
 
       {/* Scene 7: Memory 记忆系统 */}
@@ -4689,6 +4886,13 @@ export const OpenClawArchitecture: React.FC<
           frame={frame - SCENE_DURATION * 6}
           accentColor={accentColor}
           textColor={textColor}
+        />
+        <ScenePresenterHud
+          sceneFrame={frame - SCENE_DURATION * 6}
+          sceneDuration={SCENE_DURATION}
+          fps={30}
+          accentColor={accentColor}
+          nextSceneLabel="Heartbeat 健康检查"
         />
       </Sequence>
 
@@ -4699,6 +4903,13 @@ export const OpenClawArchitecture: React.FC<
           accentColor={accentColor}
           textColor={textColor}
         />
+        <ScenePresenterHud
+          sceneFrame={frame - SCENE_DURATION * 7}
+          sceneDuration={SCENE_DURATION}
+          fps={30}
+          accentColor={accentColor}
+          nextSceneLabel="Cron 定时任务"
+        />
       </Sequence>
 
       {/* Scene 9: Cron 定时任务 */}
@@ -4707,6 +4918,13 @@ export const OpenClawArchitecture: React.FC<
           frame={frame - SCENE_DURATION * 8}
           accentColor={accentColor}
           textColor={textColor}
+        />
+        <ScenePresenterHud
+          sceneFrame={frame - SCENE_DURATION * 8}
+          sceneDuration={SCENE_DURATION}
+          fps={30}
+          accentColor={accentColor}
+          nextSceneLabel="架构总结"
         />
       </Sequence>
 
@@ -4717,6 +4935,13 @@ export const OpenClawArchitecture: React.FC<
           accentColor={accentColor}
           textColor={textColor}
         />
+        <ScenePresenterHud
+          sceneFrame={frame - SCENE_DURATION * 9}
+          sceneDuration={SCENE_DURATION}
+          fps={30}
+          accentColor={accentColor}
+          nextSceneLabel="产品对比"
+        />
       </Sequence>
 
       {/* Scene 11: 产品对比 */}
@@ -4725,6 +4950,13 @@ export const OpenClawArchitecture: React.FC<
           frame={frame - SCENE_DURATION * 10}
           accentColor={accentColor}
           textColor={textColor}
+        />
+        <ScenePresenterHud
+          sceneFrame={frame - SCENE_DURATION * 10}
+          sceneDuration={SCENE_DURATION}
+          fps={30}
+          accentColor={accentColor}
+          nextSceneLabel="视频结束"
         />
       </Sequence>
     </AbsoluteFill>
