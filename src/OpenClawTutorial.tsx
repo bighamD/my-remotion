@@ -372,7 +372,334 @@ const TerminalCommand: React.FC<{
   );
 };
 
-// 场景 2: OpenClaw 能做什么（案例占位）
+// 场景 2: OpenClaw 解决了什么问题
+const WhatProblemsOpenClawSolvesScene: React.FC<{
+  frame: number;
+  accentColor: string;
+  textColor: string;
+  cardBg: string;
+}> = ({ frame, accentColor, textColor, cardBg }) => {
+  const subtitlePrefix = "大模型越来越强，但";
+  const subtitleTyped = "“无法自动干活”";
+  const subtitleRevealProgress = interpolate(frame, [12, 64], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  const showCursor = frame % 12 < 6;
+
+  const pulse = 0.82 + Math.sin(frame / 12) * 0.18;
+  const leftFloat = Math.sin(frame / 20) * 4;
+  const rightFloat = Math.sin(frame / 22 + 1.3) * 4;
+
+  const leftOpacity = spring({
+    frame,
+    fps: 30,
+    config: { damping: 20, stiffness: 120 },
+  });
+
+  const rightOpacity = spring({
+    frame: frame - 10,
+    fps: 30,
+    config: { damping: 20, stiffness: 120 },
+  });
+
+  const bottomOpacity = spring({
+    frame: frame - 24,
+    fps: 30,
+    config: { damping: 18, stiffness: 100 },
+  });
+
+  const sweepX = interpolate(frame % 90, [0, 89], [-40, 110], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+
+  return (
+    <SceneShell>
+      <h2
+        style={{
+          fontSize: "60px",
+          fontWeight: 800,
+          color: accentColor,
+          margin: "0 0 14px 0",
+          textAlign: "center",
+          textShadow: `0 0 30px ${accentColor}44`,
+        }}
+      >
+        OpenClaw解决了什么问题？
+      </h2>
+      <p
+        style={{
+          fontSize: "30px",
+          margin: "0 0 42px 0",
+          textAlign: "center",
+          lineHeight: 1.5,
+          fontWeight: 600,
+          color: "#D9D9EE",
+        }}
+      >
+        {subtitlePrefix}
+        <span
+          style={{
+            marginLeft: "8px",
+            color: "#FFC06A",
+            textShadow: "0 0 16px rgba(255, 192, 106, 0.45)",
+            display: "inline-block",
+            position: "relative",
+            paddingRight: "12px",
+          }}
+        >
+          <span
+            style={{
+              display: "inline-block",
+              whiteSpace: "nowrap",
+              clipPath: `inset(0 ${100 - subtitleRevealProgress * 100}% 0 0)`,
+            }}
+          >
+            {subtitleTyped}
+          </span>
+          {showCursor ? (
+            <span
+              style={{
+                color: accentColor,
+                position: "absolute",
+                left: `${subtitleRevealProgress * 100}%`,
+                top: 0,
+                transform: "translateX(2px)",
+              }}
+            >
+              ▋
+            </span>
+          ) : null}
+        </span>
+      </p>
+
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "1500px",
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "30px",
+          marginBottom: "26px",
+        }}
+      >
+        <div
+          style={{
+            opacity: leftOpacity,
+            transform: `translateY(${interpolate(frame, [0, 24], [28, 0], {
+              extrapolateRight: "clamp",
+            }) + leftFloat}px)`,
+            borderRadius: "24px",
+            border: "2px solid rgba(255, 138, 101, 0.45)",
+            background: `linear-gradient(160deg, ${cardBg}EE 0%, rgba(25, 20, 24, 0.96) 100%)`,
+            boxShadow: `0 10px 34px rgba(0, 0, 0, 0.35), 0 0 ${24 + pulse * 10}px rgba(255, 138, 101, 0.16)`,
+            padding: "30px",
+          }}
+        >
+          <div
+            style={{
+              fontSize: "30px",
+              fontWeight: 800,
+              color: "#FFB4A2",
+              marginBottom: "14px",
+            }}
+          >
+            普通 ChatGPT / Claude / 豆包 限制
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "12px",
+              color: textColor,
+              fontSize: "24px",
+              lineHeight: 1.45,
+            }}
+          >
+            {[
+              "不能持续运行",
+              "没有长期记忆",
+              "不能主动执行系统命令",
+              "你问一句，它答一句。",
+              "你关掉对话，它就没了",
+            ].map((item, index) => {
+              const itemOpacity = spring({
+                frame: frame - 8 - index * 4,
+                fps: 30,
+                config: { damping: 18, stiffness: 110 },
+              });
+              return (
+                <div
+                  key={item}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px",
+                    opacity: itemOpacity,
+                    transform: `translateX(${interpolate(
+                      itemOpacity,
+                      [0, 1],
+                      [28, 0],
+                      { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+                    )}px)`,
+                  }}
+                >
+                  <span style={{ color: "#FF8A65" }}>•</span>
+                  <span
+                    style={{
+                      color:
+                        item.includes("持续运行") ||
+                        item.includes("长期记忆") ||
+                        item.includes("执行系统命令")
+                          ? "#FFD3C4"
+                          : textColor,
+                    }}
+                  >
+                    {item}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div
+          style={{
+            opacity: rightOpacity,
+            transform: `translateY(${interpolate(frame - 10, [0, 24], [28, 0], {
+              extrapolateRight: "clamp",
+            }) + rightFloat}px)`,
+            borderRadius: "24px",
+            border: `2px solid ${accentColor}66`,
+            background:
+              "linear-gradient(160deg, rgba(35, 28, 26, 0.95) 0%, rgba(18, 18, 30, 0.98) 100%)",
+            boxShadow: `0 10px 34px rgba(0, 0, 0, 0.35), 0 0 ${30 + pulse * 12}px ${accentColor}33`,
+            padding: "30px",
+          }}
+        >
+          <div
+            style={{
+              fontSize: "38px",
+              fontWeight: 800,
+              color: accentColor,
+              marginBottom: "8px",
+            }}
+          >
+            OpenClaw
+          </div>
+          <div
+            style={{
+              fontSize: "22px",
+              color: textColor,
+              opacity: 0.86,
+              marginBottom: "14px",
+            }}
+          >
+            更像是你养的一台 AI 机器人
+          </div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "10px 14px",
+              fontSize: "22px",
+              color: textColor,
+              lineHeight: 1.4,
+            }}
+          >
+            {[
+              "一直在线",
+              "定时工作",
+              "自己巡逻",
+              "同时控制多台电脑",
+              "根据记忆调整行为",
+              "空闲时自我优化",
+            ].map((item, index) => {
+              const itemOpacity = spring({
+                frame: frame - 14 - index * 3,
+                fps: 30,
+                config: { damping: 18, stiffness: 110 },
+              });
+              return (
+                <div
+                  key={item}
+                  style={{
+                    display: "flex",
+                    gap: "8px",
+                    opacity: itemOpacity,
+                    transform: `translateY(${interpolate(
+                      itemOpacity,
+                      [0, 1],
+                      [16, 0],
+                      { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+                    )}px)`,
+                  }}
+                >
+                  <span style={{ color: accentColor }}>✓</span>
+                  <span>{item}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      <div
+        style={{
+          opacity: bottomOpacity,
+          transform: `translateY(${interpolate(frame - 24, [0, 20], [18, 0], {
+            extrapolateRight: "clamp",
+          })}px)`,
+          width: "100%",
+          maxWidth: "1500px",
+          borderRadius: "16px",
+          border: `1px solid ${accentColor}66`,
+          background: "rgba(20, 20, 30, 0.82)",
+          padding: "20px 26px",
+          position: "relative",
+          overflow: "hidden",
+          textAlign: "center",
+          fontSize: "28px",
+          color: textColor,
+          lineHeight: 1.45,
+          boxShadow: `0 0 26px ${accentColor}22`,
+        }}
+      >
+        <div style={{ position: "relative", zIndex: 2 }}>
+          解决
+          <span style={{ color: "#FFCB7A", fontWeight: 800 }}>
+            “AI 不能持续运行”
+          </span>
+          、
+          <span style={{ color: accentColor, fontWeight: 800 }}>
+            “不能跨系统协作”
+          </span>
+          、
+          <span style={{ color: "#9FDBFF", fontWeight: 800 }}>
+            “不能调度任务”
+          </span>
+          的问题
+        </div>
+        <div
+          style={{
+            position: "absolute",
+            left: `${sweepX}%`,
+            top: 0,
+            width: "24%",
+            height: "100%",
+            transform: "skewX(-18deg)",
+            background:
+              "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%)",
+            zIndex: 1,
+          }}
+        />
+      </div>
+    </SceneShell>
+  );
+};
+
+// 场景 3: OpenClaw 能做什么（案例占位）
 const WhatCanOpenClawDoScene: React.FC<{
   frame: number;
   accentColor: string;
@@ -1430,19 +1757,19 @@ export const OpenClawTutorial: React.FC<z.infer<typeof openClawSchema>> = ({
         />
       </Sequence>
 
-      {/* Scene 2: What can OpenClaw do? (180-360 frames, 6 seconds) */}
+      {/* Scene 2: What problems does OpenClaw solve? (180-360 frames, 6 seconds) */}
       <Sequence from={180} durationInFrames={180}>
-        <WhatCanOpenClawDoScene
+        <WhatProblemsOpenClawSolvesScene
           frame={frame - 180}
           accentColor={accentColor}
-          cardBg={cardBg}
           textColor={textColor}
+          cardBg={cardBg}
         />
       </Sequence>
 
-      {/* Scene 3: Features (360-540 frames, 6 seconds) */}
+      {/* Scene 3: What can OpenClaw do? (360-540 frames, 6 seconds) */}
       <Sequence from={360} durationInFrames={180}>
-        <FeaturesScene
+        <WhatCanOpenClawDoScene
           frame={frame - 360}
           accentColor={accentColor}
           cardBg={cardBg}
@@ -1450,58 +1777,68 @@ export const OpenClawTutorial: React.FC<z.infer<typeof openClawSchema>> = ({
         />
       </Sequence>
 
-      {/* Scene 4: Install - Step 1 (540-870 frames, 11 seconds) */}
-      <Sequence from={540} durationInFrames={330}>
-        <InstallScene
+      {/* Scene 4: Features (540-720 frames, 6 seconds) */}
+      <Sequence from={540} durationInFrames={180}>
+        <FeaturesScene
           frame={frame - 540}
+          accentColor={accentColor}
+          cardBg={cardBg}
+          textColor={textColor}
+        />
+      </Sequence>
+
+      {/* Scene 5: Install - Step 1 (720-1050 frames, 11 seconds) */}
+      <Sequence from={720} durationInFrames={330}>
+        <InstallScene
+          frame={frame - 720}
           accentColor={accentColor}
           textColor={textColor}
           step={1}
         />
       </Sequence>
 
-      {/* Scene 5: Install - Step 2 (870-1260 frames, 13 seconds) */}
-      <Sequence from={870} durationInFrames={390}>
+      {/* Scene 6: Install - Step 2 (1050-1440 frames, 13 seconds) */}
+      <Sequence from={1050} durationInFrames={390}>
         <InstallScene
-          frame={frame - 870}
+          frame={frame - 1050}
           accentColor={accentColor}
           textColor={textColor}
           step={2}
         />
       </Sequence>
 
-      {/* Scene 6: Install - Step 3 (1260-1560 frames, 10 seconds) */}
-      <Sequence from={1260} durationInFrames={300}>
+      {/* Scene 7: Install - Step 3 (1440-1740 frames, 10 seconds) */}
+      <Sequence from={1440} durationInFrames={300}>
         <InstallScene
-          frame={frame - 1260}
+          frame={frame - 1440}
           accentColor={accentColor}
           textColor={textColor}
           step={3}
         />
       </Sequence>
 
-      {/* Scene 7: Gateway (1560-1830 frames, 9 seconds) */}
-      <Sequence from={1560} durationInFrames={270}>
+      {/* Scene 8: Gateway (1740-2010 frames, 9 seconds) */}
+      <Sequence from={1740} durationInFrames={270}>
         <GatewayScene
-          frame={frame - 1560}
+          frame={frame - 1740}
           accentColor={accentColor}
           textColor={textColor}
         />
       </Sequence>
 
-      {/* Scene 8: Message (1830-2100 frames, 9 seconds) */}
-      <Sequence from={1830} durationInFrames={270}>
+      {/* Scene 9: Message (2010-2280 frames, 9 seconds) */}
+      <Sequence from={2010} durationInFrames={270}>
         <MessageScene
-          frame={frame - 1830}
+          frame={frame - 2010}
           accentColor={accentColor}
           textColor={textColor}
         />
       </Sequence>
 
-      {/* Scene 9: Outro (2100-2250 frames, 5 seconds) */}
-      <Sequence from={2100} durationInFrames={150}>
+      {/* Scene 10: Outro (2280-2430 frames, 5 seconds) */}
+      <Sequence from={2280} durationInFrames={150}>
         <OutroScene
-          frame={frame - 2100}
+          frame={frame - 2280}
           accentColor={accentColor}
           textColor={textColor}
         />

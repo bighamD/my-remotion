@@ -18,7 +18,7 @@ const App: React.FC = () => {
     <Player
       component={OpenClawTutorial}
       inputProps={inputProps}
-      durationInFrames={2460}
+      durationInFrames={2430}
       compositionWidth={1920}
       compositionHeight={1080}
       fps={30}
