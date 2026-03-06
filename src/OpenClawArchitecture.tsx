@@ -122,6 +122,315 @@ const ScenePresenterHud: React.FC<{
 };
 
 // ============================================
+// 手绘风格折线图组件
+// ============================================
+
+const HandDrawnLineChart: React.FC<{
+  frame: number;
+  accentColor: string;
+  textColor: string;
+  delay: number;
+}> = ({ frame, accentColor, textColor, delay }) => {
+  const opacity = spring({
+    frame: frame - delay,
+    fps: 30,
+    config: { damping: 20, stiffness: 100 },
+  });
+
+  // GitHub star 数据
+  const rawData = [
+    { date: new Date("2025-11-24"), stars: 0 },
+    { date: new Date("2025-12-10"), stars: 3000 },
+    { date: new Date("2026-01-10"), stars: 9000 },
+    { date: new Date("2026-01-27"), stars: 15000 },
+    { date: new Date("2026-01-29"), stars: 50000 },
+    { date: new Date("2026-01-30"), stars: 106000 },
+    { date: new Date("2026-02-05"), stars: 157000 },
+    { date: new Date("2026-02-16"), stars: 200000 },
+    { date: new Date("2026-03-05"), stars: 255000 },
+  ];
+
+  // 计算时间跨度
+  const startDate = rawData[0].date.getTime();
+
+  // 转换数据为图表坐标
+  const data = rawData.map((d) => {
+    const daysFromStart = (d.date.getTime() - startDate) / (1000 * 60 * 60 * 24);
+    const month = (d.date.getMonth() + 1).toString().padStart(2, '0');
+    const day = d.date.getDate().toString().padStart(2, '0');
+    return {
+      x: daysFromStart,
+      y: d.stars,
+      dateLabel: `${month}/${day}`,
+    };
+  });
+
+  const chartWidth = 550;
+  const chartHeight = 340;
+  const padding = { top: 40, right: 50, bottom: 65, left: 80 };
+  const contentWidth = chartWidth - padding.left - padding.right;
+  const contentHeight = chartHeight - padding.top - padding.bottom;
+
+  // 计算Y轴最大值（所有数据集中）
+  const maxY = Math.max(...data.map((d) => d.y)) * 1.1;
+  const maxX = data[data.length - 1].x;
+
+  const getY = (value: number) => {
+    return padding.top + contentHeight - (value / maxY) * contentHeight;
+  };
+
+  const getX = (value: number) => {
+    return padding.left + (value / maxX) * contentWidth;
+  };
+
+  // 生成手绘风格的路径（带随机抖动）
+  const generateWobblyPath = (points: { x: number; y: number }[]) => {
+    if (points.length === 0) return "";
+    let path = `M ${points[0].x} ${points[0].y}`;
+    for (let i = 1; i < points.length; i++) {
+      const prev = points[i - 1];
+      const curr = points[i];
+      const midX = (prev.x + curr.x) / 2;
+      const midY = (prev.y + curr.y) / 2;
+      path += ` Q ${prev.x} ${prev.y} ${midX} ${midY}`;
+    }
+    path += ` T ${points[points.length - 1].x} ${points[points.length - 1].y}`;
+    return path;
+  };
+
+  // 动画进度
+  const progress = Math.min(1, Math.max(0, (frame - delay) / 60));
+  const visibleDataCount = Math.floor(progress * data.length);
+  const visibleData = data.slice(0, Math.max(1, visibleDataCount));
+  const points = visibleData.map((d) => ({ x: getX(d.x), y: getY(d.y) }));
+
+  return (
+    <div
+      style={{
+        opacity,
+        transform: `translateY(${interpolate(
+          frame - delay,
+          [0, 30],
+          [30, 0],
+          { extrapolateRight: "clamp" },
+        )}px)`,
+      }}
+    >
+      <div
+        style={{
+          padding: "32px",
+          background: `rgba(255,255,255,0.03)`,
+          border: `2px solid ${accentColor}44`,
+          borderRadius: "20px",
+          boxShadow: `0 0 30px ${accentColor}22`,
+        }}
+      >
+        {/* 标题 */}
+        <div
+          style={{
+            fontSize: "24px",
+            fontWeight: 700,
+            color: textColor,
+            marginBottom: "24px",
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+          }}
+        >
+          <span style={{ fontSize: "28px" }}>⭐</span>
+          <span>GitHub Stars 趋势</span>
+        </div>
+
+        {/* 图表 */}
+        <svg
+          width={chartWidth}
+          height={chartHeight}
+          style={{
+            background: "rgba(0,0,0,0.2)",
+            borderRadius: "12px",
+          }}
+        >
+          {/* X轴和Y轴实线 */}
+          <line
+            x1={padding.left}
+            y1={padding.top}
+            x2={padding.left}
+            y2={chartHeight - padding.bottom}
+            stroke="rgba(255,255,255,0.4)"
+            strokeWidth="2"
+          />
+          <line
+            x1={padding.left}
+            y1={chartHeight - padding.bottom}
+            x2={chartWidth - padding.right}
+            y2={chartHeight - padding.bottom}
+            stroke="rgba(255,255,255,0.4)"
+            strokeWidth="2"
+          />
+
+          {/* Y轴网格线 - 50K为单位 */}
+          {[0, 50, 100, 150, 200, 250, 300].map((value) => {
+            const ratio = value / 300;
+            if (ratio > 1) return null;
+            const y = padding.top + contentHeight * (1 - ratio);
+            return (
+              <line
+                key={`grid-y-${value}`}
+                x1={padding.left}
+                y1={y}
+                x2={chartWidth - padding.right}
+                y2={y}
+                stroke="rgba(255,255,255,0.1)"
+                strokeWidth="1"
+                strokeDasharray="4,4"
+              />
+            );
+          })}
+
+          {/* Y轴标签 - 50K为单位 */}
+          {[0, 50, 100, 150, 200, 250, 300].map((value) => {
+            const ratio = value / 300;
+            if (ratio > 1) return null;
+            const y = padding.top + contentHeight * (1 - ratio);
+            return (
+              <text
+                key={`ylabel-${value}`}
+                x={padding.left - 10}
+                y={y}
+                fill="rgba(255,255,255,0.6)"
+                fontSize="12"
+                textAnchor="end"
+                dominantBaseline="middle"
+                fontFamily="monospace"
+              >
+                {value}K
+              </text>
+            );
+          })}
+
+          {/* X轴标签 - 显示日期格式 MM/DD，每隔几个点显示避免重叠 */}
+          {data
+            .filter((d, i) => i === 0 || i === data.length - 1 || i % 3 === 0)
+            .map((d, i) => {
+              const originalIndex = data.indexOf(d);
+              return (
+                <text
+                  key={`xlabel-${originalIndex}`}
+                  x={getX(d.x)}
+                  y={chartHeight - padding.bottom + 25}
+                  fill="rgba(255,255,255,0.6)"
+                  fontSize="11"
+                  textAnchor="middle"
+                  fontFamily="monospace"
+                >
+                  {d.dateLabel}
+                </text>
+              );
+            })}
+
+          {/* 渐变填充 */}
+          <defs>
+            <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={accentColor} stopOpacity="0.4" />
+              <stop offset="100%" stopColor={accentColor} stopOpacity="0" />
+            </linearGradient>
+          </defs>
+
+          {/* 面积图 */}
+          {points.length > 1 && (
+            <path
+              d={`${generateWobblyPath(points)} L ${
+                points[points.length - 1].x
+              } ${chartHeight - padding.bottom} L ${points[0].x} ${
+                chartHeight - padding.bottom
+              } Z`}
+              fill="url(#areaGradient)"
+            />
+          )}
+
+          {/* 折线 - 手绘风格 */}
+          {points.length > 1 && (
+            <>
+              {/* 外层粗线（带抖动） */}
+              <path
+                d={generateWobblyPath(
+                  points.map((p) => ({
+                    x: p.x + (Math.random() - 0.5) * 2,
+                    y: p.y + (Math.random() - 0.5) * 2,
+                  })),
+                )}
+                fill="none"
+                stroke={`${accentColor}66`}
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              {/* 中层线 */}
+              <path
+                d={generateWobblyPath(points)}
+                fill="none"
+                stroke={accentColor}
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              {/* 内层高光线 */}
+              <path
+                d={generateWobblyPath(
+                  points.map((p) => ({
+                    x: p.x + (Math.random() - 0.5) * 1,
+                    y: p.y + (Math.random() - 0.5) * 1,
+                  })),
+                )}
+                fill="none"
+                stroke={`${accentColor}FF`}
+                strokeWidth="0.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                opacity={0.8}
+              />
+            </>
+          )}
+
+        </svg>
+
+        {/* 底部信息 */}
+        <div
+          style={{
+            marginTop: "20px",
+            textAlign: "center",
+            fontSize: "14px",
+            color: "rgba(255,255,255,0.7)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "8px",
+          }}
+        >
+          <span>🔥</span>
+          <span>OpenClaw 总 Stars:</span>
+          <span style={{ color: accentColor, fontSize: "20px", fontWeight: 700 }}>
+            {rawData[rawData.length - 1].stars.toLocaleString()}
+          </span>
+        </div>
+
+        {/* 数据来源 */}
+        <div
+          style={{
+            marginTop: "12px",
+            textAlign: "center",
+            fontSize: "13px",
+            color: "#60A5FA",
+          }}
+        >
+          数据来源: https://www.star-history.com/?repos=openclaw/openclaw
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ============================================
 // 场景 0: OpenClaw 核心概念
 // ============================================
 
@@ -150,21 +459,21 @@ export const IntroConceptScene: React.FC<{
       title: "多渠道集成",
       desc: "支持飞书、Telegram、Discord 等",
       color: "#10B981",
-      delay: 50,
+      delay: 45,
     },
     {
       icon: "⚡",
       title: "自主执行",
       desc: "主动思考、规划并执行任务",
       color: "#F59E0B",
-      delay: 70,
+      delay: 60,
     },
     {
       icon: "🛡️",
       title: "安全可控",
       desc: "自托管部署，数据完全掌控",
       color: "#3B82F6",
-      delay: 90,
+      delay: 75,
     },
   ];
 
@@ -213,112 +522,99 @@ export const IntroConceptScene: React.FC<{
         </p>
       </div>
 
-      {/* 核心概念卡片 */}
+      {/* 核心概念区域 - 左右两列布局 */}
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "32px",
+          display: "flex",
+          gap: "48px",
           width: "100%",
           maxWidth: "1400px",
+          alignItems: "stretch",
         }}
       >
-        {features.map((feature) => (
-          <div
-            key={feature.title}
-            style={{
-              padding: "32px",
-              background: `rgba(255,255,255,0.03)`,
-              border: `1px solid ${feature.color}33`,
-              borderRadius: "20px",
-              opacity: spring({
-                frame: frame - feature.delay,
-                fps: 30,
-                config: { damping: 20, stiffness: 100 },
-              }),
-              transform: `translateY(${interpolate(
-                frame - feature.delay,
-                [0, 30],
-                [30, 0],
-                { extrapolateRight: "clamp" },
-              )}px)`,
-              boxShadow: `0 0 30px ${feature.color}15`,
-            }}
-          >
+        {/* 左侧：GitHub Stars 折线图 */}
+        <div style={{ flex: "0 0 auto", display: "flex", alignItems: "flex-start" }}>
+          <HandDrawnLineChart
+            frame={frame}
+            accentColor={accentColor}
+            textColor={textColor}
+            delay={30}
+          />
+        </div>
+
+        {/* 右侧：核心特性卡片（单列布局） */}
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            gap: "24px",
+            justifyContent: "space-between",
+          }}
+        >
+          {features.map((feature) => (
             <div
+              key={feature.title}
               style={{
-                display: "flex",
-                alignItems: "flex-start",
-                gap: "20px",
+                padding: "24px 28px",
+                background: `rgba(255,255,255,0.03)`,
+                border: `1px solid ${feature.color}33`,
+                borderRadius: "16px",
+                opacity: spring({
+                  frame: frame - feature.delay,
+                  fps: 30,
+                  config: { damping: 20, stiffness: 100 },
+                }),
+                transform: `translateY(${interpolate(
+                  frame - feature.delay,
+                  [0, 30],
+                  [30, 0],
+                  { extrapolateRight: "clamp" },
+                )}px)`,
+                boxShadow: `0 0 30px ${feature.color}15`,
               }}
             >
               <div
                 style={{
-                  fontSize: "48px",
-                  filter: `drop-shadow(0 4px 12px ${feature.color}66)`,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "16px",
                 }}
               >
-                {feature.icon}
-              </div>
-              <div style={{ flex: 1 }}>
-                <h3
+                <div
                   style={{
-                    fontSize: "24px",
-                    fontWeight: 700,
-                    color: feature.color,
-                    margin: "0 0 8px 0",
+                    fontSize: "40px",
+                    filter: `drop-shadow(0 4px 12px ${feature.color}66)`,
+                    flexShrink: 0,
                   }}
                 >
-                  {feature.title}
-                </h3>
-                <p
-                  style={{
-                    fontSize: "16px",
-                    color: "rgba(255,255,255,0.7)",
-                    margin: 0,
-                    lineHeight: 1.5,
-                  }}
-                >
-                  {feature.desc}
-                </p>
+                  {feature.icon}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <h3
+                    style={{
+                      fontSize: "22px",
+                      fontWeight: 700,
+                      color: feature.color,
+                      margin: "0 0 6px 0",
+                    }}
+                  >
+                    {feature.title}
+                  </h3>
+                  <p
+                    style={{
+                      fontSize: "15px",
+                      color: "rgba(255,255,255,0.7)",
+                      margin: 0,
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    {feature.desc}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
-
-      {/* 底部标语 */}
-      <div
-        style={{
-          marginTop: "60px",
-          padding: "24px 48px",
-          background: `${accentColor}15`,
-          border: `2px solid ${accentColor}`,
-          borderRadius: "16px",
-          opacity: spring({
-            frame: frame - 110,
-            fps: 30,
-            config: { damping: 20, stiffness: 100 },
-          }),
-          textAlign: "center",
-        }}
-      >
-        <div
-          style={{
-            fontSize: "22px",
-            fontWeight: 600,
-            color: textColor,
-            display: "flex",
-            alignItems: "center",
-            gap: "12px",
-            justifyContent: "center",
-          }}
-        >
-          <span style={{ color: accentColor }}>✨</span>
-          <span>不只是聊天机器人，而是真正能</span>
-          <span style={{ color: accentColor }}>干活</span>
-          <span>的 AI 助理</span>
-          <span style={{ color: accentColor }}>✨</span>
+          ))}
         </div>
       </div>
     </div>
