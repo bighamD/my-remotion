@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Player } from '@remotion/player';
-import { OpenClawTutorial, openClawSchema } from './OpenClawTutorial';
-import { zIndex } from 'zod';
+import { OpenClawTutorial } from './OpenClawTutorial';
 
 // Player 组件
 const App: React.FC = () => {
@@ -18,7 +17,7 @@ const App: React.FC = () => {
     <Player
       component={OpenClawTutorial}
       inputProps={inputProps}
-      durationInFrames={2460}
+      durationInFrames={2880}
       compositionWidth={1920}
       compositionHeight={1080}
       fps={30}

@@ -303,7 +303,7 @@ const TerminalCommand: React.FC<{
         )
       : output?.length ?? 0;
   const outputText =
-    output && outputTypewriter ? output.slice(0, outputTypedLength) : output;
+    output && outputTypewriter ? output.slice(0, outputTypedLength) : output ?? "";
 
   return (
     <div style={{ opacity: cmdOpacity, marginBottom: "20px" }}>
@@ -371,6 +371,203 @@ const TerminalCommand: React.FC<{
         </div>
       )}
     </div>
+  );
+};
+
+// 场景 2: OpenClaw 能力边界
+const LayerOverviewScene: React.FC<{
+  frame: number;
+  accentColor: string;
+  cardBg: string;
+  textColor: string;
+}> = ({ frame, accentColor, cardBg, textColor }) => {
+  const layers = [
+    {
+      title: "Agent系统层",
+      owner: "OpenClaw",
+      color: "#FF7A59",
+      points: [
+        "任务拆分、并行调度与优先级管理",
+        "worktree 生命周期与上下文隔离",
+        "流程编排：实现 → 测试 → 评审 → 合并",
+      ],
+    },
+    {
+      title: "编程工具层",
+      owner: "Claude Code / Codex",
+      color: "#10B981",
+      points: [
+        "在指定 .worktree 的工作目录读写代码与执行命令",
+        "按任务完成实现、修复和测试",
+        "输出可提交的代码改动结果",
+      ],
+    },
+    {
+      title: "模型层",
+      owner: "Claude / GPT",
+      color: "#60A5FA",
+      points: [
+        "生成代码、文本与推理结果",
+        "提供决策建议与上下文理解",
+        "不直接管理分支、仓库与 worktree",
+      ],
+    },
+  ];
+
+  return (
+    <SceneShell padding="0 70px">
+      <SceneTitle
+        title="## 三层结构总览"
+        subtitle="重点区分 OpenClaw 的系统能力，不和工具层、模型层混在一起"
+        accentColor={accentColor}
+        textColor={textColor}
+      />
+
+      <div
+        style={{
+          marginTop: "-10px",
+          marginBottom: "28px",
+          padding: "20px 26px",
+          borderRadius: "16px",
+          background: "rgba(20, 20, 34, 0.86)",
+          border: `1px solid ${accentColor}44`,
+          boxShadow: `0 0 24px ${accentColor}26`,
+          opacity: spring({
+            frame,
+            fps: 30,
+            config: { damping: 18, stiffness: 110 },
+          }),
+        }}
+      >
+        <pre
+          style={{
+            margin: 0,
+            color: textColor,
+            fontSize: "24px",
+            lineHeight: 1.45,
+            fontFamily: "'SF Mono', 'Monaco', 'Inconsolata', 'Menlo', 'Consolas', monospace",
+            whiteSpace: "pre",
+          }}
+        >
+{`┌──────────────────────┐
+│ Agent系统层          │ ← OpenClaw 在这里
+├──────────────────────┤
+│ 编程工具层           │ ← Claude Code / Codex
+├──────────────────────┤
+│ 模型层               │ ← Claude / GPT
+└──────────────────────┘`}
+        </pre>
+      </div>
+
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "1700px",
+          display: "grid",
+          gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+          gap: "18px",
+        }}
+      >
+        {layers.map((layer, index) => (
+          <div
+            key={layer.title}
+            style={{
+              background: `linear-gradient(155deg, ${cardBg}F0 0%, rgba(22, 22, 36, 0.96) 100%)`,
+              borderRadius: "16px",
+              border: `1px solid ${layer.color}55`,
+              padding: "20px 20px 18px 20px",
+              boxShadow: `0 0 22px ${layer.color}1F`,
+              opacity: spring({
+                frame: frame - index * 8,
+                fps: 30,
+                config: { damping: 20, stiffness: 100 },
+              }),
+              transform: `translateY(${interpolate(
+                frame - index * 8,
+                [0, 18],
+                [24, 0],
+                { extrapolateRight: "clamp" },
+              )}px)`,
+            }}
+          >
+            <div
+              style={{
+                fontSize: "28px",
+                fontWeight: 800,
+                color: layer.color,
+                marginBottom: "8px",
+              }}
+            >
+              {layer.title}
+            </div>
+            <div
+              style={{
+                fontSize: "19px",
+                color: textColor,
+                opacity: 0.88,
+                marginBottom: "12px",
+                fontWeight: 600,
+              }}
+            >
+              {layer.owner}
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              {layer.points.map((point) => (
+                <div
+                  key={point}
+                  style={{
+                    fontSize: "16px",
+                    lineHeight: 1.4,
+                    color: textColor,
+                    opacity: 0.8,
+                    display: "flex",
+                    alignItems: "flex-start",
+                    gap: "8px",
+                  }}
+                >
+                  <span style={{ color: layer.color }}>•</span>
+                  <span>{point}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div
+        style={{
+          marginTop: "22px",
+          padding: "16px 20px",
+          borderRadius: "14px",
+          border: `1px solid ${accentColor}55`,
+          background: "rgba(18, 18, 30, 0.74)",
+          display: "flex",
+          flexDirection: "column",
+          gap: "8px",
+          minWidth: "1100px",
+        }}
+      >
+        <div
+          style={{
+            fontSize: "22px",
+            fontWeight: 800,
+            color: accentColor,
+          }}
+        >
+          OpenClaw 解决了什么问题
+        </div>
+        <div
+          style={{
+            fontSize: "18px",
+            fontWeight: 600,
+            color: textColor,
+            opacity: 0.9,
+          }}
+        >
+          多任务并行隔离、流程编排自动化、失败可恢复
+        </div>
+      </div>
+    </SceneShell>
   );
 };
 
@@ -822,7 +1019,7 @@ export const OpenClawTutorial: React.FC<z.infer<typeof openClawSchema>> = ({
 
       {/* Scene 2: Features (180-360 frames, 6 seconds) - 缩短了一半 */}
       <Sequence from={180} durationInFrames={180}>
-        <FeaturesScene
+        <LayerOverviewScene
           frame={frame - 180}
           accentColor={accentColor}
           cardBg={cardBg}
@@ -830,58 +1027,68 @@ export const OpenClawTutorial: React.FC<z.infer<typeof openClawSchema>> = ({
         />
       </Sequence>
 
-      {/* Scene 3: Install - Step 1 (360-960 frames, 20 seconds) */}
-      <Sequence from={360} durationInFrames={600}>
-        <InstallScene
+      {/* Scene 3: Features (360-540 frames, 6 seconds) */}
+      <Sequence from={360} durationInFrames={180}>
+        <FeaturesScene
           frame={frame - 360}
+          accentColor={accentColor}
+          cardBg={cardBg}
+          textColor={textColor}
+        />
+      </Sequence>
+
+      {/* Scene 4: Install - Step 1 (540-1140 frames, 20 seconds) */}
+      <Sequence from={540} durationInFrames={600}>
+        <InstallScene
+          frame={frame - 540}
           accentColor={accentColor}
           textColor={textColor}
           step={1}
         />
       </Sequence>
 
-      {/* Scene 4: Install - Step 2 (960-1440 frames, 16 seconds) */}
-      <Sequence from={960} durationInFrames={480}>
+      {/* Scene 5: Install - Step 2 (1140-1620 frames, 16 seconds) */}
+      <Sequence from={1140} durationInFrames={480}>
         <InstallScene
-          frame={frame - 960}
+          frame={frame - 1140}
           accentColor={accentColor}
           textColor={textColor}
           step={2}
         />
       </Sequence>
 
-      {/* Scene 5: Install - Step 3 (1440-1800 frames, 12 seconds) */}
-      <Sequence from={1440} durationInFrames={360}>
+      {/* Scene 6: Install - Step 3 (1620-1980 frames, 12 seconds) */}
+      <Sequence from={1620} durationInFrames={360}>
         <InstallScene
-          frame={frame - 1440}
+          frame={frame - 1620}
           accentColor={accentColor}
           textColor={textColor}
           step={3}
         />
       </Sequence>
 
-      {/* Scene 6: Gateway (1800-2160 frames, 12 seconds) */}
-      <Sequence from={1800} durationInFrames={360}>
+      {/* Scene 7: Gateway (1980-2340 frames, 12 seconds) */}
+      <Sequence from={1980} durationInFrames={360}>
         <GatewayScene
-          frame={frame - 1800}
+          frame={frame - 1980}
           accentColor={accentColor}
           textColor={textColor}
         />
       </Sequence>
 
-      {/* Scene 7: Message (2160-2520 frames, 12 seconds) */}
-      <Sequence from={2160} durationInFrames={360}>
+      {/* Scene 8: Message (2340-2700 frames, 12 seconds) */}
+      <Sequence from={2340} durationInFrames={360}>
         <MessageScene
-          frame={frame - 2160}
+          frame={frame - 2340}
           accentColor={accentColor}
           textColor={textColor}
         />
       </Sequence>
 
-      {/* Scene 8: Outro (2520-2700 frames, 6 seconds) */}
-      <Sequence from={2520} durationInFrames={180}>
+      {/* Scene 9: Outro (2700-2880 frames, 6 seconds) */}
+      <Sequence from={2700} durationInFrames={180}>
         <OutroScene
-          frame={frame - 2520}
+          frame={frame - 2700}
           accentColor={accentColor}
           textColor={textColor}
         />

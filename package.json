@@ -33,6 +33,7 @@
     "build": "remotion bundle",
     "build:web": "vite build",
     "preview:web": "vite preview",
+    "shots:complete:scene-ends": "bash scripts/export-openclaw-complete-scene-ends.sh",
     "deploy": "gh-pages -d dist",
     "upgrade": "remotion upgrade",
     "lint": "eslint src && tsc"
